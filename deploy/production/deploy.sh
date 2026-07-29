@@ -131,6 +131,7 @@ local_https_check() {
   upstream_route_check console.123proxy.cn /ip/default/offers
   expected_status_check console.123proxy.cn /app/ 200
   expected_status_check console.123proxy.cn "/apiv1/console/orderDetail?alipayreturn=healthcheck" 302
+  expected_status_check console.123proxy.cn "/apiv1/console/usercost?alipayreturn=healthcheck" 302
   expected_status_check www.123proxy.cn /ip/default/offers 200
   cors_header_check console.123proxy.cn /ip/default/offers https://www.123proxy.cn
   cors_header_check console.123proxy.cn /ip/default/userorder https://www.123proxy.cn

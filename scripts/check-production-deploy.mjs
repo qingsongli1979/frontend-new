@@ -144,6 +144,7 @@ for (const required of [
   "/accsrv/adm/bankinsert",
   "console.123proxy.cn /app/",
   "/apiv1/console/orderDetail?alipayreturn=healthcheck",
+  "/apiv1/console/usercost?alipayreturn=healthcheck",
   "www.123proxy.cn /ip/default/offers",
   "/status-api/v1/summary",
   "../certificates/validate-certificates.sh",

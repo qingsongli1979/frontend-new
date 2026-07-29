@@ -105,6 +105,7 @@ assert.equal(invoices[1].invoiceTypeLabel, "增值税专用发票");
 
 const index = await readFile(new URL("../console/app/index.html", import.meta.url), "utf8");
 const consoleCss = await readFile(new URL("../console/app/console.css", import.meta.url), "utf8");
+const accountScript = await readFile(new URL("../console/app/account.js", import.meta.url), "utf8");
 assert.match(index, /account\.js\?v=/);
 assert.match(index, /id="usageWorkspace"/);
 assert.doesNotMatch(index, /id="usagePackageRows"/);
@@ -122,5 +123,8 @@ assert.match(
 );
 assert.match(consoleCss, /\.money-input em\s*\{[^}]*height:\s*100%/s);
 assert.match(consoleCss, /\.money-input input\s*\{[^}]*height:\s*100%/s);
+assert.match(accountScript, /\/accsrv\/0xalicheckorderstatus\//);
+assert.match(accountScript, /handleRechargeReturn/);
+assert.doesNotMatch(accountScript, /\/ip\/clouduserorder\/imply/);
 
 console.log("Console account audit passed: traffic ledger, billing, recharge, invoices and account settings");

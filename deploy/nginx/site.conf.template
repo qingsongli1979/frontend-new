@@ -167,6 +167,14 @@ server {
         return 302 "/app/#payment-return?provider=alipay&tradeNo=$arg_alipayreturn";
     }
 
+    location = /apiv1/console/usercost {
+        return 302 "/app/#recharge-return?provider=alipay&tradeNo=$arg_alipayreturn";
+    }
+
+    location = /console/usercost {
+        return 302 "/app/#recharge-return?provider=alipay&tradeNo=$arg_alipayreturn";
+    }
+
     location = /apiv1/managements/login-page {
         return 302 /agency-login.html$is_args$args;
     }

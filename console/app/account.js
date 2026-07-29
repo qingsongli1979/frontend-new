@@ -1,4 +1,10 @@
-import { renderQrCode } from "./payment.js";
+import {
+  clearPendingRecharge,
+  extractPaymentTradeNo,
+  loadPendingRecharge,
+  renderQrCode,
+  savePendingRecharge
+} from "./payment.js";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 20000;
@@ -831,13 +837,30 @@ async function submitRecharge(event) {
   submit.disabled = true;
   if (method === "alipay") {
     const paymentWindow = window.open("", "_blank");
+    if (!paymentWindow) {
+      submit.disabled = false;
+      message.hidden = false;
+      message.textContent = "浏览器阻止了支付窗口，请允许弹窗后重试。";
+      return;
+    }
+    paymentWindow.document.write("<p style='font-family:sans-serif;padding:32px'>正在进入支付宝...</p>");
+    savePendingRecharge({ provider: "alipay", amount });
     try {
       const html = await request(`/accsrv/0xalipay/${amount}`);
-      paymentWindow.document.write(typeof html === "string" ? html : String(html?.html || ""));
+      const paymentHtml = typeof html === "string" ? html : String(html?.html || "");
+      savePendingRecharge({
+        provider: "alipay",
+        paymentTradeNo: extractPaymentTradeNo(paymentHtml),
+        amount
+      });
+      paymentWindow.document.open();
+      paymentWindow.document.write(paymentHtml);
+      paymentWindow.document.close();
       paymentWindow.focus();
       document.querySelector("#accountRechargeDialog")?.close();
       showToast("支付宝支付页面已打开");
     } catch (error) {
+      clearPendingRecharge();
       paymentWindow?.close();
       message.hidden = false;
       message.textContent = error.message || "支付宝充值创建失败";
@@ -903,6 +926,77 @@ function startPaymentPolling(tradeNo) {
     }
   };
   state.paymentTimer = window.setTimeout(check, 5000);
+}
+
+function renderRechargeReturnState(type, title, message, balance = null) {
+  const workspace = document.querySelector("#billingWorkspace");
+  if (!workspace) return;
+  const icon = type === "success" ? "circle-check-big" : type === "error" ? "circle-alert" : "loader-circle";
+  workspace.innerHTML = `
+    <section class="panel payment-return-panel">
+      <div class="payment-complete is-${type}">
+        <i data-lucide="${icon}" aria-hidden="true"></i>
+        <strong>${escapeHtml(title)}</strong>
+        <p>${escapeHtml(message)}</p>
+        ${balance === null ? "" : `<p>当前账户余额 <strong>¥${formatMoney(balance)}</strong></p>`}
+        <div class="payment-return-actions">
+          <a class="button button-primary" href="#billing?tab=recharge">查看充值记录</a>
+          <a class="button button-secondary" href="#overview">返回控制台概览</a>
+        </div>
+      </div>
+    </section>`;
+  refreshIcons();
+}
+
+function notifyRechargeComplete(balance) {
+  try {
+    window.opener?.postMessage({
+      type: "123proxy-recharge-complete",
+      balance
+    }, window.location.origin);
+  } catch {
+    // The result page remains useful if the original console window was closed.
+  }
+}
+
+async function handleRechargeReturn(params = new URLSearchParams()) {
+  const paymentTradeNo = String(params.get("tradeNo") || "");
+  const pending = loadPendingRecharge(paymentTradeNo);
+  if (!paymentTradeNo) {
+    renderRechargeReturnState("error", "缺少支付流水号", "无法核验本次充值，请前往充值记录查看到账状态。");
+    return;
+  }
+
+  renderRechargeReturnState("pending", "正在确认充值结果", "正在向支付后台核验到账状态，请勿关闭页面。");
+  try {
+    const result = await request(`/accsrv/0xalicheckorderstatus/${encodeURIComponent(paymentTradeNo)}`);
+    if (!result?.paid) {
+      const waiting = ["NOTPAY", "USERPAYING", ""].includes(String(result?.status || ""));
+      renderRechargeReturnState(
+        waiting ? "pending" : "error",
+        waiting ? "充值结果确认中" : "充值未完成",
+        waiting
+          ? "支付平台尚未返回最终状态，请稍后在充值记录中刷新查看。"
+          : `支付状态：${result?.status || "UNKNOWN"}。如已扣款，请联系客户服务核查。`
+      );
+      return;
+    }
+
+    const user = await request("/accsrv/information").catch(() => null);
+    const balance = number(result.balance ?? user?.balance ?? state.user?.balance);
+    state.user = user || { ...(state.user || {}), balance };
+    clearPendingRecharge();
+    window.ConsoleOverview?.reload?.();
+    notifyRechargeComplete(balance);
+    const amountText = pending?.amount ? `¥${formatMoney(pending.amount)} 已到账。` : "充值金额已到账。";
+    renderRechargeReturnState("success", "充值成功", amountText, balance);
+  } catch (error) {
+    renderRechargeReturnState(
+      "error",
+      "充值状态确认失败",
+      error.message || "请前往充值记录重新检查到账状态。"
+    );
+  }
 }
 
 function hasAuthority(name) {
@@ -1290,11 +1384,20 @@ function ensureDialogs() {
 
 if (typeof window !== "undefined" && typeof document !== "undefined") {
   ensureDialogs();
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin || event.data?.type !== "123proxy-recharge-complete") return;
+    if (state.user && Number.isFinite(Number(event.data.balance))) {
+      state.user.balance = Number(event.data.balance);
+    }
+    window.ConsoleOverview?.reload?.();
+    showToast("充值成功，账户余额已更新");
+  });
   window.ConsoleAccount = {
     openUsage,
     openBilling,
     openSettings,
-    openRecharge: openRechargeDialog
+    openRecharge: openRechargeDialog,
+    handleRechargeReturn
   };
   window.dispatchEvent(new CustomEvent("console-account-ready"));
 }

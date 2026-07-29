@@ -420,6 +420,12 @@ function routeCurrentHash() {
     window.ConsoleCommerce?.handlePaymentReturn(params);
     return;
   }
+  if (route === "recharge-return") {
+    markActiveNav(document.querySelector('[data-view="billing"]'));
+    showPanel("billing", "充值结果");
+    window.ConsoleAccount?.handleRechargeReturn(params);
+    return;
+  }
   if (route === "extract") {
     const productKey = params.get("product") || "tunnel";
     markActiveNav(document.querySelector(`[data-product="${productKey}"]`));

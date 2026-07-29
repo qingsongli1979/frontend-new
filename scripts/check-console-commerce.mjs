@@ -13,9 +13,14 @@ import {
 } from "../console/app/commerce.js";
 import {
   PENDING_PAYMENT_KEY,
+  PENDING_RECHARGE_KEY,
+  clearPendingRecharge,
+  extractPaymentTradeNo as extractSharedPaymentTradeNo,
   loadPendingPayment,
+  loadPendingRecharge,
   normalizePaymentUri,
-  savePendingPayment
+  savePendingPayment,
+  savePendingRecharge
 } from "../console/app/payment.js";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -80,6 +85,10 @@ assert.equal(
   extractPaymentTradeNo('<a href="/return?alipayreturn=PAY-123&x=1">pay</a>'),
   "PAY-123"
 );
+assert.equal(
+  extractSharedPaymentTradeNo('<a href="/return?alipayreturn=RECHARGE-123&x=1">pay</a>'),
+  "RECHARGE-123"
+);
 assert.equal(normalizePaymentUri("weixin://wxpay/bizpayurl?pr=test"), "weixin://wxpay/bizpayurl?pr=test");
 assert.throws(() => normalizePaymentUri("javascript:alert(1)"), /无效/);
 
@@ -98,6 +107,17 @@ savePendingPayment({
 assert.equal(JSON.parse(storage.getItem(PENDING_PAYMENT_KEY)).orderTradeNo, "ORDER-123");
 assert.equal(loadPendingPayment("PAY-123", storage, 2000).provider, "alipay");
 assert.equal(loadPendingPayment("PAY-OTHER", storage, 2000), null);
+savePendingRecharge({
+  provider: "alipay",
+  paymentTradeNo: "RECHARGE-123",
+  amount: 100,
+  createdAt: 1000
+}, storage);
+assert.equal(JSON.parse(storage.getItem(PENDING_RECHARGE_KEY)).amount, 100);
+assert.equal(loadPendingRecharge("RECHARGE-123", storage, 2000).provider, "alipay");
+assert.equal(loadPendingRecharge("RECHARGE-OTHER", storage, 2000), null);
+clearPendingRecharge(storage);
+assert.equal(storage.getItem(PENDING_RECHARGE_KEY), null);
 
 const consoleHtml = await readFile(path.join(rootDir, "console", "app", "index.html"), "utf8");
 const consoleCss = await readFile(path.join(rootDir, "console", "app", "console.css"), "utf8");

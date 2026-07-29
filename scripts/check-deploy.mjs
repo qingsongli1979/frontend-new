@@ -145,6 +145,8 @@ for (const required of [
   "/apiv1/managements/login-page",
   "/apiv1/console/orderDetail",
   "#payment-return?provider=alipay",
+  "/apiv1/console/usercost",
+  "#recharge-return?provider=alipay",
   "agencyconsole/agency-manager",
   "LEGACY_CONSOLE_UPSTREAM",
   "WEBSITE_LISTEN",

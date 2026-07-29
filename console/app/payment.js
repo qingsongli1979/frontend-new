@@ -1,4 +1,5 @@
 const PENDING_PAYMENT_KEY = "123proxy_pending_payment";
+const PENDING_RECHARGE_KEY = "123proxy_pending_recharge";
 const PENDING_PAYMENT_TTL_MS = 2 * 60 * 60 * 1000;
 
 function storageOrDefault(storage) {
@@ -11,6 +12,20 @@ function normalizePaymentUri(value) {
     throw new Error("支付二维码地址无效");
   }
   return uri;
+}
+
+function extractPaymentTradeNo(html) {
+  const text = String(html || "");
+  const patterns = [
+    /alipayreturn=([^"'&<>\s]+)/i,
+    /out_trade_no["']?\s*[:=]\s*["']([^"']+)/i,
+    /tradeNo["']?\s*[:=]\s*["']([^"']+)/i
+  ];
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match?.[1]) return decodeURIComponent(match[1]);
+  }
+  return "";
 }
 
 async function renderQrCode(container, value, options = {}) {
@@ -80,12 +95,57 @@ function clearPendingPayment(storage) {
   storageOrDefault(storage)?.removeItem(PENDING_PAYMENT_KEY);
 }
 
+function savePendingRecharge(record, storage) {
+  const target = storageOrDefault(storage);
+  if (!target) return null;
+  const normalized = {
+    provider: String(record?.provider || ""),
+    paymentTradeNo: String(record?.paymentTradeNo || ""),
+    amount: Number(record?.amount) || 0,
+    createdAt: Number(record?.createdAt) || Date.now()
+  };
+  target.setItem(PENDING_RECHARGE_KEY, JSON.stringify(normalized));
+  return normalized;
+}
+
+function loadPendingRecharge(paymentTradeNo = "", storage, now = Date.now()) {
+  const target = storageOrDefault(storage);
+  if (!target) return null;
+  try {
+    const pending = JSON.parse(target.getItem(PENDING_RECHARGE_KEY) || "null");
+    if (!pending || now - Number(pending.createdAt) > PENDING_PAYMENT_TTL_MS) {
+      target.removeItem(PENDING_RECHARGE_KEY);
+      return null;
+    }
+    if (
+      paymentTradeNo
+      && pending.paymentTradeNo
+      && String(paymentTradeNo) !== String(pending.paymentTradeNo)
+    ) {
+      return null;
+    }
+    return pending;
+  } catch {
+    target.removeItem(PENDING_RECHARGE_KEY);
+    return null;
+  }
+}
+
+function clearPendingRecharge(storage) {
+  storageOrDefault(storage)?.removeItem(PENDING_RECHARGE_KEY);
+}
+
 export {
   PENDING_PAYMENT_KEY,
+  PENDING_RECHARGE_KEY,
   PENDING_PAYMENT_TTL_MS,
   clearPendingPayment,
+  clearPendingRecharge,
+  extractPaymentTradeNo,
   loadPendingPayment,
+  loadPendingRecharge,
   normalizePaymentUri,
   renderQrCode,
-  savePendingPayment
+  savePendingPayment,
+  savePendingRecharge
 };

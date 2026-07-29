@@ -1,5 +1,6 @@
 import {
   clearPendingPayment,
+  extractPaymentTradeNo,
   loadPendingPayment,
   renderQrCode,
   savePendingPayment
@@ -699,20 +700,6 @@ async function payOrder(order, method) {
     setNotice("#orderNotice", "error", error.message || "支付请求失败，请稍后重试");
     renderOrder(order, state.user || {});
   }
-}
-
-function extractPaymentTradeNo(html) {
-  const text = String(html || "");
-  const patterns = [
-    /alipayreturn=([^"'&<>\s]+)/i,
-    /out_trade_no["']?\s*[:=]\s*["']([^"']+)/i,
-    /tradeNo["']?\s*[:=]\s*["']([^"']+)/i
-  ];
-  for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match?.[1]) return decodeURIComponent(match[1]);
-  }
-  return "";
 }
 
 async function startAlipayPayment(order) {
