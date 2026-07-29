@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Network Speed Monitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        #orderInfo {
+            margin-bottom: 1.5rem;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        #currentSpeed {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        select {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Network Speed Monitor</h1>
+    <p id="orderInfo">Order ID: <code id="orderIdDisplay"></code></p>
+
+    <!-- Controls -->
+    <div class="card" style="flex-wrap: wrap;">
+        <label for="unitSelect"><strong>Unit:</strong></label>
+        <select id="unitSelect">
+            <option value="Gbps" selected>Gbps</option>
+            <option value="Mbps">Mbps</option>
+        </select>
+        <label for="durationSelect" style="margin-left: 1rem;"><strong>Duration:</strong></label>
+        <select id="durationSelect">
+            <option value="8" selected>Last 8 hours</option>
+            <option value="12">Last 12 hours</option>
+            <option value="16">Last 16 hours</option>
+            <option value="24">Last 24 hours</option>
+        </select>
+    </div>
+
+    <!-- Current speed -->
+    <div class="card">
+        <span><strong>Current Speed:</strong></span>
+        <span id="currentSpeed">--</span>
+    </div>
+
+    <!-- Current connections -->
+    <div class="card">
+        <span><strong>TCP Connections:</strong></span>
+        <span id="currentConnections">--</span>
+    </div>
+
+    <!-- Line chart -->
+    <canvas id="speedChart" height="200"></canvas>
+
+    <script>
+        // ─────────────────────────────────────────────────────────────
+        // Configuration: Obtain orderId from the page URL.
+        // Example: network.html?orderId=6812317a0b7708329360c996
+        // If omitted, the default ID is used.
+        // ─────────────────────────────────────────────────────────────
+        const params = new URLSearchParams(window.location.search);
+        const orderId =
+            params.get("orderId") || "no"; // fallback
+        document.getElementById("orderIdDisplay").textContent = orderId;
+
+        const API_URL = `https://console.123proxy.cn/ip/ipspeed/${orderId}`;
+
+        // Global state
+        let chart;
+        let rawData = []; // Store raw json data
+        let labels = []; // x‑axis labels (timestamps)
+        let speedsGbps = []; // raw speeds in Gbps
+        let connections = []; // TCP connections
+        let unit = "Gbps"; // current selected unit
+        let durationHours = 8; // default duration
+
+        const currentSpeedEl = document.getElementById("currentSpeed");
+        const currentConnsEl = document.getElementById("currentConnections");
+        const unitSelect = document.getElementById("unitSelect");
+        const durationSelect = document.getElementById("durationSelect");
+
+        unitSelect.addEventListener("change", () => {
+            unit = unitSelect.value;
+            updateDisplay();
+        });
+
+        durationSelect.addEventListener("change", () => {
+            durationHours = parseInt(durationSelect.value, 10);
+            processData();
+        });
+
+        /** Convert Gbps -> selected unit */
+        const convert = (speedGbps) =>
+            unit === "Gbps" ? speedGbps : speedGbps * 1000;
+
+        /** Build converted speeds array */
+        const getConvertedSpeeds = () => speedsGbps.map(convert);
+
+        /** Initialize Chart.js instance */
+        function initChart() {
+            const ctx = document.getElementById("speedChart").getContext("2d");
+            chart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: `Speed (${unit})`,
+                            data: getConvertedSpeeds(),
+                            fill: false,
+                            tension: 0.3,
+                            borderColor: "rgb(75, 192, 192)",
+                            backgroundColor: "rgba(75, 192, 192, 0.5)",
+                            yAxisID: "y",
+                        },
+                        {
+                            label: "TCP Connections",
+                            data: connections,
+                            fill: false,
+                            tension: 0.3,
+                            borderColor: "rgb(255, 99, 132)",
+                            backgroundColor: "rgba(255, 99, 132, 0.5)",
+                            yAxisID: "y1",
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Time",
+                            },
+                        },
+                        y: {
+                            type: "linear",
+                            display: true,
+                            position: "left",
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: unit,
+                            },
+                        },
+                        y1: {
+                            type: "linear",
+                            display: true,
+                            position: "right",
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Connections",
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                        },
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                        },
+                    },
+                },
+            });
+        }
+
+        /** Update chart & current speed display */
+        function updateDisplay() {
+            // Update current speed
+            if (speedsGbps.length) {
+                const latest = convert(speedsGbps[speedsGbps.length - 1]);
+                currentSpeedEl.textContent = `${latest.toFixed(
+                    unit === "Gbps" ? 2 : 0
+                )} ${unit}`;
+            }
+
+            // Update current connections
+            if (connections.length) {
+                const latestConns = connections[connections.length - 1];
+                currentConnsEl.textContent = latestConns.toLocaleString();
+            }
+
+            // Update chart
+            if (chart) {
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = getConvertedSpeeds();
+                chart.data.datasets[0].label = `Speed (${unit})`;
+                chart.data.datasets[1].data = connections;
+                chart.options.scales.y.title.text = unit;
+                chart.update();
+            }
+        }
+
+        /** Process raw data based on duration and update visuals */
+        function processData() {
+            const cutoffTime = Date.now() - durationHours * 60 * 60 * 1000;
+            const filteredData = rawData.filter(item => item.timestamp >= cutoffTime);
+
+            // Extract data
+            labels = filteredData.map((item) =>
+                new Date(item.timestamp).toLocaleTimeString()
+            );
+            speedsGbps = filteredData.map((item) => item.speed);
+            connections = filteredData.map((item) => item.conns || 0);
+
+            // Initialize or update chart
+            if (!chart) {
+                initChart();
+            }
+
+            // Update display with current unit
+            updateDisplay();
+        }
+
+        /** Fetch speed data and refresh visuals */
+        async function fetchSpeed() {
+            try {
+                const res = await fetch(API_URL);
+                if (!res.ok) throw new Error("Network response was not ok");
+                const json = await res.json();
+
+                // Sort chronologically
+                json.sort((a, b) => a.timestamp - b.timestamp);
+                rawData = json;
+
+                processData();
+            } catch (err) {
+                console.error("Failed to fetch speed data:", err);
+            }
+        }
+
+        // Initial fetch & periodic update every 30 seconds
+        fetchSpeed();
+        setInterval(fetchSpeed, 30000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IP质量检测</title>
+  <style>
+    /* CSS style to make the windowId input bigger */
+    #windowId {
+      font-size: 30px; /* Adjust the font size as per your preference */
+      text-align: center; /* Center the text in the input field */
+    }
+    #username {
+      font-size: 20px; /* Adjust the font size as per your preference */
+      text-align: center; /* Center the text in the input field */
+    }
+  </style>
+</head>
+<body>
+<h1>IP质量自动检测</h1>
+
+<!-- Add the "窗口ID" item -->
+
+<form id="ipQualityForm">
+  <label for="windowId">窗口ID:</label>
+  <input type="text" id="windowId" name="windowId" size="10" readonly><br><br>
+  <label for="windowId">此窗口代理用户名:</label>
+  <div>
+    <input type="text" id="username" name="username" size="50" readonly>
+    <button type="button" id="copyButton" style="cursor: pointer;" onclick="copyUsernameToClipboard(this)">复制</button>
+  </div><br><br>
+<!--  <input type="text" id="username" name="username" size="50" readonly><br><br>-->
+
+  <label for="ipAddress">IP质量检测地址:</label>
+  <input type="text" id="ipAddress" name="ipAddress" size="100" required><br><br>
+
+  <label for="stopScore">多少分数停止:</label>
+  <input type="number" id="stopScore" name="stopScore" value=0 required><br><br>
+
+  <label for="deduplicateIP">勾选IP去重:</label>
+  <input type="checkbox" id="deduplicateIP" name="deduplicateIP"><br><br>
+
+  <input type="button" value="开始检测" id="submitButton" >
+  <input type="button" value="停止检测" id="cancelButton" disabled="true">
+</form>
+
+<div id="result">
+  <!-- The IP address, country, region, and score will be displayed here -->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  var randomWindowId = Math.floor(Math.random() * 90000) + 10000;
+  // Set the value of the "窗口ID" input field with the generated random number
+  document.getElementById("windowId").value = randomWindowId;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const user = urlParams.get('user');
+  console.log(user);
+  const newuser = replaceSessionPart(user, randomWindowId);
+  console.log(newuser);
+  document.getElementById("username").value = newuser;
+
+
+  // Access individual parameters using the get() method
+  const host = urlParams.get('host');
+  const port = urlParams.get('port');
+  const password = urlParams.get('password');
+
+  let isTesting = false;
+  let testingInProgress = false;
+
+  // JavaScript code to handle the form submission
+  document.getElementById('submitButton').addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    // Only start if not already in progress
+    if (testingInProgress) return;
+    testingInProgress = true;
+    isTesting = true;
+
+    const submitButton = document.getElementById('submitButton');
+    const cancelButton = document.getElementById('cancelButton');
+    submitButton.disabled = true;
+    cancelButton.disabled = false;
+
+    while (isTesting) {
+      await testip(host, port, newuser, password);
+      const sleepTime = Math.floor(Math.random() * (3000 + 1)); // Random sleep time
+      await sleep(sleepTime);
+    }
+
+    // Reset flag once testing is complete
+    testingInProgress = false;
+  });
+
+  document.getElementById('cancelButton').addEventListener('click', (event) => {
+    event.preventDefault();
+    isTesting = false; // Stop the testing loop
+
+    const submitButton = document.getElementById('submitButton');
+    const cancelButton = document.getElementById('cancelButton');
+    submitButton.disabled = false;
+    cancelButton.disabled = true;
+
+  });
+
+
+  async function refreship(host, port, user, password) {
+    const resultDiv = document.getElementById('result');
+    const targetUrl ="https://console.123proxy.cn/ip/default/change-ip?host="+host+"&port="+port+"&user="+encodeURIComponent(user)+"&password="+password;
+    console.log(targetUrl);
+
+    try {
+      const data = await $.get(targetUrl);
+      console.log(data);
+      if (data && data.includes("ok")) {
+        let resultText = `<span style="color:green;"><b>刷新IP成功，开始测试IP质量</b></span><br><br>`;
+        resultDiv.innerHTML = resultText;
+        return true;
+      } else {
+        let resultText = `<span style="color:#FF0000;"><b>刷新IP失败, 重试中...</b></span><br><br>`;
+        resultDiv.innerHTML = resultText;
+        return false;
+      }
+    } catch (error) {
+      let resultText = `<span style="color:#FF0000;"><b>刷新IP失败, 重试中...</b></span><br><br>`;
+      resultDiv.innerHTML = resultText;
+      return false;
+    }
+
+
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function fetchWithRetry(host, port, user, password) {
+    let retryCount = 0;
+    let rst = false;
+
+    while (retryCount < 1000 && isTesting) { // Retry up to 1000 times
+      rst = await refreship(host, port, user, password);
+
+      if (rst) {
+        console.log("Data fetched successfully:", rst);
+        break; // Break the loop if successful
+      } else {
+        retryCount++;
+        const sleepTime = Math.floor(Math.random() * (5000 - 3000 + 1)) + 3000; // Random sleep between 3 to 5 seconds
+        console.log("Retry in", sleepTime, "ms");
+        await sleep(sleepTime); // Wait before retrying
+      }
+    }
+
+    if (retryCount === 1000) {
+      console.log("Maximum retry count reached. Data could not be fetched.");
+    }
+
+    // Further actions using rst after successful fetch (rst = true)
+    if (rst) {
+      // Do something with the fetched data
+      console.log("Data processing after successful fetch:", rst);
+    }
+  }
+
+
+
+  async function testip(host, port, user, password) {
+    const submitButton = document.getElementById('submitButton');
+    const cancelButton = document.getElementById('cancelButton');
+    submitButton.disabled = true;
+    cancelButton.disabled = false;
+    await fetchWithRetry(host, port, user, password);
+    if (!isTesting)
+      return;
+    const sleepTime = Math.floor(Math.random() * (5000 + 1)) + 5000; // Random sleep between 3 to 5 seconds
+    await sleep(sleepTime); // Wait before retrying
+    console.log("hehe");
+    const ipAddress = encodeURIComponent(document.getElementById('ipAddress').value);
+    const stopScore = document.getElementById('stopScore').value;
+    const resultDiv = document.getElementById('result');
+    const needDedup = document.getElementById("deduplicateIP").checked;
+
+    // const targetURL = urlParams.get('url');
+
+    // Disable the submit button while handling the form
+
+    const targetUrl ="https://console.123proxy.cn/ip/default/ip-quality-check?host="+host+"&port="+port+"&user="+encodeURIComponent(user)+"&password="+password+"&url="+ipAddress;
+    console.log(targetUrl);
+    try {
+      const data = await $.get(targetUrl);
+      console.log(data)
+      // Extract the IP address, country, region, and score using regular expressions
+      /*const ipAddressValue = /当前的IP地址为：<br\/><b>(.*?)<\/b>/.exec(data);
+      const countryValue = /国家：<b>(.*?)<\/b>/.exec(data);
+      const regionValue = /地区：<b>(.*?)<\/b>/.exec(data);
+      const fraudScore = /Fraud IP判断得分为：<b>(.*?)<\/b>/.exec(data);
+      const ipDuplicate = /该IP是否被使用过：<span style="color:#FF0000;"><b>(.*?)<\/b>/.exec(data);
+  */
+      const ipAddressValue = data.ip;
+      const countryValue = data.country;
+      const regionValue = data.city;
+      const fraudScore = data.score;
+      const ipDuplicate = data.duplicated;
+
+      // const ipDuplicate = /该IP是否被使用过：<span style="color:#FF0000;"><b>(.*?)<\/b>/.exec(data);
+
+      if (ipAddressValue && countryValue && regionValue && fraudScore != -1) {
+        // Update the resultDiv with the extracted IP address, country, region, and score
+        let resultText = `当前的IP地址为：<b>${ipAddressValue}</b><br><br>
+                                        国家：<b>${countryValue}</b>&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;&nbsp;&nbsp;
+                                        地区：<b>${regionValue}</b><br><br>
+                                        是否重复：<b>${ipDuplicate?'是':'否'}</b><br><br>
+                                        Fraud IP判断得分为：<b>${fraudScore}</b><br><br>`;
+
+        if (fraudScore <= stopScore && (needDedup?!ipDuplicate:true)) {
+          resultText += `<span style="color:green;"><b>目标命中，请使用此IP</b></span><br><br>`;
+          resultText += `筛选时间：<b >${new Date().toLocaleTimeString()}</b><br>`;
+          resultText += `代理用户名：<b style="color:#FF0000;">${user}</b> <button type="button" id="copyButton1" style="cursor: pointer;font-size: 18px" onclick="copyUsernameToClipboard(this)">复制</button> <br>`;
+          resultText += `代理主机：<b >${host}</b><br>`;
+          resultText += `代理端口：<b >${port}</b><br>`;
+          resultDiv.innerHTML = resultText;
+          submitButton.disabled = false;
+          cancelButton.disabled = true;
+          isTesting = false;
+        } else {
+          resultText += `<span style="color:#FF0000;"><b>继续刷新IP</b></span><br><br>`;
+          resultDiv.innerHTML = resultText;
+        }
+
+      } else {
+        resultDiv.innerHTML = "无法从IP监测网站提取信息, 重试中....";
+      }
+      // Re-enable the submit button after handling is complete
+    } catch (error) {
+      let resultText = `<span style="color:#FF0000;"><b>测试IP质量失败, 重试中....</b></span><br><br>`;
+      resultDiv.innerHTML = resultText;
+    }
+
+  }
+
+  function generateRandomString() {
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+
+    for (let i = 0; i < 12; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters[randomIndex];
+    }
+
+    return randomString;
+  }
+
+  function replaceSessionPart(originalString, digits) {
+    const startIndex = originalString.indexOf("-sess_") + 6;
+    const endIndex = originalString.indexOf("_", startIndex);
+
+    if (startIndex === -1 || endIndex === -1) {
+      return originalString; // Return the original string if the session part is not found
+    }
+
+    const sessionPart = originalString.substring(startIndex, endIndex);
+    const randomString = "12proxy"+digits;
+    const newString = originalString.replace(sessionPart, randomString);
+
+    return newString;
+  }
+  function copyUsernameToClipboard(button) {
+    const usernameInput = document.getElementById('username');
+    usernameInput.select();
+    document.execCommand('copy');
+    const currentTime = new Date().toLocaleTimeString();
+    button.innerText = `已经复制 (${currentTime})`;
+  }
+</script>
+</body>
+</html>

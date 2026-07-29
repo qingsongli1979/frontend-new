@@ -102,11 +102,37 @@ local_https_check() {
     echo "Route check passed: https://${host}${path} returned ${status}"
   }
 
+  cors_header_check() {
+    local host="$1"
+    local path="$2"
+    local origin="$3"
+    local headers
+    local origin_count
+    local origin_value
+
+    headers="$(curl --silent --show-error --insecure \
+      --dump-header - \
+      --output /dev/null \
+      --header "Origin: ${origin}" \
+      --resolve "${host}:443:127.0.0.1" \
+      "https://${host}${path}")"
+    origin_count="$(printf '%s\n' "$headers" | awk 'BEGIN { IGNORECASE=1 } /^Access-Control-Allow-Origin:/ { count++ } END { print count + 0 }')"
+    origin_value="$(printf '%s\n' "$headers" | awk 'BEGIN { IGNORECASE=1 } /^Access-Control-Allow-Origin:/ { sub(/^[^:]+:[[:space:]]*/, ""); sub(/\r$/, ""); print; exit }')"
+
+    if [[ "$origin_count" != "1" || "$origin_value" != "$origin" ]]; then
+      echo "CORS check failed: https://${host}${path} returned ${origin_count} Access-Control-Allow-Origin headers, first value=${origin_value:-<empty>}" >&2
+      return 1
+    fi
+    echo "CORS check passed: https://${host}${path} returned one origin header"
+  }
+
   upstream_route_check console.123proxy.cn /accsrv/information
   upstream_route_check console.123proxy.cn /ssosrv/oauth/token
   upstream_route_check console.123proxy.cn /ip/default/offers
   expected_status_check console.123proxy.cn /app/ 200
   expected_status_check www.123proxy.cn /ip/default/offers 200
+  cors_header_check console.123proxy.cn /ip/default/offers https://www.123proxy.cn
+  cors_header_check console.123proxy.cn /ip/default/userorder https://www.123proxy.cn
   upstream_route_check www.123proxy.cn /status-api/v1/summary
 }
 

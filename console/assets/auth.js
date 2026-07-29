@@ -98,6 +98,29 @@
     return payload;
   }
 
+  function storedAccessToken() {
+    const raw = localStorage.getItem(TOKEN_KEY);
+    if (!raw) return "";
+    try {
+      const token = JSON.parse(raw);
+      return token?.access_token || token?.token || "";
+    } catch (error) {
+      return raw;
+    }
+  }
+
+  function consoleDestination() {
+    const requestedNext = new URLSearchParams(location.search).get("next");
+    if (requestedNext && requestedNext.startsWith("/") && !requestedNext.startsWith("//")) {
+      return `${API_BASE}${requestedNext}`;
+    }
+    return `${API_BASE}${IS_LOCAL_PREVIEW ? "/console/app/" : "/app/"}`;
+  }
+
+  function enterConsole() {
+    location.replace(consoleDestination());
+  }
+
   function initPasswordToggles() {
     $$(".auth-password-toggle").forEach((button) => {
       button.addEventListener("click", () => {
@@ -145,7 +168,7 @@
     }, 1000);
   }
 
-  function initLogin() {
+  async function initLogin() {
     const form = $("#loginForm");
     if (!form) return;
     const account = $("#loginAccount");
@@ -155,6 +178,32 @@
     const mfaForm = $("#mfaForm");
     const mfaCode = $("#mfaCode");
     const resend = $("#mfaResend");
+
+    async function restoreExistingSession() {
+      const token = storedAccessToken();
+      if (!token) return false;
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 8000);
+      setBusy(form, true, "正在检查登录状态");
+      try {
+        await request("/accsrv/information", {
+          signal: controller.signal,
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        enterConsole();
+        return true;
+      } catch (error) {
+        if ([401, 403].includes(error.status)) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
+        return false;
+      } finally {
+        window.clearTimeout(timeout);
+        setBusy(form, false, "登录控制台");
+      }
+    }
+
+    if (await restoreExistingSession()) return;
 
     async function sendMfa() {
       await request(`/accsrv/0xagency/multifactorauth/smsotp/${encodeURIComponent(account.value.trim())}`);
@@ -177,11 +226,7 @@
         body
       });
       localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
-      const requestedNext = new URLSearchParams(location.search).get("next");
-      const next = requestedNext && requestedNext.startsWith("/")
-        ? `${API_BASE}${requestedNext}`
-        : `${API_BASE}${IS_LOCAL_PREVIEW ? "/console/app/" : "/app/"}`;
-      location.href = next;
+      enterConsole();
     }
 
     form.addEventListener("submit", async (event) => {

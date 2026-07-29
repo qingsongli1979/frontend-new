@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>用户订单列表</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            font-size: 1rem;
+            padding: 0.5em;
+            width: 70%;
+            max-width: 300px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        select {
+            font-size: 1rem;
+            padding: 0.5em;
+            width: 70%;
+            max-width: 300px;
+            box-sizing: border-box;
+            text-align: center;
+
+        }
+        button {
+            font-size: 1rem;
+            padding: 0.6em 1em;
+            margin-left: 0.5em;
+            cursor: pointer;
+        }
+        /* responsive table container */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.5em;
+            text-align: center;
+        }
+        th {
+            background: #f5f5f5;
+        }
+        @media (max-width: 600px) {
+            th, td {
+                font-size: 0.85rem;
+                padding: 0.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>用户订单列表</h1>
+
+<form id="orderForm">
+    <label for="username">代理用户名:</label>
+    <input type="text" id="username" name="username" placeholder="输入用户名">
+
+    <button type="button" id="copyButton" style="cursor: pointer;height: 48px" onclick="copyUsernameToClipboard(this)" >粘贴</button>
+    <button type="button" id="loadOrders">加载订单</button>
+
+    <br>
+    <label for="username">订单ID:</label>
+    <input type="text" id="orderId" name="orderId" placeholder="订单Id">
+    <br>
+    <label for="unit">时间单位:</label>
+    <select id="unit" name="period">
+        <option value="day">Day</option>
+        <option value="week">Week</option>
+        <option value="month" selected>Month</option>
+        <option value="year">Year</option>
+    </select>
+    <br>
+    <label for="username">续费时常:</label>
+    <input type="text" id="num" name="num" placeholder="续费时间">
+
+    <br>
+    <button type="button" id="freeze">暂停套餐</button>
+    <button type="button" id="unfreeze">取消暂停</button>
+    <button type="button" id="expireorder">过期套餐</button>
+    <button type="button" id="activeorder">激活套餐</button>
+    <button type="button" id="extendorder">续费套餐</button>
+
+
+
+
+</form>
+
+<div id="result">
+    <!-- 订单表格会渲染到这里 -->
+</div>
+
+<!-- jQuery（若已在项目中，请改用全局引用） -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+<script>
+    // 从页面 URL 拿 token，比如 ?token=ABC123
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token') || '';
+
+    // 后端订单列表接口（替换成你的真实 URL）
+    const ordersEndpoint = 'https://console.123proxy.cn/ip/default/userorder';
+
+    document.getElementById('loadOrders').addEventListener('click', async () => {
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        const url = `${ordersEndpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}`;
+        try {
+            const data = await $.getJSON(url);
+            renderTable(data);
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">获取订单失败，请稍后重试。</p>';
+        }
+    });
+
+
+    document.getElementById('freeze').addEventListener('click',  async (event) => {
+        event.preventDefault();
+
+        const endpoint = 'https://console.123proxy.cn/ip/default/freeze1';
+
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        let orderId = document.getElementById('orderId').value.trim();
+        if (!orderId) {
+            alert('请先输入订单id');
+            return;
+        }
+
+
+        const url = `${endpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&freeze=true&id=${orderId}`;
+        try {
+            const data = await $.getJSON(url);
+            document.getElementById('result').innerHTML = `<p style="color:blue;">${data}</p>`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">冻结失败，请稍后重试。</p>';
+        }
+
+
+    });
+
+    document.getElementById('unfreeze').addEventListener('click',  async (event) => {
+        event.preventDefault();
+
+        const endpoint = 'https://console.123proxy.cn/ip/default/freeze1';
+
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        let orderId = document.getElementById('orderId').value.trim();
+        if (!orderId) {
+            alert('请先输入订单id');
+            return;
+        }
+
+        const url = `${endpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&freeze=false&id=${orderId}`;
+        try {
+            const data = await $.getJSON(url);
+            document.getElementById('result').innerHTML = `<p style="color:blue;">${data}</p>`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">解冻失败，请稍后重试。</p>';
+        }
+
+    });
+
+
+    document.getElementById('expireorder').addEventListener('click',  async (event) => {
+        event.preventDefault();
+
+        const endpoint = 'https://console.123proxy.cn/ip/default/expire1';
+
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        let orderId = document.getElementById('orderId').value.trim();
+        if (!orderId) {
+            alert('请先输入订单id');
+            return;
+        }
+
+        const url = `${endpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&id=${orderId}`;
+        try {
+            const data = await $.getJSON(url);
+            document.getElementById('result').innerHTML = `<p style="color:blue;">${data}</p>`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">解冻失败，请稍后重试。</p>';
+        }
+
+    });
+
+
+    document.getElementById('activeorder').addEventListener('click',  async (event) => {
+        event.preventDefault();
+
+        const endpoint = 'https://console.123proxy.cn/ip/default/active1';
+
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        let orderId = document.getElementById('orderId').value.trim();
+        if (!orderId) {
+            alert('请先输入订单id');
+            return;
+        }
+
+        const url = `${endpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&id=${orderId}`;
+        try {
+            const data = await $.getJSON(url);
+            document.getElementById('result').innerHTML = `<p style="color:blue;">${data}</p>`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">激活失败，请稍后重试。</p>';
+        }
+
+    });
+
+    document.getElementById('extendorder').addEventListener('click',  async (event) => {
+        event.preventDefault();
+
+        const endpoint = 'https://console.123proxy.cn/ip/default/extend';
+
+        let username = document.getElementById('username').value.trim();
+        if (!username) {
+            alert('请先输入用户名');
+            return;
+        }
+        if (!username.startsWith('u')) {
+            username = 'u' + username;
+        }
+
+        let orderId = document.getElementById('orderId').value.trim();
+        if (!orderId) {
+            alert('请先输入订单id');
+            return;
+        }
+
+        let unit = document.getElementById('unit').value.trim();
+
+        let num = document.getElementById('num').value.trim();
+        if (!num) {
+            alert('请先输入续费时间');
+            return;
+        }
+
+
+        const url = `${endpoint}?token=${encodeURIComponent(token)}&username=${encodeURIComponent(username)}&id=${orderId}&unit=${unit}&num=${num}`;
+        try {
+            const data = await $.getJSON(url);
+            document.getElementById('result').innerHTML = `<p style="color:blue;">${data}</p>`;
+        } catch (err) {
+            console.error(err);
+            document.getElementById('result').innerHTML = '<p style="color:red;">续费套餐失败，请稍后重试。</p>';
+        }
+
+    });
+
+
+    function renderTable(orders) {
+        if (!Array.isArray(orders) || orders.length === 0) {
+            document.getElementById('result').innerHTML = '<p>暂无订单。</p>';
+            return;
+        }
+
+        // 假设每个订单对象包含：orderId, date, status, total
+        let html = `
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>订单号</th>
+                <th>名称</th>
+                <th>到期时间</th>
+                <th>状态</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+        orders.forEach(o => {
+            html += `
+          <tr>
+            <td>${o.orderId || ''}<button type="button" id="copyButton1" style="cursor: pointer;font-size: 18px" onclick="copyOrderId('${o.orderId || ''}')">复制</button></td>
+            <td>${getMatrixingTitle(o.chargeType, o.total,  o.remainTrafficInGB ? o.remainTrafficInGB.toFixed(2) : "0.00")}</td>
+            <td>${moment(o.expirationTime).format("YYYY-MM-DD HH:mm:ss")}</td>
+            <td>${o.overTime ? "已失效" : "有效"}</td>
+          </tr>
+        `;
+        });
+        html += `
+            </tbody>
+          </table>
+        </div>
+      `;
+        document.getElementById('result').innerHTML = html;
+    }
+
+    async function copyOrderId(orderId) {
+
+        await navigator.clipboard.writeText(orderId);
+
+    }
+    function copyUsernameToClipboard(button) {
+        const usernameElement = document.getElementById('username');
+
+        navigator.clipboard.readText().then(text => {
+            document.getElementById('username').value = text;
+        }).catch(err => {
+            console.error('Failed to read clipboard contents: ', err);
+        });
+    }
+
+    function getMatrixingTitle(type, total, traffic) {
+        switch (type) {
+            case 'fixedIp':
+                return `长效静态IP套餐 ${total}个IP`;
+
+            case 'durationIp':
+                return `动态代理按IP通道套餐 不限流量 IP${total}个`;
+
+            case 'trafficIp':
+                return `隧道代理按流量套餐 流量${traffic}GB`;
+
+            case 'tunnelIp':
+                return `隧道代理按并发请求套餐 ${total}次/秒`;
+
+            case 'tmpPackage':
+                return `补充流量包  流量${traffic}GB`;
+
+            case 'residentialDynamicIp':
+                return traffic === 0
+                    ? '不限量住宅代理套餐 不限流量、不限并发'
+                    : `隧道住宅代理IP套餐 流量${traffic}GB`;
+
+            case 'residentialStaticIp':
+                return `静态住宅IP套餐 ${total}个IP`;
+
+            default:
+                throw new Error(`Unknown package type: ${type}`);
+        }
+    }
+
+
+</script>
+</body>
+</html>

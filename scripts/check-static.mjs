@@ -588,6 +588,9 @@ expect(codeSolutionPage.includes("公开代码同步任务"), "ai-github-proxy.h
 
 const pricingPage = await readFile(path.join(rootDir, "pricing.html"), "utf8");
 expect(pricingPage.includes('class="pricing-refined site-refined"'), "pricing.html: refined pricing class missing");
+expect(pricingPage.includes('assets/pricing.js?v=20260729-03'), "pricing.html: pricing asset cache version is stale");
+const englishPricingPage = await readFile(path.join(rootDir, "en", "pricing.html"), "utf8");
+expect(englishPricingPage.includes('../assets/pricing.js?v=20260729-03'), "en/pricing.html: pricing asset cache version is stale");
 for (const description of refinedProductDescriptions) {
   expect(homepage.includes(description), `index.html: missing canonical product menu copy: ${description}`);
   expect(pricingPage.includes(description), `pricing.html: product menu copy differs from homepage: ${description}`);
@@ -759,6 +762,11 @@ const consoleAgencyCss = await readFile(path.join(rootDir, "console", "assets", 
 const consoleAgencyJs = await readFile(path.join(rootDir, "console", "assets", "agency.js"), "utf8");
 expect(consoleAuthCss.includes("123Proxy console authentication"), "console/assets/auth.css: missing console asset");
 expect(consoleAuthJs.includes("123Proxy console authentication"), "console/assets/auth.js: missing console asset");
+expect(consoleAuthJs.includes('request("/accsrv/information"'), "console/assets/auth.js: login page must validate an existing session");
+expect(consoleAuthJs.includes("location.replace(consoleDestination())"), "console/assets/auth.js: valid sessions must enter the console without leaving login in history");
+expect(consoleAuthJs.includes("localStorage.removeItem(TOKEN_KEY)"), "console/assets/auth.js: expired sessions must be cleared");
+const consoleLoginPage = await readFile(path.join(rootDir, "console", "login.html"), "utf8");
+expect(consoleLoginPage.includes("assets/auth.js?v=20260729-03"), "console/login.html: authentication asset cache version is stale");
 expect(consoleAgencyCss.includes("123Proxy agency partner console"), "console/assets/agency.css: missing agency asset");
 expect(consoleAgencyJs.includes("123Proxy agency partner console"), "console/assets/agency.js: missing agency asset");
 
