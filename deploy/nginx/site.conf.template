@@ -1,0 +1,235 @@
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    location / {
+        return 404;
+    }
+}
+
+server {
+    listen 80;
+    server_name 123proxy.cn;
+
+    return 301 https://www.123proxy.cn$request_uri;
+}
+
+server {
+    listen ${HTTPS_REDIRECT_LISTEN};
+    server_name www.123proxy.cn console.123proxy.cn;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen ${WEBSITE_LISTEN};
+    server_name www.123proxy.cn;
+
+    include /etc/nginx/tls/website.conf;
+
+    root /var/www/website;
+    index index.html;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    location ^~ /status-api/ {
+        rewrite ^/status-api/(.*)$ /$1 break;
+        set $status_api_upstream ${STATUS_API_UPSTREAM};
+        proxy_pass $status_api_upstream;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+        add_header Cache-Control "no-store" always;
+    }
+
+    location = /document/docs/intro/ {
+        return 301 /developers/;
+    }
+
+    location = /document/docs/intro {
+        return 301 /developers/;
+    }
+
+    location ^~ /blogs/ {
+        set $wordpress_upstream ${WORDPRESS_UPSTREAM};
+        proxy_pass $wordpress_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location ~* \.(?:css|js|mjs|svg|png|jpg|jpeg|webp|woff2)$ {
+        try_files $uri =404;
+        expires 7d;
+    }
+
+    location ~* \.html$ {
+        try_files $uri =404;
+        expires -1;
+    }
+
+    location / {
+        try_files $uri $uri.html $uri/ =404;
+    }
+}
+
+server {
+    listen ${CONSOLE_LISTEN};
+    server_name console.123proxy.cn;
+
+    include /etc/nginx/tls/console.conf;
+
+    root /var/www/console;
+    index login.html;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    location = / {
+        return 302 https://www.123proxy.cn/;
+    }
+
+    location = /index.html {
+        return 302 https://www.123proxy.cn/;
+    }
+
+    location = /apiv1/yonghu/login {
+        return 302 /login.html$is_args$args;
+    }
+
+    location = /apiv1/yonghu/register {
+        return 302 /register.html$is_args$args;
+    }
+
+    location = /apiv1/yonghu/forgot-password {
+        return 302 /forgot-password.html$is_args$args;
+    }
+
+    location = /apiv1/yonghu/aggrement {
+        return 301 https://www.123proxy.cn/agreement.html;
+    }
+
+    location = /agreement.html {
+        return 301 https://www.123proxy.cn/agreement.html;
+    }
+
+    location ~ ^/(?:login|register|forgot-password|aggrement)\.html$ {
+        try_files $uri =404;
+        expires -1;
+    }
+
+    location = /app {
+        return 302 /app/;
+    }
+
+    location ^~ /app/ {
+        try_files $uri $uri/ /app/index.html;
+        expires -1;
+    }
+
+    location ^~ /assets/ {
+        try_files $uri =404;
+        expires 7d;
+    }
+
+    location ^~ /accsrv/sms-service/otp/ {
+        limit_req zone=console_otp burst=2 nodelay;
+        limit_req_status 429;
+        set $account_upstream ${ACCOUNT_SERVICE_UPSTREAM};
+        proxy_pass $account_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location ^~ /accsrv/ {
+        set $account_upstream ${ACCOUNT_SERVICE_UPSTREAM};
+        proxy_pass $account_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location ^~ /ssosrv/oauth/token {
+        limit_req zone=console_login burst=10 nodelay;
+        limit_req_status 429;
+        set $auth_upstream ${AUTH_SERVICE_UPSTREAM};
+        proxy_pass $auth_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location ^~ /ssosrv/ {
+        set $auth_upstream ${AUTH_SERVICE_UPSTREAM};
+        proxy_pass $auth_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location ^~ /ip/ {
+        include /etc/nginx/target/ip-rate-limit.conf;
+
+        add_header Access-Control-Allow-Origin $pricing_cors_origin always;
+        add_header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS" always;
+        add_header Access-Control-Allow-Headers "Content-Type, Authorization" always;
+        add_header Vary "Origin" always;
+
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+
+        set $ip_upstream ${IP_SERVICE_UPSTREAM};
+        proxy_pass $ip_upstream;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+    }
+
+    location / {
+        set $legacy_console_upstream ${LEGACY_CONSOLE_UPSTREAM};
+        proxy_pass $legacy_console_upstream;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+}

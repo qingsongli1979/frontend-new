@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="Python Playwright通过123Proxy代理网关采集JavaScript渲染页面，包含代理账密、浏览器启动、翻页、等待策略和JSON输出。">
+  <title>Python Playwright代理配置完整案例 | 123Proxy</title>
+  <link rel="canonical" href="https://www.123proxy.cn/developers/examples/playwright-proxy/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="Python Playwright代理配置完整案例 | 123Proxy">
+  <meta property="og:description" content="Python Playwright通过123Proxy代理网关采集JavaScript渲染页面，包含代理账密、浏览器启动、翻页、等待策略和JSON输出。">
+  <meta property="og:url" content="https://www.123proxy.cn/developers/examples/playwright-proxy/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta property="article:modified_time" content="2026-07-29">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/developer-docs.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"TechArticle","@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#document","headline":"Python Playwright代理采集","description":"Python Playwright通过123Proxy代理网关采集JavaScript渲染页面，包含代理账密、浏览器启动、翻页、等待策略和JSON输出。","url":"https://www.123proxy.cn/developers/examples/playwright-proxy/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"isPartOf":{"@id":"https://www.123proxy.cn/developers/#document"},"dateModified":"2026-07-29","about":[{"@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service"},{"@type":"Thing","name":"Playwright"},{"@type":"Thing","name":"JavaScript渲染页面"},{"@type":"Thing","name":"网页数据采集"}],"mentions":[{"@id":"https://www.123proxy.cn/residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-residential-proxy.html#service"}],"hasPart":{"@type":"SoftwareSourceCode","@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#source-code","name":"Python Playwright代理采集","url":"https://www.123proxy.cn/developers/examples/playwright-proxy/#code","isPartOf":{"@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#document"},"codeSampleType":"完整可运行示例","programmingLanguage":"Python","runtimePlatform":"Python 3.10+ / Chromium","targetProduct":{"@type":"SoftwareApplication","name":"Playwright","applicationCategory":"DeveloperApplication"}}},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"开发者中心","item":"https://www.123proxy.cn/developers/"},{"@type":"ListItem","position":3,"name":"Python Playwright代理采集","item":"https://www.123proxy.cn/developers/examples/playwright-proxy/"}]},{"@type":"Service","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service","name":"隧道代理","url":"https://www.123proxy.cn/scraping-rotating-proxy.html","description":"固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。","serviceType":"Scraping rotating proxy","category":"Rotating proxy for web scraping","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、采集系统开发者、数据工程团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"proxy.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"36923"},{"@type":"PropertyValue","name":"默认地区","value":"全球随机"},{"@type":"PropertyValue","name":"代理池","value":"爬虫混合池约 95% 住宅 IP + 5% 数据中心 IP；纯住宅池为 100% 住宅 IP"},{"@type":"PropertyValue","name":"计费方式","value":"按流量或按并发线程"}]},{"@type":"Service","@id":"https://www.123proxy.cn/residential-proxy.html#service","name":"隧道住宅代理","url":"https://www.123proxy.cn/residential-proxy.html","description":"固定网关接入 8000万+ 住宅 IP，覆盖 190+ 国家和地区，提取代理时指定国家或地区与 SESSION，仅按流量购买。","serviceType":"Residential rotating proxy","category":"Geo-targeted residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、跨地区采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"33000"},{"@type":"PropertyValue","name":"住宅代理池","value":"8000万+"},{"@type":"PropertyValue","name":"覆盖范围","value":"190+ 国家和地区"},{"@type":"PropertyValue","name":"计费方式","value":"仅按流量"}]},{"@type":"Service","@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service","name":"不限量动态住宅","url":"https://www.123proxy.cn/unlimited-residential-proxy.html","description":"每端口不限流量与并发，按端口和带宽套餐使用，出口 IP 每 3–30 分钟固定轮转。","serviceType":"Unlimited residential proxy by port","category":"Port-based residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"浏览器自动化开发者、持续采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"unlimit.residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"10253"},{"@type":"PropertyValue","name":"端口能力","value":"每端口不限流量与并发"},{"@type":"PropertyValue","name":"轮转周期","value":"3–30 分钟"},{"@type":"PropertyValue","name":"地区设置","value":"提取代理时按套餐统一设置"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service","name":"长效静态代理","url":"https://www.123proxy.cn/static-datacenter-proxy.html","description":"独享固定数据中心代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static datacenter proxy","category":"Static datacenter proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"企业系统开发者、固定出口任务、API 集成团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定数据中心 IP"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"白名单模式","value":"不支持 123Proxy 套餐 IP 白名单认证"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-residential-proxy.html#service","name":"长效静态住宅","url":"https://www.123proxy.cn/static-residential-proxy.html","description":"独享固定住宅 ISP 代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static residential proxy","category":"Static residential ISP proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"需要固定住宅出口的开发者、长期会话任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定住宅 ISP IP"},{"@type":"PropertyValue","name":"覆盖范围","value":"69 个国家和地区"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]},{"@type":"FAQPage","@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#faq","inLanguage":"zh-CN","isPartOf":{"@id":"https://www.123proxy.cn/developers/examples/playwright-proxy/#document"},"mainEntity":[{"@type":"Question","name":"为什么浏览器采集比Requests消耗更多并发？","acceptedAnswer":{"@type":"Answer","text":"浏览器会同时加载HTML、JavaScript、CSS、字体、图片和接口，一个页面通常产生多条并发请求。"}},{"@type":"Question","name":"什么时候适合使用不限量动态住宅？","acceptedAnswer":{"@type":"Answer","text":"持续浏览器任务需要较多流量和并发时可考虑不限量动态住宅，并使用固定网关unlimit.residential.123proxy.cn:10253。"}},{"@type":"Question","name":"SESSION应该如何保持？","acceptedAnswer":{"@type":"Answer","text":"使用隧道住宅或隧道代理纯住宅池时，把控制台生成的完整SESSION用户名作为PROXY_USER，并复用同一BrowserContext。"}}]}]}</script>
+</head>
+<body class="developer-docs" data-developer-page="example-playwright">
+  <div class="page">
+    
+    <div class="docs-utility">
+      <div class="docs-frame docs-utility-inner">
+        <a class="docs-network-state" href="/status/"><i></i>全球代理网络运行正常</a>
+        <div>
+          <a href="/global-network.html">全球网络</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+    </div>
+    <header class="docs-header">
+      <div class="docs-frame docs-header-inner">
+        <div class="docs-brand-group">
+          <a class="brand docs-brand" href="/" aria-label="123Proxy 首页">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <span class="docs-brand-divider" aria-hidden="true"></span>
+          <a class="docs-product-name" href="/developers/">开发者中心</a>
+        </div>
+        
+    <div class="docs-search is-compact" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+        <nav class="docs-topnav" aria-label="开发者导航">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/developers/examples/">代码案例</a>
+          <a class="docs-console-link" href="https://console.123proxy.cn/app/">控制台<i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        </nav>
+        <button class="docs-icon-button docs-mobile-toggle" type="button" data-docs-mobile-toggle aria-expanded="false" aria-controls="docsMobileNav" aria-label="打开开发者导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+      <div class="docs-mobile-nav" id="docsMobileNav" data-docs-mobile-nav>
+        <a href="/developers/">文档首页</a>
+        <a href="/developers/getting-started/">快速开始</a>
+        <a href="/developers/#products">产品接入</a>
+        <a href="/developers/examples/">代码案例</a>
+        <a href="/developers/getting-started/#troubleshooting">错误排查</a>
+        <a href="https://console.123proxy.cn/app/">登录控制台</a>
+      </div>
+    </header>
+    
+    <main class="docs-layout docs-frame">
+      <button class="docs-sidebar-open" type="button" data-docs-sidebar-toggle><i data-lucide="panel-left" aria-hidden="true"></i>文档目录</button>
+      
+    <aside class="docs-sidebar" data-docs-sidebar>
+      <nav aria-label="文档目录">
+        <div class="docs-sidebar-group">
+          <span>开始使用</span>
+          
+    <a href="/developers/">
+      <i data-lucide="layout-grid" aria-hidden="true"></i><span>开发者中心</span>
+    </a>
+          
+    <a href="/developers/getting-started/">
+      <i data-lucide="rocket" aria-hidden="true"></i><span>5 分钟快速开始</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>产品接入</span>
+          
+    <a href="/developers/products/scraping-rotating-proxy/">
+      <i data-lucide="route" aria-hidden="true"></i><span>隧道代理</span>
+    </a>
+          
+    <a href="/developers/products/residential-rotating-proxy/">
+      <i data-lucide="globe-2" aria-hidden="true"></i><span>隧道住宅代理</span>
+    </a>
+          
+    <a href="/developers/products/unlimited-residential-proxy/">
+      <i data-lucide="refresh-cw" aria-hidden="true"></i><span>不限量动态住宅</span>
+    </a>
+          
+    <a href="/developers/products/static-datacenter-proxy/">
+      <i data-lucide="server" aria-hidden="true"></i><span>长效静态代理</span>
+    </a>
+          
+    <a href="/developers/products/static-residential-proxy/">
+      <i data-lucide="house-plug" aria-hidden="true"></i><span>长效静态住宅</span>
+    </a>
+          
+    <a href="/high-bandwidth-proxy.html">
+      <i data-lucide="gauge" aria-hidden="true"></i><span>高带宽代理 IP</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>工程指南</span>
+          
+    <a href="/developers/guides/concurrency-qps-performance/">
+      <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>并发、QPS 与响应时间</span>
+    </a>
+          
+    <a href="/developers/guides/session-geo-rotation/">
+      <i data-lucide="shuffle" aria-hidden="true"></i><span>SESSION 与出口轮转</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>错误、超时与重试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-product-selection/">
+      <i data-lucide="git-compare-arrows" aria-hidden="true"></i><span>代理产品选型</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>框架案例</span>
+          
+    <a href="/developers/examples/">
+      <i data-lucide="code-2" aria-hidden="true"></i><span>完整代码案例</span>
+    </a>
+          
+    <a href="/developers/examples/python-requests-proxy/">
+      <span>Python Requests</span>
+    </a>
+          
+    <a href="/developers/examples/scrapy-proxy/">
+      <span>Scrapy</span>
+    </a>
+          
+    <a href="/developers/examples/playwright-proxy/" class="is-active" aria-current="page">
+      <span>Playwright</span>
+    </a>
+          
+    <a href="/developers/examples/selenium-proxy/">
+      <span>Selenium</span>
+    </a>
+          
+    <a href="/developers/examples/puppeteer-proxy/">
+      <span>Puppeteer</span>
+    </a>
+          
+    <a href="/developers/examples/nodejs-axios-proxy/">
+      <span>Node.js Axios</span>
+    </a>
+          
+    <a href="/developers/examples/go-colly-proxy/">
+      <span>Go Colly</span>
+    </a>
+          
+    <a href="/developers/examples/java-jsoup-proxy/">
+      <span>Java Jsoup</span>
+    </a>
+          
+    <a href="/developers/examples/php-curl-proxy/">
+      <span>PHP cURL</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>验证与排查</span>
+          
+    <a href="/developers/getting-started/#verify">
+      <i data-lucide="activity" aria-hidden="true"></i><span>可用性测试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>常见错误</span>
+    </a>
+        </div>
+      </nav>
+      <div class="docs-sidebar-support">
+        <span><i data-lucide="life-buoy" aria-hidden="true"></i></span>
+        <strong>接入遇到问题？</strong>
+        <p>附上请求时间、套餐类型和错误信息联系技术支持。</p>
+        <a href="/contact.html#solutions">联系技术支持<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </aside>
+      <article class="docs-article">
+        
+    
+    <nav class="docs-breadcrumb" aria-label="面包屑">
+      <a href="/developers/">开发者中心</a><i data-lucide="chevron-right" aria-hidden="true"></i>
+      <a href="/developers/examples/">代码案例</a>
+      <i data-lucide="chevron-right" aria-hidden="true"></i><span>Playwright</span>
+    </nav>
+    <header class="docs-article-header">
+      <span class="docs-eyebrow"><i data-lucide="braces" aria-hidden="true"></i>PYTHON BROWSER AUTOMATION</span>
+      <h1>Python Playwright代理采集</h1>
+      <p>Playwright在浏览器启动时设置123Proxy网关和账密，等待页面网络稳定后读取渲染完成的DOM，连续采集3页并写入JSON。</p>
+      <div class="docs-product-facts">
+        <span><small>语言</small><strong>Python 3.10+</strong></span><span><small>框架</small><strong>Playwright</strong></span><span><small>测试目标</small><strong>Quotes to Scrape / JavaScript</strong></span><span><small>输出</small><strong>quotes-playwright.json</strong></span>
+      </div>
+      <div class="docs-article-actions">
+        <a class="btn btn-primary" href="https://console.123proxy.cn/app/#extract?product=tunnel"><i data-lucide="terminal" aria-hidden="true"></i>打开对应产品提取</a>
+        <a class="btn docs-secondary-button" href="https://quotes.toscrape.com/js/" target="_blank" rel="noreferrer"><i data-lucide="external-link" aria-hidden="true"></i>查看测试目标</a>
+      </div>
+    </header>
+
+    <section id="result">
+      <div class="docs-section-title"><span>01</span><div><small>END-TO-END RESULT</small><h2>采集JavaScript渲染页面并翻页</h2></div></div>
+      <div class="docs-run-summary">
+        <span><small>测试目标</small><strong>Quotes to Scrape / JavaScript</strong><code>https://quotes.toscrape.com/js/</code></span>
+        <span><small>运行时</small><strong>Python 3.10+</strong><code>Playwright</code></span>
+        <span><small>输出文件</small><strong>结构化数据</strong><code>quotes-playwright.json</code></span>
+      </div>
+      <p>代码直接连接隧道代理固定网关 <code>proxy.123proxy.cn:36923</code>。主机与端口无需替换，出口路由由当前产品配置决定；你只需设置控制台生成的完整代理用户名和密码。</p>
+    </section>
+
+    <section id="credentials">
+      <div class="docs-section-title"><span>02</span><div><small>CREDENTIALS</small><h2>只把代理账密放进环境变量</h2></div></div>
+      <p><code>PROXY_USER</code>必须是控制台中的代理用户名，不是网站登录手机号。地区和SESSION场景应复制控制台生成的完整路由用户名。</p>
+      
+    <div class="docs-code" data-code-group="example-playwright-env">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="bash" aria-selected="true" class="is-active">macOS / Linux</button><button type="button" role="tab" data-code-tab="powershell" aria-selected="false" class="">PowerShell</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="bash"><code>export PROXY_USER=&quot;替换为控制台代理用户名&quot;
+export PROXY_PASS=&quot;替换为控制台代理密码&quot;
+# 隧道代理固定网关：proxy.123proxy.cn:36923</code></pre><pre role="tabpanel" data-code-panel="powershell" hidden><code>$env:PROXY_USER=&quot;替换为控制台代理用户名&quot;
+$env:PROXY_PASS=&quot;替换为控制台代理密码&quot;
+# 隧道代理固定网关：proxy.123proxy.cn:36923</code></pre>
+    </div>
+      <p class="docs-quiet-note"><i data-lucide="lock-keyhole" aria-hidden="true"></i>不要把真实代理密码提交到Git仓库、镜像、日志或前端代码中。</p>
+    </section>
+
+    <section id="code">
+      <div class="docs-section-title"><span>03</span><div><small>COMPLETE PROGRAM</small><h2>scrape_js.py</h2></div></div>
+      <p>以下代码包含完整入口和输出逻辑。安装注释、运行命令与依赖声明保留在文件顶部，复制为对应文件后即可执行。</p>
+      
+    <div class="docs-code" data-code-group="example-playwright-complete">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="source" aria-selected="true" class="is-active">Playwright</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="source"><code># requirements:
+#   python -m pip install playwright
+#   playwright install chromium
+import asyncio
+import json
+import os
+from urllib.parse import urljoin
+
+from playwright.async_api import async_playwright
+
+PROXY_HOST = &quot;proxy.123proxy.cn&quot;
+PROXY_PORT = 36923
+PROXY_USER = os.environ[&quot;PROXY_USER&quot;]
+PROXY_PASS = os.environ[&quot;PROXY_PASS&quot;]
+START_URL = &quot;https://quotes.toscrape.com/js/&quot;
+MAX_PAGES = 3
+
+
+async def main():
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(
+            headless=True,
+            proxy={
+                &quot;server&quot;: f&quot;http://{PROXY_HOST}:{PROXY_PORT}&quot;,
+                &quot;username&quot;: PROXY_USER,
+                &quot;password&quot;: PROXY_PASS,
+            },
+        )
+        context = await browser.new_context(
+            user_agent=&quot;123Proxy-Developer-Example/1.0&quot;,
+            locale=&quot;en-US&quot;,
+        )
+        page = await context.new_page()
+        page.set_default_navigation_timeout(45_000)
+
+        records = []
+        url = START_URL
+        for _ in range(MAX_PAGES):
+            await page.goto(url, wait_until=&quot;networkidle&quot;)
+            await page.locator(&quot;div.quote&quot;).first.wait_for()
+
+            records.extend(
+                await page.locator(&quot;div.quote&quot;).evaluate_all(
+                    &quot;&quot;&quot;nodes =&gt; nodes.map(node =&gt; ({
+                      text: node.querySelector(&quot;span.text&quot;)?.textContent.trim(),
+                      author: node.querySelector(&quot;small.author&quot;)?.textContent.trim(),
+                      tags: [...node.querySelectorAll(&quot;a.tag&quot;)]
+                        .map(tag =&gt; tag.textContent.trim()),
+                      source_url: location.href
+                    }))&quot;&quot;&quot;
+                )
+            )
+
+            next_link = page.locator(&quot;li.next &gt; a&quot;)
+            if await next_link.count() == 0:
+                break
+            href = await next_link.get_attribute(&quot;href&quot;)
+            url = urljoin(page.url, href)
+
+        with open(&quot;quotes-playwright.json&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as output:
+            json.dump(records, output, ensure_ascii=False, indent=2)
+
+        print(
+            f&quot;saved {len(records)} records to quotes-playwright.json&quot;
+        )
+        await context.close()
+        await browser.close()
+
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(main())</code></pre>
+    </div>
+    </section>
+
+    <section id="checks">
+      <div class="docs-section-title"><span>04</span><div><small>ENGINEERING CHECKS</small><h2>案例没有省略的关键逻辑</h2></div></div>
+      <div class="docs-check-grid">
+        <div><span>01</span><i data-lucide="circle-check" aria-hidden="true"></i><strong>代理在chromium.launch阶段设置，覆盖页面资源请求</strong></div><div><span>02</span><i data-lucide="circle-check" aria-hidden="true"></i><strong>用户名与密码使用独立字段，不拼进server</strong></div><div><span>03</span><i data-lucide="circle-check" aria-hidden="true"></i><strong>等待networkidle及目标元素，避免固定长时间sleep</strong></div><div><span>04</span><i data-lucide="circle-check" aria-hidden="true"></i><strong>复用同一BrowserContext完成连续分页</strong></div>
+      </div>
+    </section>
+
+    <section id="switch-product">
+      <div class="docs-section-title"><span>05</span><div><small>SWITCH PROXY PRODUCT</small><h2>替换网关，不改采集逻辑</h2></div></div>
+      
+    <div class="docs-gateway-table">
+      <div class="docs-gateway-head"><span>代理产品</span><span>网关域名</span><span>端口</span><span>适合任务</span></div>
+      <div><span>隧道代理</span><code>proxy.123proxy.cn</code><code>36923</code><span>混合池 / 纯住宅池</span></div><div><span>隧道住宅代理</span><code>residential.123proxy.cn</code><code>33000</code><span>国家地区与SESSION</span></div><div><span>不限量动态住宅</span><code>unlimit.residential.123proxy.cn</code><code>10253</code><span>不限流量住宅任务</span></div><div><span>两类静态代理</span><code>控制台分配的固定代理IP</code><code>返回端口</code><span>直连IP，无网关域名</span></div>
+    </div>
+      <div class="docs-callout">
+        <i data-lucide="route" aria-hidden="true"></i>
+        <div><strong>隧道住宅代理的国家与SESSION写在完整代理用户名中</strong><p>网关固定为 <code>residential.123proxy.cn:33000</code>。例如使用美国SESSION时，直接把控制台生成的完整用户名作为 <code>PROXY_USER</code>，代码无需解析或重组。</p></div>
+      </div>
+    </section>
+
+    <section id="references">
+      <div class="docs-section-title"><span>06</span><div><small>PRIMARY REFERENCES</small><h2>框架文档与测试目标</h2></div></div>
+      <div class="docs-source-links">
+        <a href="https://playwright.dev/python/docs/network#http-proxy" target="_blank" rel="noreferrer"><span><i data-lucide="external-link" aria-hidden="true"></i></span><strong>Playwright代理配置</strong><code>https://playwright.dev/python/docs/network#http-proxy</code></a><a href="https://playwright.dev/python/docs/locators" target="_blank" rel="noreferrer"><span><i data-lucide="external-link" aria-hidden="true"></i></span><strong>Playwright Locator</strong><code>https://playwright.dev/python/docs/locators</code></a><a href="https://quotes.toscrape.com/js/" target="_blank" rel="noreferrer"><span><i data-lucide="external-link" aria-hidden="true"></i></span><strong>JavaScript测试目标</strong><code>https://quotes.toscrape.com/js/</code></a>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="docs-section-title"><span>07</span><div><small>TROUBLESHOOTING</small><h2>常见问题</h2></div></div>
+      <div class="docs-troubleshooting">
+        <details open><summary>为什么浏览器采集比Requests消耗更多并发？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>浏览器会同时加载HTML、JavaScript、CSS、字体、图片和接口，一个页面通常产生多条并发请求。</p></details><details><summary>什么时候适合使用不限量动态住宅？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>持续浏览器任务需要较多流量和并发时可考虑不限量动态住宅，并使用固定网关unlimit.residential.123proxy.cn:10253。</p></details><details><summary>SESSION应该如何保持？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>使用隧道住宅或隧道代理纯住宅池时，把控制台生成的完整SESSION用户名作为PROXY_USER，并复用同一BrowserContext。</p></details>
+      </div>
+    </section>
+
+    <nav class="docs-next">
+      <span>对应产品手册</span>
+      <a href="/developers/products/scraping-rotating-proxy/"><div><small>隧道代理</small><strong>查看认证、地区与轮转规则</strong></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </nav>
+      </article>
+      
+    <aside class="docs-toc">
+      <strong>本页内容</strong>
+      <nav>
+        <a href="#result">案例结果</a><a href="#credentials">设置账密</a><a href="#code">完整代码</a><a href="#checks">工程检查</a><a href="#switch-product">切换产品</a><a href="#references">参考文档</a><a href="#faq">常见问题</a>
+      </nav>
+      <a class="docs-toc-console" href="https://console.123proxy.cn/app/"><i data-lucide="terminal" aria-hidden="true"></i>打开控制台</a>
+    </aside>
+    </main>
+    
+    <footer class="docs-footer">
+      <div class="docs-frame docs-footer-inner">
+        <div>
+          <a class="brand docs-footer-brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+        </div>
+        <div class="docs-footer-links">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/pricing.html">价格</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+      <div class="docs-frame docs-footer-bottom">
+        <span>© 2026 123Proxy. All rights reserved.</span>
+        <span>文档内容以当前控制台可用能力为准</span>
+      </div>
+    </footer>
+  </div>
+  <script type="application/json" id="developerSearchIndex">[{"title":"开发者中心","section":"开始使用","href":"/developers/","keywords":"开发文档 文档首页 产品选择 代码示例"},{"title":"5 分钟快速开始","section":"开始使用","href":"/developers/getting-started/","keywords":"curl python http socks 认证 控制台 生成代理"},{"title":"隧道代理接入手册","section":"产品接入","href":"/developers/products/scraping-rotating-proxy/","keywords":"Scraping rotating proxy 混合池 纯住宅池 session 白名单 地区 并发 流量"},{"title":"隧道住宅代理接入手册","section":"产品接入","href":"/developers/products/residential-rotating-proxy/","keywords":"Residential rotating proxy 8000万 190 国家码 +us session 住宅IP 按流量"},{"title":"不限量动态住宅接入手册","section":"产品接入","href":"/developers/products/unlimited-residential-proxy/","keywords":"不限流量 不限并发 连续端口 端口范围 3-30分钟 套餐级地区"},{"title":"长效静态代理接入手册","section":"产品接入","href":"/developers/products/static-datacenter-proxy/","keywords":"固定数据中心IP 分配链接 提取API 账密认证 无白名单 不轮转"},{"title":"长效静态住宅接入手册","section":"产品接入","href":"/developers/products/static-residential-proxy/","keywords":"固定住宅ISP IP 分配链接 提取API 账密认证 无白名单 长效"},{"title":"代理并发、QPS与响应时间","section":"工程指南","href":"/developers/guides/concurrency-qps-performance/","keywords":"并发线程 qps 吞吐量 响应时间 p95 浏览器资源 worker little law"},{"title":"SESSION、地区定位与出口轮转","section":"工程指南","href":"/developers/guides/session-geo-rotation/","keywords":"session sticky geo country region rotation 全球随机 国家定位 固定出口"},{"title":"代理错误、超时与重试排查","section":"工程指南","href":"/developers/guides/proxy-errors-retries/","keywords":"407 403 429 timeout tls dns tcp retry backoff connection pool"},{"title":"代理产品选型边界","section":"工程指南","href":"/developers/guides/proxy-product-selection/","keywords":"代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"},{"title":"代理爬虫代码案例","section":"框架案例","href":"/developers/examples/","keywords":"crawler examples 爬虫框架 完整代码 网关域名 可运行"},{"title":"Python Requests代理爬虫","section":"框架案例","href":"/developers/examples/python-requests-proxy/","keywords":"python requests beautifulsoup proxy quotes pagination jsonl"},{"title":"Scrapy代理配置","section":"框架案例","href":"/developers/examples/scrapy-proxy/","keywords":"scrapy proxy middleware books pagination detail feed jsonlines"},{"title":"Python Playwright代理","section":"框架案例","href":"/developers/examples/playwright-proxy/","keywords":"playwright python browser proxy javascript rendered quotes"},{"title":"Python Selenium代理","section":"框架案例","href":"/developers/examples/selenium-proxy/","keywords":"selenium python chrome proxy authentication extension javascript residential unlimited"},{"title":"Node.js Puppeteer代理","section":"框架案例","href":"/developers/examples/puppeteer-proxy/","keywords":"nodejs puppeteer proxy authenticate infinite scroll browser"},{"title":"Node.js Axios代理","section":"框架案例","href":"/developers/examples/nodejs-axios-proxy/","keywords":"nodejs axios cheerio proxy keep alive retry residential pagination jsonl"},{"title":"Golang Colly代理","section":"框架案例","href":"/developers/examples/go-colly-proxy/","keywords":"golang go colly proxy switcher pagination csv"},{"title":"Java Jsoup代理","section":"框架案例","href":"/developers/examples/java-jsoup-proxy/","keywords":"java jsoup proxy authentication maven books csv"},{"title":"PHP cURL代理","section":"框架案例","href":"/developers/examples/php-curl-proxy/","keywords":"php curl proxy domdocument xpath json"},{"title":"代理认证","section":"核心概念","href":"/developers/getting-started/#authentication","keywords":"用户名 密码 账密 whitelist allowlist IP白名单 407"},{"title":"HTTP(S) 与 SOCKS5","section":"核心概念","href":"/developers/getting-started/#protocols","keywords":"http https socks5 proxy curl"},{"title":"SESSION 与出口轮转","section":"核心概念","href":"/developers/products/residential-rotating-proxy/#session","keywords":"sticky session 粘性会话 ttl 国家码 轮换 换ip"},{"title":"连续端口与套餐级轮转","section":"核心概念","href":"/developers/products/unlimited-residential-proxy/#ports","keywords":"port range 端口范围 worker 3-30分钟 不限并发"},{"title":"静态 IP 分配链接","section":"核心概念","href":"/developers/products/static-datacenter-proxy/#allocation","keywords":"allocation extract api 分配链接 固定IP 返回格式"},{"title":"代理可用性测试","section":"错误排查","href":"/developers/getting-started/#verify","keywords":"测试 出口ip 超时 407 curl check"}]</script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/developer-docs.js?v=20260729-04"></script>
+</body>
+</html>

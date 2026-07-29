@@ -1,0 +1,50 @@
+name: 123proxy-monitoring
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${KUMA_PORT:-3001}:3001"
+    volumes:
+      - uptime-kuma-data:/app/data
+    networks:
+      - monitoring
+    security_opt:
+      - no-new-privileges:true
+
+  status-service:
+    build:
+      context: ./status-service
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      CONFIG_FILE: /config/monitors.json
+      PUBLIC_EVENTS_FILE: /config/public-events.json
+      STATE_FILE: /data/status-state.json
+      KUMA_PUSH_BASE_URL: http://uptime-kuma:3001/api/push
+      HTTP_LISTEN: 0.0.0.0:8080
+    volumes:
+      - ./monitors.json:/config/monitors.json:ro
+      - ./public-events.json:/config/public-events.json:ro
+      - status-service-data:/data
+    expose:
+      - "8080"
+    depends_on:
+      - uptime-kuma
+    networks:
+      - monitoring
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  uptime-kuma-data:
+  status-service-data:
+
+networks:
+  monitoring:
+    name: 123proxy-monitoring

@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="按DNS、TCP、TLS、代理认证、目标响应和解析六层排查代理请求，处理407、403、429、超时、连接池与退避重试。">
+  <title>代理407、403、429、超时与重试排查 | 123Proxy 开发者中心</title>
+  <link rel="canonical" href="https://www.123proxy.cn/developers/guides/proxy-errors-retries/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="代理407、403、429、超时与重试排查 | 123Proxy 开发者中心">
+  <meta property="og:description" content="按DNS、TCP、TLS、代理认证、目标响应和解析六层排查代理请求，处理407、403、429、超时、连接池与退避重试。">
+  <meta property="og:url" content="https://www.123proxy.cn/developers/guides/proxy-errors-retries/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta property="article:modified_time" content="2026-07-29">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/developer-docs.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"TechArticle","@id":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/#document","headline":"代理错误、超时与重试排查","description":"按DNS、TCP、TLS、代理认证、目标响应和解析六层排查代理请求，处理407、403、429、超时、连接池与退避重试。","url":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"isPartOf":{"@id":"https://www.123proxy.cn/developers/#document"},"dateModified":"2026-07-29","about":[{"@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service"},{"@id":"https://www.123proxy.cn/residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-residential-proxy.html#service"}]},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"开发者中心","item":"https://www.123proxy.cn/developers/"},{"@type":"ListItem","position":3,"name":"代理错误、超时与重试排查","item":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/"}]},{"@type":"Service","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service","name":"隧道代理","url":"https://www.123proxy.cn/scraping-rotating-proxy.html","description":"固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。","serviceType":"Scraping rotating proxy","category":"Rotating proxy for web scraping","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、采集系统开发者、数据工程团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"proxy.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"36923"},{"@type":"PropertyValue","name":"默认地区","value":"全球随机"},{"@type":"PropertyValue","name":"代理池","value":"爬虫混合池约 95% 住宅 IP + 5% 数据中心 IP；纯住宅池为 100% 住宅 IP"},{"@type":"PropertyValue","name":"计费方式","value":"按流量或按并发线程"}]},{"@type":"Service","@id":"https://www.123proxy.cn/residential-proxy.html#service","name":"隧道住宅代理","url":"https://www.123proxy.cn/residential-proxy.html","description":"固定网关接入 8000万+ 住宅 IP，覆盖 190+ 国家和地区，提取代理时指定国家或地区与 SESSION，仅按流量购买。","serviceType":"Residential rotating proxy","category":"Geo-targeted residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、跨地区采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"33000"},{"@type":"PropertyValue","name":"住宅代理池","value":"8000万+"},{"@type":"PropertyValue","name":"覆盖范围","value":"190+ 国家和地区"},{"@type":"PropertyValue","name":"计费方式","value":"仅按流量"}]},{"@type":"Service","@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service","name":"不限量动态住宅","url":"https://www.123proxy.cn/unlimited-residential-proxy.html","description":"每端口不限流量与并发，按端口和带宽套餐使用，出口 IP 每 3–30 分钟固定轮转。","serviceType":"Unlimited residential proxy by port","category":"Port-based residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"浏览器自动化开发者、持续采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"unlimit.residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"10253"},{"@type":"PropertyValue","name":"端口能力","value":"每端口不限流量与并发"},{"@type":"PropertyValue","name":"轮转周期","value":"3–30 分钟"},{"@type":"PropertyValue","name":"地区设置","value":"提取代理时按套餐统一设置"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service","name":"长效静态代理","url":"https://www.123proxy.cn/static-datacenter-proxy.html","description":"独享固定数据中心代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static datacenter proxy","category":"Static datacenter proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"企业系统开发者、固定出口任务、API 集成团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定数据中心 IP"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"白名单模式","value":"不支持 123Proxy 套餐 IP 白名单认证"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-residential-proxy.html#service","name":"长效静态住宅","url":"https://www.123proxy.cn/static-residential-proxy.html","description":"独享固定住宅 ISP 代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static residential proxy","category":"Static residential ISP proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"需要固定住宅出口的开发者、长期会话任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定住宅 ISP IP"},{"@type":"PropertyValue","name":"覆盖范围","value":"69 个国家和地区"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]},{"@type":"FAQPage","@id":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/#faq","inLanguage":"zh-CN","isPartOf":{"@id":"https://www.123proxy.cn/developers/guides/proxy-errors-retries/#document"},"mainEntity":[{"@type":"Question","name":"代理返回 407 时是否应该更换出口 IP？","acceptedAnswer":{"@type":"Answer","text":"通常不应该。407 是代理认证失败，应先检查代理用户、密码、完整地区或SESSION用户名，以及套餐白名单是否绑定到当前服务器公网IPv4。更换出口不会修复错误账密。"}},{"@type":"Question","name":"403 和 429 是否代表代理网关故障？","acceptedAnswer":{"@type":"Answer","text":"通常不是。403 与429一般来自目标站点，分别表示拒绝访问或频率限制。应先记录响应头和目标域名，再检查授权、请求频率、Retry-After、账号状态和访问规则。"}},{"@type":"Question","name":"遇到 TLS 错误能否直接关闭证书校验？","acceptedAnswer":{"@type":"Answer","text":"不建议。关闭校验会失去服务器身份验证。应先确认系统时间、CA证书、SNI、代理协议和目标证书链，再判断是否为受控测试环境中的临时诊断。"}}]}]}</script>
+</head>
+<body class="developer-docs" data-developer-page="guide-errors">
+  <div class="page">
+    
+    <div class="docs-utility">
+      <div class="docs-frame docs-utility-inner">
+        <a class="docs-network-state" href="/status/"><i></i>全球代理网络运行正常</a>
+        <div>
+          <a href="/global-network.html">全球网络</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+    </div>
+    <header class="docs-header">
+      <div class="docs-frame docs-header-inner">
+        <div class="docs-brand-group">
+          <a class="brand docs-brand" href="/" aria-label="123Proxy 首页">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <span class="docs-brand-divider" aria-hidden="true"></span>
+          <a class="docs-product-name" href="/developers/">开发者中心</a>
+        </div>
+        
+    <div class="docs-search is-compact" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+        <nav class="docs-topnav" aria-label="开发者导航">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/developers/examples/">代码案例</a>
+          <a class="docs-console-link" href="https://console.123proxy.cn/app/">控制台<i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        </nav>
+        <button class="docs-icon-button docs-mobile-toggle" type="button" data-docs-mobile-toggle aria-expanded="false" aria-controls="docsMobileNav" aria-label="打开开发者导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+      <div class="docs-mobile-nav" id="docsMobileNav" data-docs-mobile-nav>
+        <a href="/developers/">文档首页</a>
+        <a href="/developers/getting-started/">快速开始</a>
+        <a href="/developers/#products">产品接入</a>
+        <a href="/developers/examples/">代码案例</a>
+        <a href="/developers/getting-started/#troubleshooting">错误排查</a>
+        <a href="https://console.123proxy.cn/app/">登录控制台</a>
+      </div>
+    </header>
+    
+    <main class="docs-layout docs-frame">
+      <button class="docs-sidebar-open" type="button" data-docs-sidebar-toggle><i data-lucide="panel-left" aria-hidden="true"></i>文档目录</button>
+      
+    <aside class="docs-sidebar" data-docs-sidebar>
+      <nav aria-label="文档目录">
+        <div class="docs-sidebar-group">
+          <span>开始使用</span>
+          
+    <a href="/developers/">
+      <i data-lucide="layout-grid" aria-hidden="true"></i><span>开发者中心</span>
+    </a>
+          
+    <a href="/developers/getting-started/">
+      <i data-lucide="rocket" aria-hidden="true"></i><span>5 分钟快速开始</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>产品接入</span>
+          
+    <a href="/developers/products/scraping-rotating-proxy/">
+      <i data-lucide="route" aria-hidden="true"></i><span>隧道代理</span>
+    </a>
+          
+    <a href="/developers/products/residential-rotating-proxy/">
+      <i data-lucide="globe-2" aria-hidden="true"></i><span>隧道住宅代理</span>
+    </a>
+          
+    <a href="/developers/products/unlimited-residential-proxy/">
+      <i data-lucide="refresh-cw" aria-hidden="true"></i><span>不限量动态住宅</span>
+    </a>
+          
+    <a href="/developers/products/static-datacenter-proxy/">
+      <i data-lucide="server" aria-hidden="true"></i><span>长效静态代理</span>
+    </a>
+          
+    <a href="/developers/products/static-residential-proxy/">
+      <i data-lucide="house-plug" aria-hidden="true"></i><span>长效静态住宅</span>
+    </a>
+          
+    <a href="/high-bandwidth-proxy.html">
+      <i data-lucide="gauge" aria-hidden="true"></i><span>高带宽代理 IP</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>工程指南</span>
+          
+    <a href="/developers/guides/concurrency-qps-performance/">
+      <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>并发、QPS 与响应时间</span>
+    </a>
+          
+    <a href="/developers/guides/session-geo-rotation/">
+      <i data-lucide="shuffle" aria-hidden="true"></i><span>SESSION 与出口轮转</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/" class="is-active" aria-current="page">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>错误、超时与重试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-product-selection/">
+      <i data-lucide="git-compare-arrows" aria-hidden="true"></i><span>代理产品选型</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>框架案例</span>
+          
+    <a href="/developers/examples/">
+      <i data-lucide="code-2" aria-hidden="true"></i><span>完整代码案例</span>
+    </a>
+          
+    <a href="/developers/examples/python-requests-proxy/">
+      <span>Python Requests</span>
+    </a>
+          
+    <a href="/developers/examples/scrapy-proxy/">
+      <span>Scrapy</span>
+    </a>
+          
+    <a href="/developers/examples/playwright-proxy/">
+      <span>Playwright</span>
+    </a>
+          
+    <a href="/developers/examples/selenium-proxy/">
+      <span>Selenium</span>
+    </a>
+          
+    <a href="/developers/examples/puppeteer-proxy/">
+      <span>Puppeteer</span>
+    </a>
+          
+    <a href="/developers/examples/nodejs-axios-proxy/">
+      <span>Node.js Axios</span>
+    </a>
+          
+    <a href="/developers/examples/go-colly-proxy/">
+      <span>Go Colly</span>
+    </a>
+          
+    <a href="/developers/examples/java-jsoup-proxy/">
+      <span>Java Jsoup</span>
+    </a>
+          
+    <a href="/developers/examples/php-curl-proxy/">
+      <span>PHP cURL</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>验证与排查</span>
+          
+    <a href="/developers/getting-started/#verify">
+      <i data-lucide="activity" aria-hidden="true"></i><span>可用性测试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>常见错误</span>
+    </a>
+        </div>
+      </nav>
+      <div class="docs-sidebar-support">
+        <span><i data-lucide="life-buoy" aria-hidden="true"></i></span>
+        <strong>接入遇到问题？</strong>
+        <p>附上请求时间、套餐类型和错误信息联系技术支持。</p>
+        <a href="/contact.html#solutions">联系技术支持<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </aside>
+      <article class="docs-article">
+        
+    
+    <nav class="docs-breadcrumb" aria-label="面包屑">
+      <a href="/developers/">开发者中心</a><i data-lucide="chevron-right" aria-hidden="true"></i>
+      <span>工程指南</span><i data-lucide="chevron-right" aria-hidden="true"></i>
+      <span>代理错误、超时与重试排查</span>
+    </nav>
+    <header class="docs-article-header">
+      <span class="docs-eyebrow"><i data-lucide="book-open-check" aria-hidden="true"></i>ENGINEERING GUIDE</span>
+      <h1>代理错误、超时与重试排查</h1>
+      <p>先确定错误发生在代理链路还是目标站点。把DNS、TCP、TLS、代理认证、目标HTTP响应和业务解析混在一起，会导致无效换IP、无限重试或错误关闭安全校验。</p>
+      <div class="docs-product-facts">
+        <span><small>排查层级</small><strong>6 层</strong></span><span><small>重点状态</small><strong>407 / 403 / 429</strong></span><span><small>重试</small><strong>有预算的退避</strong></span><span><small>安全</small><strong>保持TLS校验</strong></span>
+      </div>
+      <div class="docs-article-actions">
+        <a class="btn btn-primary" href="https://console.123proxy.cn/app/#extract?product=tunnel"><i data-lucide="terminal" aria-hidden="true"></i>打开提取代理</a>
+        <a class="btn docs-secondary-button" href="/status/"><i data-lucide="arrow-up-right" aria-hidden="true"></i>查看服务状态</a>
+      </div>
+    </header>
+
+    <section id="layers">
+      <div class="docs-section-title"><span>01</span><div><small>FAILURE LAYERS</small><h2>按请求链路逐层定位</h2></div></div>
+      <div class="docs-compare-table">
+        <div class="docs-compare-head"><span>层级</span><span>典型现象</span><span>优先检查</span></div>
+        <div><strong>DNS</strong><span>无法解析代理网关或目标域名</span><span>解析器、服务器网络、网关域名拼写</span></div>
+        <div><strong>TCP</strong><span>Connection refused、reset或连接超时</span><span>HOST、PORT、防火墙、出口网络和服务状态</span></div>
+        <div><strong>TLS</strong><span>证书、握手、SNI或协议版本错误</span><span>系统时间、CA、客户端版本和代理协议</span></div>
+        <div><strong>代理认证</strong><span>HTTP 407</span><span>代理用户、密码、完整路由用户名和套餐白名单</span></div>
+        <div><strong>目标响应</strong><span>403、404、429、5xx</span><span>目标授权、请求频率、Retry-After和目标状态</span></div>
+        <div><strong>业务解析</strong><span>HTTP成功但字段为空或页面结构不符</span><span>响应内容、登录状态、渲染方式和选择器</span></div>
+      </div>
+    </section>
+
+    <section id="diagnose">
+      <div class="docs-section-title"><span>02</span><div><small>MINIMUM DIAGNOSTIC</small><h2>先用 cURL 分离代理与框架问题</h2></div></div>
+      <p>使用与程序相同的代理网关和账密访问简单测试目标。<code>--verbose</code> 可显示CONNECT、认证和TLS阶段；日志中不要长期保存完整代理密码。</p>
+      
+    <div class="docs-code" data-code-group="proxy-diagnostic">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="curl" aria-selected="true" class="is-active">cURL</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="curl"><code>export PROXY_USER=&quot;YOUR_PROXY_USER&quot;
+export PROXY_PASS=&quot;YOUR_PROXY_PASSWORD&quot;
+
+curl --verbose --fail-with-body   --proxy &quot;http://proxy.123proxy.cn:36923&quot;   --proxy-user &quot;${PROXY_USER}:${PROXY_PASS}&quot;   --connect-timeout 15   --max-time 30   &quot;https://httpbin.org/status/200&quot;</code></pre>
+    </div>
+      <div class="docs-callout">
+        <i data-lucide="circle-check" aria-hidden="true"></i>
+        <div><strong>cURL成功而框架失败</strong><p>继续检查框架代理参数、环境变量覆盖、连接池、浏览器代理作用域和URL编码，不要先更换代理产品。</p></div>
+      </div>
+    </section>
+
+    <section id="status">
+      <div class="docs-section-title"><span>03</span><div><small>STATUS CODES</small><h2>不同状态码对应不同处理动作</h2></div></div>
+      <div class="docs-compare-table">
+        <div class="docs-compare-head"><span>状态</span><span>含义</span><span>正确动作</span></div>
+        <div><strong>407</strong><span>代理网关拒绝认证</span><span>修复账密、完整用户名或套餐白名单，不盲目换出口</span></div>
+        <div><strong>403</strong><span>目标站点拒绝当前请求或身份</span><span>确认访问授权、请求头、账号状态、地区与目标规则</span></div>
+        <div><strong>429</strong><span>目标站点或接口触发频率限制</span><span>读取Retry-After，降低单域名并发并执行退避</span></div>
+        <div><strong>5xx</strong><span>目标服务或中间链路临时失败</span><span>只对安全请求执行有限重试，并记录目标域名</span></div>
+      </div>
+    </section>
+
+    <section id="timeouts">
+      <div class="docs-section-title"><span>04</span><div><small>TIMEOUT BUDGET</small><h2>区分连接超时、读取超时和任务截止时间</h2></div></div>
+      <div class="docs-fact-list">
+        <div><strong>连接超时</strong><p>限制解析、TCP连接、代理CONNECT与TLS握手等待。建议单独设置，例如15秒。</p></div>
+        <div><strong>读取超时</strong><p>限制连接建立后等待响应数据的时间。大文件下载应按对象大小调整。</p></div>
+        <div><strong>任务截止时间</strong><p>限制包含重试在内的整个页面或对象处理时长，防止队列被少量慢任务占满。</p></div>
+      </div>
+      <div class="docs-callout is-warning">
+        <i data-lucide="timer-off" aria-hidden="true"></i>
+        <div><strong>超时不是越长越稳定</strong><p>过长超时会让失败请求长期占用并发线程；过短则会把正常慢响应误判为失败。应根据p95与对象大小设置，并给重试留下总预算。</p></div>
+      </div>
+    </section>
+
+    <section id="retry">
+      <div class="docs-section-title"><span>05</span><div><small>BOUNDED RETRY</small><h2>只重试可恢复且幂等的请求</h2></div></div>
+      <p>GET与HEAD通常可以在有限预算内重试；会创建订单、分配静态IP或修改状态的请求不能因为结果未知就自动重复提交。</p>
+      
+    <div class="docs-code" data-code-group="retry-backoff">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="python" aria-selected="true" class="is-active">Python</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="python"><code># python -m pip install requests
+import random
+import time
+
+import requests
+
+RETRYABLE = {429, 500, 502, 503, 504}
+
+
+def get_with_backoff(session, url, proxies, attempts=4):
+    for attempt in range(attempts):
+        try:
+            response = session.get(
+                url,
+                proxies=proxies,
+                timeout=(15, 30),
+            )
+            if response.status_code not in RETRYABLE:
+                response.raise_for_status()
+                return response
+
+            retry_after = response.headers.get(&quot;Retry-After&quot;)
+            if retry_after and retry_after.isdigit():
+                delay = min(float(retry_after), 60)
+            else:
+                delay = min(2 ** attempt + random.random(), 30)
+        except (requests.ConnectTimeout, requests.ReadTimeout):
+            delay = min(2 ** attempt + random.random(), 30)
+
+        if attempt == attempts - 1:
+            raise RuntimeError(&quot;request exhausted retry budget&quot;)
+        time.sleep(delay)
+
+    raise RuntimeError(&quot;unreachable&quot;)</code></pre>
+    </div>
+      <div class="docs-checklist">
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>限制最大尝试次数</strong><small>常见起点为首次请求加2-3次重试。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>指数退避并加入随机抖动</strong><small>避免多个worker在同一时刻再次冲击目标。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>尊重 Retry-After</strong><small>目标明确给出等待时间时优先使用，并设置合理上限。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>保留总任务截止时间</strong><small>单次超时与多次重试之和不能无限增长。</small></span></div>
+      </div>
+    </section>
+
+    <section id="pool-tls">
+      <div class="docs-section-title"><span>06</span><div><small>CONNECTIONS & TLS</small><h2>连接池与TLS不要用错误的捷径处理</h2></div></div>
+      <div class="docs-boundary-grid">
+        <div class="is-supported"><i data-lucide="link" aria-hidden="true"></i><span><strong>复用稳定连接</strong><small>同一目标和SESSION可减少握手；监控空闲连接被关闭后的重建。</small></span></div>
+        <div><i data-lucide="refresh-cw" aria-hidden="true"></i><span><strong>需要换路由时重建连接</strong><small>更改地区、SESSION或轮转参数后关闭旧HTTP隧道。</small></span></div>
+        <div class="is-supported"><i data-lucide="shield-check" aria-hidden="true"></i><span><strong>保留证书校验</strong><small>修复CA、系统时间、SNI或客户端协议，不默认verify=false。</small></span></div>
+        <div><i data-lucide="file-warning" aria-hidden="true"></i><span><strong>区分代理错误与目标证书错误</strong><small>记录失败阶段、目标域名和客户端错误类型。</small></span></div>
+      </div>
+    </section>
+
+    <section id="logging">
+      <div class="docs-section-title"><span>07</span><div><small>SAFE LOGGING</small><h2>记录足够排查但不泄露凭证</h2></div></div>
+      <div class="docs-format-table">
+        <div><code>request_id</code><span>跨worker关联一次任务及其重试</span></div>
+        <div><code>target_host</code><span>定位单一目标站点的错误率与限速</span></div>
+        <div><code>proxy_product</code><span>记录产品和套餐标识，不记录代理密码</span></div>
+        <div><code>session_id</code><span>可脱敏记录SESSION，排查粘性路由</span></div>
+        <div><code>status / error_type</code><span>区分HTTP状态与客户端异常</span></div>
+        <div><code>attempt / duration_ms</code><span>观察重试次数与每次耗时</span></div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="docs-section-title"><span>08</span><div><small>FAQ</small><h2>常见问题</h2></div></div>
+      
+    <div class="docs-troubleshooting">
+      
+        <details open>
+          <summary>代理返回 407 时是否应该更换出口 IP？<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <p>通常不应该。407 是代理认证失败，应先检查代理用户、密码、完整地区或SESSION用户名，以及套餐白名单是否绑定到当前服务器公网IPv4。更换出口不会修复错误账密。 <a class="docs-inline-action" href="/developers/getting-started/#authentication">查看代理认证<i data-lucide="arrow-right" aria-hidden="true"></i></a></p>
+        </details>
+        <details>
+          <summary>403 和 429 是否代表代理网关故障？<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <p>通常不是。403 与429一般来自目标站点，分别表示拒绝访问或频率限制。应先记录响应头和目标域名，再检查授权、请求频率、Retry-After、账号状态和访问规则。 <a class="docs-inline-action" href="/developers/guides/concurrency-qps-performance/">计算目标站点并发与QPS<i data-lucide="arrow-right" aria-hidden="true"></i></a></p>
+        </details>
+        <details>
+          <summary>遇到 TLS 错误能否直接关闭证书校验？<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <p>不建议。关闭校验会失去服务器身份验证。应先确认系统时间、CA证书、SNI、代理协议和目标证书链，再判断是否为受控测试环境中的临时诊断。</p>
+        </details>
+    </div>
+    </section>
+
+    <nav class="docs-next">
+      <span>下一篇工程指南</span>
+      <a href="/developers/guides/proxy-product-selection/"><div><small>架构决策</small><strong>代理产品选型边界</strong></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </nav>
+      </article>
+      
+    <aside class="docs-toc">
+      <strong>本页内容</strong>
+      <nav>
+        <a href="#layers">故障分层</a><a href="#diagnose">最小诊断</a><a href="#status">状态码处理</a><a href="#timeouts">超时预算</a><a href="#retry">重试与退避</a><a href="#pool-tls">连接池与TLS</a><a href="#logging">安全日志</a><a href="#faq">常见问题</a>
+      </nav>
+      <a class="docs-toc-console" href="https://console.123proxy.cn/app/"><i data-lucide="terminal" aria-hidden="true"></i>打开控制台</a>
+    </aside>
+    </main>
+    
+    <footer class="docs-footer">
+      <div class="docs-frame docs-footer-inner">
+        <div>
+          <a class="brand docs-footer-brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+        </div>
+        <div class="docs-footer-links">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/pricing.html">价格</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+      <div class="docs-frame docs-footer-bottom">
+        <span>© 2026 123Proxy. All rights reserved.</span>
+        <span>文档内容以当前控制台可用能力为准</span>
+      </div>
+    </footer>
+  </div>
+  <script type="application/json" id="developerSearchIndex">[{"title":"开发者中心","section":"开始使用","href":"/developers/","keywords":"开发文档 文档首页 产品选择 代码示例"},{"title":"5 分钟快速开始","section":"开始使用","href":"/developers/getting-started/","keywords":"curl python http socks 认证 控制台 生成代理"},{"title":"隧道代理接入手册","section":"产品接入","href":"/developers/products/scraping-rotating-proxy/","keywords":"Scraping rotating proxy 混合池 纯住宅池 session 白名单 地区 并发 流量"},{"title":"隧道住宅代理接入手册","section":"产品接入","href":"/developers/products/residential-rotating-proxy/","keywords":"Residential rotating proxy 8000万 190 国家码 +us session 住宅IP 按流量"},{"title":"不限量动态住宅接入手册","section":"产品接入","href":"/developers/products/unlimited-residential-proxy/","keywords":"不限流量 不限并发 连续端口 端口范围 3-30分钟 套餐级地区"},{"title":"长效静态代理接入手册","section":"产品接入","href":"/developers/products/static-datacenter-proxy/","keywords":"固定数据中心IP 分配链接 提取API 账密认证 无白名单 不轮转"},{"title":"长效静态住宅接入手册","section":"产品接入","href":"/developers/products/static-residential-proxy/","keywords":"固定住宅ISP IP 分配链接 提取API 账密认证 无白名单 长效"},{"title":"代理并发、QPS与响应时间","section":"工程指南","href":"/developers/guides/concurrency-qps-performance/","keywords":"并发线程 qps 吞吐量 响应时间 p95 浏览器资源 worker little law"},{"title":"SESSION、地区定位与出口轮转","section":"工程指南","href":"/developers/guides/session-geo-rotation/","keywords":"session sticky geo country region rotation 全球随机 国家定位 固定出口"},{"title":"代理错误、超时与重试排查","section":"工程指南","href":"/developers/guides/proxy-errors-retries/","keywords":"407 403 429 timeout tls dns tcp retry backoff connection pool"},{"title":"代理产品选型边界","section":"工程指南","href":"/developers/guides/proxy-product-selection/","keywords":"代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"},{"title":"代理爬虫代码案例","section":"框架案例","href":"/developers/examples/","keywords":"crawler examples 爬虫框架 完整代码 网关域名 可运行"},{"title":"Python Requests代理爬虫","section":"框架案例","href":"/developers/examples/python-requests-proxy/","keywords":"python requests beautifulsoup proxy quotes pagination jsonl"},{"title":"Scrapy代理配置","section":"框架案例","href":"/developers/examples/scrapy-proxy/","keywords":"scrapy proxy middleware books pagination detail feed jsonlines"},{"title":"Python Playwright代理","section":"框架案例","href":"/developers/examples/playwright-proxy/","keywords":"playwright python browser proxy javascript rendered quotes"},{"title":"Python Selenium代理","section":"框架案例","href":"/developers/examples/selenium-proxy/","keywords":"selenium python chrome proxy authentication extension javascript residential unlimited"},{"title":"Node.js Puppeteer代理","section":"框架案例","href":"/developers/examples/puppeteer-proxy/","keywords":"nodejs puppeteer proxy authenticate infinite scroll browser"},{"title":"Node.js Axios代理","section":"框架案例","href":"/developers/examples/nodejs-axios-proxy/","keywords":"nodejs axios cheerio proxy keep alive retry residential pagination jsonl"},{"title":"Golang Colly代理","section":"框架案例","href":"/developers/examples/go-colly-proxy/","keywords":"golang go colly proxy switcher pagination csv"},{"title":"Java Jsoup代理","section":"框架案例","href":"/developers/examples/java-jsoup-proxy/","keywords":"java jsoup proxy authentication maven books csv"},{"title":"PHP cURL代理","section":"框架案例","href":"/developers/examples/php-curl-proxy/","keywords":"php curl proxy domdocument xpath json"},{"title":"代理认证","section":"核心概念","href":"/developers/getting-started/#authentication","keywords":"用户名 密码 账密 whitelist allowlist IP白名单 407"},{"title":"HTTP(S) 与 SOCKS5","section":"核心概念","href":"/developers/getting-started/#protocols","keywords":"http https socks5 proxy curl"},{"title":"SESSION 与出口轮转","section":"核心概念","href":"/developers/products/residential-rotating-proxy/#session","keywords":"sticky session 粘性会话 ttl 国家码 轮换 换ip"},{"title":"连续端口与套餐级轮转","section":"核心概念","href":"/developers/products/unlimited-residential-proxy/#ports","keywords":"port range 端口范围 worker 3-30分钟 不限并发"},{"title":"静态 IP 分配链接","section":"核心概念","href":"/developers/products/static-datacenter-proxy/#allocation","keywords":"allocation extract api 分配链接 固定IP 返回格式"},{"title":"代理可用性测试","section":"错误排查","href":"/developers/getting-started/#verify","keywords":"测试 出口ip 超时 407 curl check"}]</script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/developer-docs.js?v=20260729-04"></script>
+</body>
+</html>

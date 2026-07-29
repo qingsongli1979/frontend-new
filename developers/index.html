@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="123Proxy 开发者中心：快速接入代理网关，了解认证、地区、SESSION、轮转、提取 API 与代码示例。">
+  <title>开发者中心 | 123Proxy</title>
+  <link rel="canonical" href="https://www.123proxy.cn/developers/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="开发者中心 | 123Proxy">
+  <meta property="og:description" content="123Proxy 开发者中心：快速接入代理网关，了解认证、地区、SESSION、轮转、提取 API 与代码示例。">
+  <meta property="og:url" content="https://www.123proxy.cn/developers/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/developer-docs.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"CollectionPage","@id":"https://www.123proxy.cn/developers/#document","headline":"从一条 cURL 开始，接入全球代理网络","description":"123Proxy 开发者中心：快速接入代理网关，了解认证、地区、SESSION、轮转、提取 API 与代码示例。","url":"https://www.123proxy.cn/developers/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"dateModified":"2026-07-29","about":[{"@id":"https://www.123proxy.cn/high-bandwidth-proxy.html#service"},{"@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service"},{"@id":"https://www.123proxy.cn/residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service"},{"@id":"https://www.123proxy.cn/static-residential-proxy.html#service"}]},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/developers/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"开发者中心","item":"https://www.123proxy.cn/developers/"}]},{"@type":"Service","@id":"https://www.123proxy.cn/high-bandwidth-proxy.html#service","name":"高带宽代理 IP","url":"https://www.123proxy.cn/high-bandwidth-proxy.html","description":"为 AI 视频、图片、代码和公开文档的大规模下载配置 10Gbps+ 单项目带宽、不限流量与定制代理池。","serviceType":"High-bandwidth proxy IP service","category":"Proxy infrastructure for AI data scraping","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、AI 数据采集团队、数据工程团队"},"additionalProperty":[{"@type":"PropertyValue","name":"单项目带宽","value":"10Gbps+"},{"@type":"PropertyValue","name":"总网络能力","value":"200Gbps+"},{"@type":"PropertyValue","name":"流量方式","value":"不限流量"},{"@type":"PropertyValue","name":"代理池","value":"可按目标站点和任务定制"}]},{"@type":"Service","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service","name":"隧道代理","url":"https://www.123proxy.cn/scraping-rotating-proxy.html","description":"固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。","serviceType":"Scraping rotating proxy","category":"Rotating proxy for web scraping","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、采集系统开发者、数据工程团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"proxy.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"36923"},{"@type":"PropertyValue","name":"默认地区","value":"全球随机"},{"@type":"PropertyValue","name":"代理池","value":"爬虫混合池约 95% 住宅 IP + 5% 数据中心 IP；纯住宅池为 100% 住宅 IP"},{"@type":"PropertyValue","name":"计费方式","value":"按流量或按并发线程"}]},{"@type":"Service","@id":"https://www.123proxy.cn/residential-proxy.html#service","name":"隧道住宅代理","url":"https://www.123proxy.cn/residential-proxy.html","description":"固定网关接入 8000万+ 住宅 IP，覆盖 190+ 国家和地区，提取代理时指定国家或地区与 SESSION，仅按流量购买。","serviceType":"Residential rotating proxy","category":"Geo-targeted residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、跨地区采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"33000"},{"@type":"PropertyValue","name":"住宅代理池","value":"8000万+"},{"@type":"PropertyValue","name":"覆盖范围","value":"190+ 国家和地区"},{"@type":"PropertyValue","name":"计费方式","value":"仅按流量"}]},{"@type":"Service","@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service","name":"不限量动态住宅","url":"https://www.123proxy.cn/unlimited-residential-proxy.html","description":"每端口不限流量与并发，按端口和带宽套餐使用，出口 IP 每 3–30 分钟固定轮转。","serviceType":"Unlimited residential proxy by port","category":"Port-based residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"浏览器自动化开发者、持续采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"unlimit.residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"10253"},{"@type":"PropertyValue","name":"端口能力","value":"每端口不限流量与并发"},{"@type":"PropertyValue","name":"轮转周期","value":"3–30 分钟"},{"@type":"PropertyValue","name":"地区设置","value":"提取代理时按套餐统一设置"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-datacenter-proxy.html#service","name":"长效静态代理","url":"https://www.123proxy.cn/static-datacenter-proxy.html","description":"独享固定数据中心代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static datacenter proxy","category":"Static datacenter proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"企业系统开发者、固定出口任务、API 集成团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定数据中心 IP"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"白名单模式","value":"不支持 123Proxy 套餐 IP 白名单认证"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-residential-proxy.html#service","name":"长效静态住宅","url":"https://www.123proxy.cn/static-residential-proxy.html","description":"独享固定住宅 ISP 代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static residential proxy","category":"Static residential ISP proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"需要固定住宅出口的开发者、长期会话任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定住宅 ISP IP"},{"@type":"PropertyValue","name":"覆盖范围","value":"69 个国家和地区"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]}]}</script>
+</head>
+<body class="developer-docs" data-developer-page="home">
+  <div class="page">
+    
+    <div class="docs-utility">
+      <div class="docs-frame docs-utility-inner">
+        <a class="docs-network-state" href="/status/"><i></i>全球代理网络运行正常</a>
+        <div>
+          <a href="/global-network.html">全球网络</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+    </div>
+    <header class="docs-header">
+      <div class="docs-frame docs-header-inner">
+        <div class="docs-brand-group">
+          <a class="brand docs-brand" href="/" aria-label="123Proxy 首页">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <span class="docs-brand-divider" aria-hidden="true"></span>
+          <a class="docs-product-name" href="/developers/">开发者中心</a>
+        </div>
+        
+    <div class="docs-search is-compact" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+        <nav class="docs-topnav" aria-label="开发者导航">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/developers/examples/">代码案例</a>
+          <a class="docs-console-link" href="https://console.123proxy.cn/app/">控制台<i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        </nav>
+        <button class="docs-icon-button docs-mobile-toggle" type="button" data-docs-mobile-toggle aria-expanded="false" aria-controls="docsMobileNav" aria-label="打开开发者导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+      <div class="docs-mobile-nav" id="docsMobileNav" data-docs-mobile-nav>
+        <a href="/developers/">文档首页</a>
+        <a href="/developers/getting-started/">快速开始</a>
+        <a href="/developers/#products">产品接入</a>
+        <a href="/developers/examples/">代码案例</a>
+        <a href="/developers/getting-started/#troubleshooting">错误排查</a>
+        <a href="https://console.123proxy.cn/app/">登录控制台</a>
+      </div>
+    </header>
+    
+    <main class="docs-home">
+      <section class="docs-home-hero">
+        <div class="docs-frame docs-home-hero-inner">
+          <div class="docs-home-copy">
+            <span class="docs-eyebrow"><i data-lucide="square-terminal" aria-hidden="true"></i>DEVELOPER DOCUMENTATION</span>
+            <h1>从一条 cURL 开始，<br>接入全球代理网络</h1>
+            <p>选择代理产品，配置认证、地区与 SESSION，将可运行的代理请求接入爬虫和 AI 数据采集任务。</p>
+            
+    <div class="docs-search" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+            <div class="docs-home-actions">
+              <a class="btn btn-primary" href="/developers/getting-started/"><i data-lucide="rocket" aria-hidden="true"></i>5 分钟快速开始</a>
+              <a class="btn docs-secondary-button" href="/developers/products/scraping-rotating-proxy/"><i data-lucide="route" aria-hidden="true"></i>查看隧道代理接入</a>
+            </div>
+          </div>
+          <div class="docs-home-code">
+            <div class="docs-home-code-head">
+              <span><i></i>FIRST REQUEST</span>
+              <small>HTTP(S) · USER / PASS</small>
+            </div>
+            
+    <div class="docs-code" data-code-group="home-quick">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="curl" aria-selected="true" class="is-active">cURL</button><button type="button" role="tab" data-code-tab="python" aria-selected="false" class="">Python</button><button type="button" role="tab" data-code-tab="node" aria-selected="false" class="">Node.js</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="curl"><code>export PROXY_USER=&quot;YOUR_PROXY_USER&quot;
+export PROXY_PASS=&quot;YOUR_PROXY_PASSWORD&quot;
+
+curl --fail-with-body --silent --show-error \
+  --proxy &quot;http://proxy.123proxy.cn:36923&quot; \
+  --proxy-user &quot;${PROXY_USER}:${PROXY_PASS}&quot; \
+  --connect-timeout 15 \
+  --max-time 30 \
+  &quot;https://api.ipify.org?format=json&quot;</code></pre><pre role="tabpanel" data-code-panel="python" hidden><code>import os
+import requests
+
+host = &quot;proxy.123proxy.cn&quot;
+port = 36923
+username = os.environ[&quot;PROXY_USER&quot;]
+password = os.environ[&quot;PROXY_PASS&quot;]
+
+proxy_url = f&quot;http://{username}:{password}@{host}:{port}&quot;
+proxies = {&quot;http&quot;: proxy_url, &quot;https&quot;: proxy_url}
+
+response = requests.get(
+    &quot;https://api.ipify.org?format=json&quot;,
+    proxies=proxies,
+    timeout=(15, 30),
+)
+response.raise_for_status()
+print(response.json())</code></pre><pre role="tabpanel" data-code-panel="node" hidden><code>// npm install axios
+const axios = require(&quot;axios&quot;);
+
+const response = await axios.get(
+  &quot;https://api.ipify.org?format=json&quot;,
+  {
+    proxy: {
+      protocol: &quot;http&quot;,
+      host: &quot;proxy.123proxy.cn&quot;,
+      port: 36923,
+      auth: {
+        username: process.env.PROXY_USER,
+        password: process.env.PROXY_PASS,
+      },
+    },
+    timeout: 30000,
+  },
+);
+
+console.log(response.data);</code></pre>
+    </div>
+            <div class="docs-home-code-result">
+              <span>EXPECTED OUTPUT</span>
+              <code>&#123;"ip": "代理出口 IP"&#125;</code>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="docs-home-band">
+        <div class="docs-frame docs-home-band-grid">
+          <a href="/developers/getting-started/#authentication"><span>01</span><strong>认证方式</strong><small>账密 / 套餐白名单</small><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/products/scraping-rotating-proxy/#routing"><span>02</span><strong>地区与路由</strong><small>全球随机 / 地区选择</small><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/guides/session-geo-rotation/"><span>03</span><strong>SESSION</strong><small>轮转 / 固定出口</small><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/guides/proxy-errors-retries/"><span>04</span><strong>错误排查</strong><small>407 / 超时 / 目标错误</small><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </section>
+
+      <section class="docs-home-section docs-frame" id="products">
+        <div class="docs-section-heading">
+          <div><span>PRODUCT ACCESS</span><h2>按代理产品查看接入方式</h2></div>
+          <p>不同产品的地区、SESSION、端口和静态 IP 分配逻辑并不相同。先选择产品，再复制对应代码。</p>
+        </div>
+        
+    <div class="docs-product-grid">
+      
+        <a class="docs-product-item" href="/high-bandwidth-proxy.html">
+          <span class="docs-product-icon"><i data-lucide="gauge" aria-hidden="true"></i></span>
+          <span>
+            <small>项目接入</small>
+            <strong>高带宽代理 IP</strong>
+            <p>项目制网关、定制代理池与 10Gbps+ 聚合容量</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="docs-product-item is-featured" href="/developers/products/scraping-rotating-proxy/">
+          <span class="docs-product-icon"><i data-lucide="route" aria-hidden="true"></i></span>
+          <span>
+            <small>完整手册</small>
+            <strong>隧道代理</strong>
+            <p>混合池与纯住宅池，流量或并发线程套餐</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="docs-product-item" href="/developers/products/residential-rotating-proxy/">
+          <span class="docs-product-icon"><i data-lucide="globe-2" aria-hidden="true"></i></span>
+          <span>
+            <small>完整手册</small>
+            <strong>隧道住宅代理</strong>
+            <p>国家定位、SESSION 与 8000 万+住宅 IP</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="docs-product-item" href="/developers/products/unlimited-residential-proxy/">
+          <span class="docs-product-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span>
+          <span>
+            <small>完整手册</small>
+            <strong>不限量动态住宅</strong>
+            <p>连续端口、套餐级地区与 3-30 分钟轮转</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="docs-product-item" href="/developers/products/static-datacenter-proxy/">
+          <span class="docs-product-icon"><i data-lucide="server" aria-hidden="true"></i></span>
+          <span>
+            <small>完整手册</small>
+            <strong>长效静态代理</strong>
+            <p>固定数据中心 IP 的分配与账密接入</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="docs-product-item" href="/developers/products/static-residential-proxy/">
+          <span class="docs-product-icon"><i data-lucide="house-plug" aria-hidden="true"></i></span>
+          <span>
+            <small>完整手册</small>
+            <strong>长效静态住宅</strong>
+            <p>固定住宅 ISP IP 的分配与长期使用</p>
+          </span>
+          <i data-lucide="arrow-right" aria-hidden="true"></i>
+        </a>
+    </div>
+      </section>
+
+      <section class="docs-home-section docs-home-workflow">
+        <div class="docs-frame">
+          <div class="docs-section-heading">
+            <div><span>ENGINEERING PATH</span><h2>从测试请求到生产 worker</h2></div>
+            <p>每一步都对应一个可验证结果，避免在未确认代理链路前直接放大并发。</p>
+          </div>
+          <div class="docs-workflow-grid">
+            <article><span>01</span><i data-lucide="package-check" aria-hidden="true"></i><h3>选择套餐</h3><p>根据流量、并发线程、端口或固定 IP 选择产品。</p></article>
+            <article><span>02</span><i data-lucide="key-round" aria-hidden="true"></i><h3>生成代理</h3><p>在控制台选择认证、协议、地区和 SESSION。</p></article>
+            <article><span>03</span><i data-lucide="terminal" aria-hidden="true"></i><h3>命令行验证</h3><p>先用 cURL 检查认证、出口和目标连接。</p></article>
+            <article><span>04</span><i data-lucide="blocks" aria-hidden="true"></i><h3>接入代码</h3><p>加入超时、重试、并发控制和任务监控。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="docs-home-section docs-frame" id="guides">
+        <div class="docs-section-heading">
+          <div><span>POPULAR GUIDES</span><h2>工程师常用文档</h2></div>
+        </div>
+        <div class="docs-guide-list">
+          <a href="/developers/guides/concurrency-qps-performance/"><span><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><div><strong>并发、QPS 与响应时间</strong><p>从任务耗时、在途请求和浏览器子资源计算容量。</p></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/guides/session-geo-rotation/"><span><i data-lucide="link" aria-hidden="true"></i></span><div><strong>什么时候使用 SESSION</strong><p>理解按请求轮转、粘性会话和固定 IP 的区别。</p></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/examples/"><span><i data-lucide="code-2" aria-hidden="true"></i></span><div><strong>9 个完整可运行案例</strong><p>覆盖 HTTP 客户端、爬虫框架与浏览器自动化。</p></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+          <a href="/developers/guides/proxy-errors-retries/"><span><i data-lucide="wrench" aria-hidden="true"></i></span><div><strong>407、超时与出口异常</strong><p>按认证、代理链路和目标站点分层排查。</p></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="docs-footer">
+      <div class="docs-frame docs-footer-inner">
+        <div>
+          <a class="brand docs-footer-brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+        </div>
+        <div class="docs-footer-links">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/pricing.html">价格</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+      <div class="docs-frame docs-footer-bottom">
+        <span>© 2026 123Proxy. All rights reserved.</span>
+        <span>文档内容以当前控制台可用能力为准</span>
+      </div>
+    </footer>
+  </div>
+  <script type="application/json" id="developerSearchIndex">[{"title":"开发者中心","section":"开始使用","href":"/developers/","keywords":"开发文档 文档首页 产品选择 代码示例"},{"title":"5 分钟快速开始","section":"开始使用","href":"/developers/getting-started/","keywords":"curl python http socks 认证 控制台 生成代理"},{"title":"隧道代理接入手册","section":"产品接入","href":"/developers/products/scraping-rotating-proxy/","keywords":"Scraping rotating proxy 混合池 纯住宅池 session 白名单 地区 并发 流量"},{"title":"隧道住宅代理接入手册","section":"产品接入","href":"/developers/products/residential-rotating-proxy/","keywords":"Residential rotating proxy 8000万 190 国家码 +us session 住宅IP 按流量"},{"title":"不限量动态住宅接入手册","section":"产品接入","href":"/developers/products/unlimited-residential-proxy/","keywords":"不限流量 不限并发 连续端口 端口范围 3-30分钟 套餐级地区"},{"title":"长效静态代理接入手册","section":"产品接入","href":"/developers/products/static-datacenter-proxy/","keywords":"固定数据中心IP 分配链接 提取API 账密认证 无白名单 不轮转"},{"title":"长效静态住宅接入手册","section":"产品接入","href":"/developers/products/static-residential-proxy/","keywords":"固定住宅ISP IP 分配链接 提取API 账密认证 无白名单 长效"},{"title":"代理并发、QPS与响应时间","section":"工程指南","href":"/developers/guides/concurrency-qps-performance/","keywords":"并发线程 qps 吞吐量 响应时间 p95 浏览器资源 worker little law"},{"title":"SESSION、地区定位与出口轮转","section":"工程指南","href":"/developers/guides/session-geo-rotation/","keywords":"session sticky geo country region rotation 全球随机 国家定位 固定出口"},{"title":"代理错误、超时与重试排查","section":"工程指南","href":"/developers/guides/proxy-errors-retries/","keywords":"407 403 429 timeout tls dns tcp retry backoff connection pool"},{"title":"代理产品选型边界","section":"工程指南","href":"/developers/guides/proxy-product-selection/","keywords":"代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"},{"title":"代理爬虫代码案例","section":"框架案例","href":"/developers/examples/","keywords":"crawler examples 爬虫框架 完整代码 网关域名 可运行"},{"title":"Python Requests代理爬虫","section":"框架案例","href":"/developers/examples/python-requests-proxy/","keywords":"python requests beautifulsoup proxy quotes pagination jsonl"},{"title":"Scrapy代理配置","section":"框架案例","href":"/developers/examples/scrapy-proxy/","keywords":"scrapy proxy middleware books pagination detail feed jsonlines"},{"title":"Python Playwright代理","section":"框架案例","href":"/developers/examples/playwright-proxy/","keywords":"playwright python browser proxy javascript rendered quotes"},{"title":"Python Selenium代理","section":"框架案例","href":"/developers/examples/selenium-proxy/","keywords":"selenium python chrome proxy authentication extension javascript residential unlimited"},{"title":"Node.js Puppeteer代理","section":"框架案例","href":"/developers/examples/puppeteer-proxy/","keywords":"nodejs puppeteer proxy authenticate infinite scroll browser"},{"title":"Node.js Axios代理","section":"框架案例","href":"/developers/examples/nodejs-axios-proxy/","keywords":"nodejs axios cheerio proxy keep alive retry residential pagination jsonl"},{"title":"Golang Colly代理","section":"框架案例","href":"/developers/examples/go-colly-proxy/","keywords":"golang go colly proxy switcher pagination csv"},{"title":"Java Jsoup代理","section":"框架案例","href":"/developers/examples/java-jsoup-proxy/","keywords":"java jsoup proxy authentication maven books csv"},{"title":"PHP cURL代理","section":"框架案例","href":"/developers/examples/php-curl-proxy/","keywords":"php curl proxy domdocument xpath json"},{"title":"代理认证","section":"核心概念","href":"/developers/getting-started/#authentication","keywords":"用户名 密码 账密 whitelist allowlist IP白名单 407"},{"title":"HTTP(S) 与 SOCKS5","section":"核心概念","href":"/developers/getting-started/#protocols","keywords":"http https socks5 proxy curl"},{"title":"SESSION 与出口轮转","section":"核心概念","href":"/developers/products/residential-rotating-proxy/#session","keywords":"sticky session 粘性会话 ttl 国家码 轮换 换ip"},{"title":"连续端口与套餐级轮转","section":"核心概念","href":"/developers/products/unlimited-residential-proxy/#ports","keywords":"port range 端口范围 worker 3-30分钟 不限并发"},{"title":"静态 IP 分配链接","section":"核心概念","href":"/developers/products/static-datacenter-proxy/#allocation","keywords":"allocation extract api 分配链接 固定IP 返回格式"},{"title":"代理可用性测试","section":"错误排查","href":"/developers/getting-started/#verify","keywords":"测试 出口ip 超时 407 curl check"}]</script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/developer-docs.js?v=20260729-04"></script>
+</body>
+</html>

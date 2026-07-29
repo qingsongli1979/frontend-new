@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="123Proxy 不限量动态住宅接入手册：套餐连续端口、每端口不限流量与并发、套餐级地区和 3-30 分钟轮转。">
+  <title>不限量动态住宅接入手册 | 123Proxy 开发者中心</title>
+  <link rel="canonical" href="https://www.123proxy.cn/developers/products/unlimited-residential-proxy/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="不限量动态住宅接入手册 | 123Proxy 开发者中心">
+  <meta property="og:description" content="123Proxy 不限量动态住宅接入手册：套餐连续端口、每端口不限流量与并发、套餐级地区和 3-30 分钟轮转。">
+  <meta property="og:url" content="https://www.123proxy.cn/developers/products/unlimited-residential-proxy/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta property="article:modified_time" content="2026-07-29">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/developer-docs.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"TechArticle","@id":"https://www.123proxy.cn/developers/products/unlimited-residential-proxy/#document","headline":"不限量动态住宅接入手册","description":"123Proxy 不限量动态住宅接入手册：套餐连续端口、每端口不限流量与并发、套餐级地区和 3-30 分钟轮转。","url":"https://www.123proxy.cn/developers/products/unlimited-residential-proxy/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"isPartOf":{"@id":"https://www.123proxy.cn/developers/#document"},"dateModified":"2026-07-29","about":{"@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service"}},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/developers/products/unlimited-residential-proxy/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"开发者中心","item":"https://www.123proxy.cn/developers/"},{"@type":"ListItem","position":3,"name":"不限量动态住宅接入手册","item":"https://www.123proxy.cn/developers/products/unlimited-residential-proxy/"}]},{"@type":"Service","@id":"https://www.123proxy.cn/unlimited-residential-proxy.html#service","name":"不限量动态住宅","url":"https://www.123proxy.cn/unlimited-residential-proxy.html","description":"每端口不限流量与并发，按端口和带宽套餐使用，出口 IP 每 3–30 分钟固定轮转。","serviceType":"Unlimited residential proxy by port","category":"Port-based residential proxy","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"浏览器自动化开发者、持续采集任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"unlimit.residential.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"10253"},{"@type":"PropertyValue","name":"端口能力","value":"每端口不限流量与并发"},{"@type":"PropertyValue","name":"轮转周期","value":"3–30 分钟"},{"@type":"PropertyValue","name":"地区设置","value":"提取代理时按套餐统一设置"}]}]}</script>
+</head>
+<body class="developer-docs" data-developer-page="unlimited">
+  <div class="page">
+    
+    <div class="docs-utility">
+      <div class="docs-frame docs-utility-inner">
+        <a class="docs-network-state" href="/status/"><i></i>全球代理网络运行正常</a>
+        <div>
+          <a href="/global-network.html">全球网络</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+    </div>
+    <header class="docs-header">
+      <div class="docs-frame docs-header-inner">
+        <div class="docs-brand-group">
+          <a class="brand docs-brand" href="/" aria-label="123Proxy 首页">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <span class="docs-brand-divider" aria-hidden="true"></span>
+          <a class="docs-product-name" href="/developers/">开发者中心</a>
+        </div>
+        
+    <div class="docs-search is-compact" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+        <nav class="docs-topnav" aria-label="开发者导航">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/developers/examples/">代码案例</a>
+          <a class="docs-console-link" href="https://console.123proxy.cn/app/">控制台<i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        </nav>
+        <button class="docs-icon-button docs-mobile-toggle" type="button" data-docs-mobile-toggle aria-expanded="false" aria-controls="docsMobileNav" aria-label="打开开发者导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+      <div class="docs-mobile-nav" id="docsMobileNav" data-docs-mobile-nav>
+        <a href="/developers/">文档首页</a>
+        <a href="/developers/getting-started/">快速开始</a>
+        <a href="/developers/#products">产品接入</a>
+        <a href="/developers/examples/">代码案例</a>
+        <a href="/developers/getting-started/#troubleshooting">错误排查</a>
+        <a href="https://console.123proxy.cn/app/">登录控制台</a>
+      </div>
+    </header>
+    
+    <main class="docs-layout docs-frame">
+      <button class="docs-sidebar-open" type="button" data-docs-sidebar-toggle><i data-lucide="panel-left" aria-hidden="true"></i>文档目录</button>
+      
+    <aside class="docs-sidebar" data-docs-sidebar>
+      <nav aria-label="文档目录">
+        <div class="docs-sidebar-group">
+          <span>开始使用</span>
+          
+    <a href="/developers/">
+      <i data-lucide="layout-grid" aria-hidden="true"></i><span>开发者中心</span>
+    </a>
+          
+    <a href="/developers/getting-started/">
+      <i data-lucide="rocket" aria-hidden="true"></i><span>5 分钟快速开始</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>产品接入</span>
+          
+    <a href="/developers/products/scraping-rotating-proxy/">
+      <i data-lucide="route" aria-hidden="true"></i><span>隧道代理</span>
+    </a>
+          
+    <a href="/developers/products/residential-rotating-proxy/">
+      <i data-lucide="globe-2" aria-hidden="true"></i><span>隧道住宅代理</span>
+    </a>
+          
+    <a href="/developers/products/unlimited-residential-proxy/" class="is-active" aria-current="page">
+      <i data-lucide="refresh-cw" aria-hidden="true"></i><span>不限量动态住宅</span>
+    </a>
+          
+    <a href="/developers/products/static-datacenter-proxy/">
+      <i data-lucide="server" aria-hidden="true"></i><span>长效静态代理</span>
+    </a>
+          
+    <a href="/developers/products/static-residential-proxy/">
+      <i data-lucide="house-plug" aria-hidden="true"></i><span>长效静态住宅</span>
+    </a>
+          
+    <a href="/high-bandwidth-proxy.html">
+      <i data-lucide="gauge" aria-hidden="true"></i><span>高带宽代理 IP</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>工程指南</span>
+          
+    <a href="/developers/guides/concurrency-qps-performance/">
+      <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>并发、QPS 与响应时间</span>
+    </a>
+          
+    <a href="/developers/guides/session-geo-rotation/">
+      <i data-lucide="shuffle" aria-hidden="true"></i><span>SESSION 与出口轮转</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>错误、超时与重试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-product-selection/">
+      <i data-lucide="git-compare-arrows" aria-hidden="true"></i><span>代理产品选型</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>框架案例</span>
+          
+    <a href="/developers/examples/">
+      <i data-lucide="code-2" aria-hidden="true"></i><span>完整代码案例</span>
+    </a>
+          
+    <a href="/developers/examples/python-requests-proxy/">
+      <span>Python Requests</span>
+    </a>
+          
+    <a href="/developers/examples/scrapy-proxy/">
+      <span>Scrapy</span>
+    </a>
+          
+    <a href="/developers/examples/playwright-proxy/">
+      <span>Playwright</span>
+    </a>
+          
+    <a href="/developers/examples/selenium-proxy/">
+      <span>Selenium</span>
+    </a>
+          
+    <a href="/developers/examples/puppeteer-proxy/">
+      <span>Puppeteer</span>
+    </a>
+          
+    <a href="/developers/examples/nodejs-axios-proxy/">
+      <span>Node.js Axios</span>
+    </a>
+          
+    <a href="/developers/examples/go-colly-proxy/">
+      <span>Go Colly</span>
+    </a>
+          
+    <a href="/developers/examples/java-jsoup-proxy/">
+      <span>Java Jsoup</span>
+    </a>
+          
+    <a href="/developers/examples/php-curl-proxy/">
+      <span>PHP cURL</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>验证与排查</span>
+          
+    <a href="/developers/getting-started/#verify">
+      <i data-lucide="activity" aria-hidden="true"></i><span>可用性测试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>常见错误</span>
+    </a>
+        </div>
+      </nav>
+      <div class="docs-sidebar-support">
+        <span><i data-lucide="life-buoy" aria-hidden="true"></i></span>
+        <strong>接入遇到问题？</strong>
+        <p>附上请求时间、套餐类型和错误信息联系技术支持。</p>
+        <a href="/contact.html#solutions">联系技术支持<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </aside>
+      <article class="docs-article">
+        
+    <nav class="docs-breadcrumb" aria-label="面包屑"><a href="/developers/">开发者中心</a><i data-lucide="chevron-right" aria-hidden="true"></i><span>产品接入</span><i data-lucide="chevron-right" aria-hidden="true"></i><span>不限量动态住宅</span></nav>
+    <header class="docs-article-header docs-product-doc-header">
+      <span class="docs-article-label">UNLIMITED RESIDENTIAL PROXY</span>
+      <h1>不限量动态住宅接入手册</h1>
+      <p>套餐按端口配置不限流量住宅资源，程序统一连接固定网关 <code>unlimit.residential.123proxy.cn:10253</code>。地区和 3–30 分钟轮转周期仍按套餐统一设置。</p>
+      <div class="docs-product-facts">
+        <span><small>资源</small><strong>连续代理端口</strong></span>
+        <span><small>每端口</small><strong>不限流量与并发</strong></span>
+        <span><small>轮转</small><strong>3–30 分钟</strong></span>
+        <span><small>地区</small><strong>套餐级统一设置</strong></span>
+      </div>
+      <div class="docs-article-actions">
+        <a class="btn btn-primary" href="https://console.123proxy.cn/app/#extract?product=unlimited"><i data-lucide="route" aria-hidden="true"></i>打开提取代理</a>
+        <a class="btn docs-secondary-button" href="/pricing.html?product=unlimited"><i data-lucide="tag" aria-hidden="true"></i>查看端口套餐</a>
+      </div>
+    </header>
+
+    <section id="quick-request">
+      <div class="docs-section-title"><span>01</span><div><small>MINIMUM REQUEST</small><h2>固定网关，只替换代理账密</h2></div></div>
+      <p>示例中的主机固定为 <code>unlimit.residential.123proxy.cn</code>，端口固定为 <code>10253</code>。只需填写控制台生成的代理用户名和密码。</p>
+      
+    <div class="docs-code" data-code-group="unlimited-code">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="curl" aria-selected="true" class="is-active">cURL</button><button type="button" role="tab" data-code-tab="python" aria-selected="false" class="">Python</button><button type="button" role="tab" data-code-tab="node" aria-selected="false" class="">Node.js</button><button type="button" role="tab" data-code-tab="go" aria-selected="false" class="">Go</button><button type="button" role="tab" data-code-tab="java" aria-selected="false" class="">Java</button><button type="button" role="tab" data-code-tab="php" aria-selected="false" class="">PHP</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="curl"><code>export PROXY_USER=&quot;YOUR_PROXY_USER&quot;
+export PROXY_PASS=&quot;YOUR_PROXY_PASSWORD&quot;
+
+curl --fail-with-body --silent --show-error \
+  --proxy &quot;http://unlimit.residential.123proxy.cn:10253&quot; \
+  --proxy-user &quot;${PROXY_USER}:${PROXY_PASS}&quot; \
+  --connect-timeout 15 \
+  --max-time 30 \
+  &quot;https://api.ipify.org?format=json&quot;</code></pre><pre role="tabpanel" data-code-panel="python" hidden><code>import os
+import requests
+
+host = &quot;unlimit.residential.123proxy.cn&quot;
+port = 10253
+username = os.environ[&quot;PROXY_USER&quot;]
+password = os.environ[&quot;PROXY_PASS&quot;]
+
+proxy_url = f&quot;http://{username}:{password}@{host}:{port}&quot;
+proxies = {&quot;http&quot;: proxy_url, &quot;https&quot;: proxy_url}
+
+response = requests.get(
+    &quot;https://api.ipify.org?format=json&quot;,
+    proxies=proxies,
+    timeout=(15, 30),
+)
+response.raise_for_status()
+print(response.json())</code></pre><pre role="tabpanel" data-code-panel="node" hidden><code>// npm install axios
+const axios = require(&quot;axios&quot;);
+
+const response = await axios.get(
+  &quot;https://api.ipify.org?format=json&quot;,
+  {
+    proxy: {
+      protocol: &quot;http&quot;,
+      host: &quot;unlimit.residential.123proxy.cn&quot;,
+      port: 10253,
+      auth: {
+        username: process.env.PROXY_USER,
+        password: process.env.PROXY_PASS,
+      },
+    },
+    timeout: 30000,
+  },
+);
+
+console.log(response.data);</code></pre><pre role="tabpanel" data-code-panel="go" hidden><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+    &quot;os&quot;
+    &quot;time&quot;
+)
+
+func main() {
+    proxyURL := &amp;url.URL{
+        Scheme: &quot;http&quot;,
+        Host: &quot;unlimit.residential.123proxy.cn:10253&quot;,
+        User: url.UserPassword(os.Getenv(&quot;PROXY_USER&quot;), os.Getenv(&quot;PROXY_PASS&quot;)),
+    }
+    client := &amp;http.Client{
+        Transport: &amp;http.Transport{Proxy: http.ProxyURL(proxyURL)},
+        Timeout: 30 * time.Second,
+    }
+    response, err := client.Get(&quot;https://api.ipify.org?format=json&quot;)
+    if err != nil { panic(err) }
+    defer response.Body.Close()
+    if response.StatusCode &gt;= 400 { panic(response.Status) }
+    body, err := io.ReadAll(response.Body)
+    if err != nil { panic(err) }
+    fmt.Println(string(body))
+}</code></pre><pre role="tabpanel" data-code-panel="java" hidden><code>import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+public class ProxyCheck {
+    public static void main(String[] args) throws Exception {
+        System.setProperty(&quot;jdk.http.auth.tunneling.disabledSchemes&quot;, &quot;&quot;);
+        String host = &quot;unlimit.residential.123proxy.cn&quot;;
+        int port = 10253;
+        String user = System.getenv(&quot;PROXY_USER&quot;);
+        char[] password = System.getenv(&quot;PROXY_PASS&quot;).toCharArray();
+
+        HttpClient client = HttpClient.newBuilder()
+            .proxy(ProxySelector.of(new InetSocketAddress(host, port)))
+            .authenticator(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password);
+                }
+            })
+            .connectTimeout(Duration.ofSeconds(15))
+            .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(&quot;https://api.ipify.org?format=json&quot;))
+            .timeout(Duration.ofSeconds(30))
+            .GET()
+            .build();
+        HttpResponse&lt;String&gt; response = client.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        );
+        if (response.statusCode() &gt;= 400) throw new RuntimeException(response.body());
+        System.out.println(response.body());
+    }
+}</code></pre><pre role="tabpanel" data-code-panel="php" hidden><code>&lt;?php
+$host = &quot;unlimit.residential.123proxy.cn&quot;;
+$port = 10253;
+$user = getenv(&quot;PROXY_USER&quot;);
+$password = getenv(&quot;PROXY_PASS&quot;);
+
+$curl = curl_init(&quot;https://api.ipify.org?format=json&quot;);
+curl_setopt_array($curl, [
+    CURLOPT_RETURNTRANSFER =&gt; true,
+    CURLOPT_PROXY =&gt; $host,
+    CURLOPT_PROXYPORT =&gt; (int) $port,
+    CURLOPT_PROXYUSERPWD =&gt; $user . &quot;:&quot; . $password,
+    CURLOPT_CONNECTTIMEOUT =&gt; 15,
+    CURLOPT_TIMEOUT =&gt; 30,
+]);
+$body = curl_exec($curl);
+if ($body === false) {
+    throw new RuntimeException(curl_error($curl));
+}
+$status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+curl_close($curl);
+if ($status &gt;= 400) throw new RuntimeException($body);
+echo $body . PHP_EOL;</code></pre>
+    </div>
+      <div class="docs-callout is-important">
+        <i data-lucide="triangle-alert" aria-hidden="true"></i>
+        <div><strong>网关端口不是需要猜测的套餐参数</strong><p><code>10253</code> 是不限量动态住宅的固定接入端口。套餐资源、地区和轮转配置由控制台及代理网关识别。</p></div>
+      </div>
+    </section>
+
+    <section id="ports">
+      <div class="docs-section-title"><span>02</span><div><small>GATEWAY & PACKAGE</small><h2>固定网关与套餐端口资源分开理解</h2></div></div>
+      <p>套餐仍按端口数量配置资源，但客户端不应自行拼接或遍历网关端口。代码始终连接固定域名和固定端口，套餐映射由控制台生成的代理凭证识别。</p>
+      <div class="docs-port-map">
+        <div><small>固定网关域名</small><strong>unlimit.residential.123proxy.cn</strong><span>代码中直接使用</span></div>
+        <div><small>固定网关端口</small><strong>10253</strong><span>不是套餐起始端口</span></div>
+        <div><small>需要替换</small><strong>USER / PASSWORD</strong><span>控制台代理账密</span></div>
+      </div>
+      <div class="docs-fact-list">
+        <div><strong>套餐端口资源</strong><p>用于定义当前套餐容量，具体资源关系由控制台和网关管理。</p></div>
+        <div><strong>不限流量</strong><p>套餐不按累计 GB 扣减，但仍应监控业务侧带宽与目标响应。</p></div>
+        <div><strong>不限并发</strong><p>每端口不限制并发线程；目标站点承载能力仍需由程序控制。</p></div>
+      </div>
+    </section>
+
+    <section id="routing">
+      <div class="docs-section-title"><span>03</span><div><small>PACKAGE ROUTING</small><h2>地区和轮转周期对全部端口生效</h2></div></div>
+      <div class="docs-compare-table">
+        <div class="docs-compare-head"><span>设置</span><span>作用范围</span><span>生效逻辑</span></div>
+        <div><strong>国家或地区</strong><span>当前套餐全部端口</span><span>不能为单个端口分别设置</span></div>
+        <div><strong>轮转周期</strong><span>当前套餐全部端口</span><span>3–30 分钟内固定，周期结束自动更换</span></div>
+        <div><strong>配置同步</strong><span>当前套餐全部端口</span><span>修改后通常需要约 3–15 分钟</span></div>
+      </div>
+      <div class="docs-callout">
+        <i data-lucide="refresh-cw" aria-hidden="true"></i>
+        <div><strong>不需要在用户名中设置 SESSION</strong><p>端口本身承担粘性路由。持续使用同一端口即可在所选周期内尽量保持同一住宅出口。</p></div>
+      </div>
+    </section>
+
+    <section id="authentication">
+      <div class="docs-section-title"><span>04</span><div><small>AUTHENTICATION</small><h2>账密或套餐 IP 白名单</h2></div></div>
+      <div class="docs-auth-flow">
+        <article><i data-lucide="key-round" aria-hidden="true"></i><div><strong>账密认证</strong><p>所有端口使用所选代理用户与密码。适合开发机、弹性节点和多 worker。</p><code>HOST:PORT:USER:PASSWORD</code></div></article>
+        <article><i data-lucide="shield-check" aria-hidden="true"></i><div><strong>套餐 IP 白名单</strong><p>白名单绑定当前不限量套餐，并对套餐全部端口生效。程序仅发送 HOST:PORT。</p><code>HOST:PORT</code></div></article>
+      </div>
+    </section>
+
+    <section id="workers">
+      <div class="docs-section-title"><span>05</span><div><small>MULTI WORKER</small><h2>多个 worker 共用固定代理网关</h2></div></div>
+      <p>下面示例启动多个 worker，但所有请求都连接 <code>unlimit.residential.123proxy.cn:10253</code>。代码无需生成端口范围，只需保护并复用控制台代理账密。</p>
+      
+    <div class="docs-code" data-code-group="unlimited-workers">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="python" aria-selected="true" class="is-active">Python</button><button type="button" role="tab" data-code-tab="node" aria-selected="false" class="">Node.js</button><button type="button" role="tab" data-code-tab="go" aria-selected="false" class="">Go</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="python"><code>import os
+from concurrent.futures import ThreadPoolExecutor
+import requests
+
+host = &quot;unlimit.residential.123proxy.cn&quot;
+port = 10253
+worker_count = 8
+username = os.environ[&quot;PROXY_USER&quot;]
+password = os.environ[&quot;PROXY_PASS&quot;]
+target = &quot;https://api.ipify.org?format=json&quot;
+
+def run_worker(worker_id):
+    proxy = f&quot;http://{username}:{password}@{host}:{port}&quot;
+    response = requests.get(
+        target,
+        proxies={&quot;http&quot;: proxy, &quot;https&quot;: proxy},
+        timeout=(15, 30),
+    )
+    response.raise_for_status()
+    return worker_id, port, response.json()
+
+with ThreadPoolExecutor(max_workers=worker_count) as pool:
+    for worker_id, port, result in pool.map(run_worker, range(worker_count)):
+        print(worker_id, port, result)</code></pre><pre role="tabpanel" data-code-panel="node" hidden><code>// npm install axios
+const axios = require(&quot;axios&quot;);
+
+const host = &quot;unlimit.residential.123proxy.cn&quot;;
+const port = 10253;
+const workerCount = 8;
+const username = process.env.PROXY_USER;
+const password = process.env.PROXY_PASS;
+
+async function runWorker(workerId) {
+  const response = await axios.get(
+    &quot;https://api.ipify.org?format=json&quot;,
+    {
+      proxy: {
+        protocol: &quot;http&quot;,
+        host,
+        port,
+        auth: { username, password },
+      },
+      timeout: 30000,
+    },
+  );
+  console.log({ workerId, port, data: response.data });
+}
+
+Promise.all(
+  Array.from({ length: workerCount }, (_, workerId) =&gt; runWorker(workerId)),
+).catch((error) =&gt; {
+  console.error(error);
+  process.exitCode = 1;
+});</code></pre><pre role="tabpanel" data-code-panel="go" hidden><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+    &quot;os&quot;
+    &quot;sync&quot;
+    &quot;time&quot;
+)
+
+func main() {
+    const workerCount = 8
+    var wait sync.WaitGroup
+
+    for workerID := 0; workerID &lt; workerCount; workerID++ {
+        wait.Add(1)
+        go func(id int) {
+            defer wait.Done()
+            proxyURL := &amp;url.URL{
+                Scheme: &quot;http&quot;,
+                Host: &quot;unlimit.residential.123proxy.cn:10253&quot;,
+                User: url.UserPassword(os.Getenv(&quot;PROXY_USER&quot;), os.Getenv(&quot;PROXY_PASS&quot;)),
+            }
+            client := &amp;http.Client{
+                Transport: &amp;http.Transport{Proxy: http.ProxyURL(proxyURL)},
+                Timeout: 30 * time.Second,
+            }
+            response, err := client.Get(&quot;https://api.ipify.org?format=json&quot;)
+            if err != nil { panic(err) }
+            defer response.Body.Close()
+            body, err := io.ReadAll(response.Body)
+            if err != nil { panic(err) }
+            if response.StatusCode &gt;= 400 { panic(response.Status) }
+            fmt.Printf(&quot;worker=%d gateway=unlimit.residential.123proxy.cn:10253 %s\n&quot;, id, body)
+        }(workerID)
+    }
+    wait.Wait()
+}</code></pre>
+    </div>
+    </section>
+
+    <section id="formats">
+      <div class="docs-section-title"><span>06</span><div><small>OUTPUT FORMAT</small><h2>固定接入地址的文本格式</h2></div></div>
+      <p>无论选择哪种文本顺序，HOST 和 PORT 都是固定网关；需要变化的部分是代理用户名与密码。</p>
+      <div class="docs-format-table">
+        <div><code>txt_type=1</code><span>HOST:PORT:USER:PASSWORD</span></div>
+        <div><code>txt_type=2</code><span>HOST:PORT@USER:PASSWORD</span></div>
+        <div><code>txt_type=3</code><span>USER:PASSWORD:HOST:PORT</span></div>
+        <div><code>txt_type=4</code><span>USER:PASSWORD@HOST:PORT</span></div>
+      </div>
+      <p class="docs-quiet-note"><i data-lucide="info" aria-hidden="true"></i>不要把套餐端口数量写成网关端口，也不要自行猜测其他接入域名。</p>
+    </section>
+
+    <section id="production">
+      <div class="docs-section-title"><span>07</span><div><small>PRODUCTION</small><h2>生产使用建议</h2></div></div>
+      <div class="docs-checklist">
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>固定网关常量</strong><small>在代码中保留官方域名与 10253 端口，不使用主机占位符。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>集中管理代理账密</strong><small>通过环境变量或密钥服务向多个 worker 提供凭证。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>变更后重新建连</strong><small>地区或周期同步完成后，关闭旧连接池再验证出口。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>限制单站点速率</strong><small>端口不限并发不代表目标站点允许无限并发。</small></span></div>
+      </div>
+    </section>
+
+    <section id="troubleshooting">
+      <div class="docs-section-title"><span>08</span><div><small>TROUBLESHOOTING</small><h2>常见问题</h2></div></div>
+      <div class="docs-troubleshooting">
+        <details open><summary>不限量动态住宅的程序接入地址是什么？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>固定使用 <code>unlimit.residential.123proxy.cn:10253</code>。代码只替换控制台代理用户名与密码，不自行生成其他网关端口。</p></details>
+        <details><summary>能否为每个端口设置不同国家？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>不能。国家或地区与 3–30 分钟轮转周期均按套餐统一设置，对套餐全部端口生效。</p></details>
+        <details><summary>如何让一个出口保持更久？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>在控制台将套餐轮转周期设置为 3–30 分钟中的合适值，并持续使用同一网关与代理凭证。该产品不使用 SESSION 用户名。</p></details>
+        <details><summary>修改地区后为什么旧连接仍是原出口？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>配置同步通常需要约 3–15 分钟。等待后关闭旧连接池并重新建立代理连接。</p></details>
+      </div>
+    </section>
+
+    <nav class="docs-next">
+      <span>运行完整案例</span>
+      <a href="/developers/examples/selenium-proxy/"><div><small>Python Selenium</small><strong>通过不限量住宅网关运行浏览器任务</strong></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </nav>
+      </article>
+      
+    <aside class="docs-toc">
+      <strong>本页内容</strong>
+      <nav>
+        <a href="#quick-request">最小请求</a><a href="#ports">网关与套餐</a><a href="#routing">套餐级路由</a><a href="#authentication">认证方式</a><a href="#workers">多 worker</a><a href="#formats">输出格式</a><a href="#production">生产建议</a><a href="#troubleshooting">常见问题</a>
+      </nav>
+      <a class="docs-toc-console" href="https://console.123proxy.cn/app/"><i data-lucide="terminal" aria-hidden="true"></i>打开控制台</a>
+    </aside>
+    </main>
+    
+    <footer class="docs-footer">
+      <div class="docs-frame docs-footer-inner">
+        <div>
+          <a class="brand docs-footer-brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+        </div>
+        <div class="docs-footer-links">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/pricing.html">价格</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+      <div class="docs-frame docs-footer-bottom">
+        <span>© 2026 123Proxy. All rights reserved.</span>
+        <span>文档内容以当前控制台可用能力为准</span>
+      </div>
+    </footer>
+  </div>
+  <script type="application/json" id="developerSearchIndex">[{"title":"开发者中心","section":"开始使用","href":"/developers/","keywords":"开发文档 文档首页 产品选择 代码示例"},{"title":"5 分钟快速开始","section":"开始使用","href":"/developers/getting-started/","keywords":"curl python http socks 认证 控制台 生成代理"},{"title":"隧道代理接入手册","section":"产品接入","href":"/developers/products/scraping-rotating-proxy/","keywords":"Scraping rotating proxy 混合池 纯住宅池 session 白名单 地区 并发 流量"},{"title":"隧道住宅代理接入手册","section":"产品接入","href":"/developers/products/residential-rotating-proxy/","keywords":"Residential rotating proxy 8000万 190 国家码 +us session 住宅IP 按流量"},{"title":"不限量动态住宅接入手册","section":"产品接入","href":"/developers/products/unlimited-residential-proxy/","keywords":"不限流量 不限并发 连续端口 端口范围 3-30分钟 套餐级地区"},{"title":"长效静态代理接入手册","section":"产品接入","href":"/developers/products/static-datacenter-proxy/","keywords":"固定数据中心IP 分配链接 提取API 账密认证 无白名单 不轮转"},{"title":"长效静态住宅接入手册","section":"产品接入","href":"/developers/products/static-residential-proxy/","keywords":"固定住宅ISP IP 分配链接 提取API 账密认证 无白名单 长效"},{"title":"代理并发、QPS与响应时间","section":"工程指南","href":"/developers/guides/concurrency-qps-performance/","keywords":"并发线程 qps 吞吐量 响应时间 p95 浏览器资源 worker little law"},{"title":"SESSION、地区定位与出口轮转","section":"工程指南","href":"/developers/guides/session-geo-rotation/","keywords":"session sticky geo country region rotation 全球随机 国家定位 固定出口"},{"title":"代理错误、超时与重试排查","section":"工程指南","href":"/developers/guides/proxy-errors-retries/","keywords":"407 403 429 timeout tls dns tcp retry backoff connection pool"},{"title":"代理产品选型边界","section":"工程指南","href":"/developers/guides/proxy-product-selection/","keywords":"代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"},{"title":"代理爬虫代码案例","section":"框架案例","href":"/developers/examples/","keywords":"crawler examples 爬虫框架 完整代码 网关域名 可运行"},{"title":"Python Requests代理爬虫","section":"框架案例","href":"/developers/examples/python-requests-proxy/","keywords":"python requests beautifulsoup proxy quotes pagination jsonl"},{"title":"Scrapy代理配置","section":"框架案例","href":"/developers/examples/scrapy-proxy/","keywords":"scrapy proxy middleware books pagination detail feed jsonlines"},{"title":"Python Playwright代理","section":"框架案例","href":"/developers/examples/playwright-proxy/","keywords":"playwright python browser proxy javascript rendered quotes"},{"title":"Python Selenium代理","section":"框架案例","href":"/developers/examples/selenium-proxy/","keywords":"selenium python chrome proxy authentication extension javascript residential unlimited"},{"title":"Node.js Puppeteer代理","section":"框架案例","href":"/developers/examples/puppeteer-proxy/","keywords":"nodejs puppeteer proxy authenticate infinite scroll browser"},{"title":"Node.js Axios代理","section":"框架案例","href":"/developers/examples/nodejs-axios-proxy/","keywords":"nodejs axios cheerio proxy keep alive retry residential pagination jsonl"},{"title":"Golang Colly代理","section":"框架案例","href":"/developers/examples/go-colly-proxy/","keywords":"golang go colly proxy switcher pagination csv"},{"title":"Java Jsoup代理","section":"框架案例","href":"/developers/examples/java-jsoup-proxy/","keywords":"java jsoup proxy authentication maven books csv"},{"title":"PHP cURL代理","section":"框架案例","href":"/developers/examples/php-curl-proxy/","keywords":"php curl proxy domdocument xpath json"},{"title":"代理认证","section":"核心概念","href":"/developers/getting-started/#authentication","keywords":"用户名 密码 账密 whitelist allowlist IP白名单 407"},{"title":"HTTP(S) 与 SOCKS5","section":"核心概念","href":"/developers/getting-started/#protocols","keywords":"http https socks5 proxy curl"},{"title":"SESSION 与出口轮转","section":"核心概念","href":"/developers/products/residential-rotating-proxy/#session","keywords":"sticky session 粘性会话 ttl 国家码 轮换 换ip"},{"title":"连续端口与套餐级轮转","section":"核心概念","href":"/developers/products/unlimited-residential-proxy/#ports","keywords":"port range 端口范围 worker 3-30分钟 不限并发"},{"title":"静态 IP 分配链接","section":"核心概念","href":"/developers/products/static-datacenter-proxy/#allocation","keywords":"allocation extract api 分配链接 固定IP 返回格式"},{"title":"代理可用性测试","section":"错误排查","href":"/developers/getting-started/#verify","keywords":"测试 出口ip 超时 407 curl check"}]</script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/developer-docs.js?v=20260729-04"></script>
+</body>
+</html>

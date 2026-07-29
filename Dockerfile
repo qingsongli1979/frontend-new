@@ -1,0 +1,67 @@
+FROM node:lts-alpine AS build
+
+WORKDIR /src
+
+COPY package*.json ./
+RUN if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+
+COPY . .
+
+ARG BUILD_REVISION=container
+ARG INDEXNOW_KEY
+ENV BUILD_REVISION=${BUILD_REVISION}
+ENV INDEXNOW_KEY=${INDEXNOW_KEY}
+RUN npm run build:deploy
+
+FROM nginx:stable-alpine
+
+ARG BUILD_REVISION=container
+ARG DEPLOY_TARGET=cn
+ARG ACCOUNT_SERVICE_UPSTREAM=http://account-service:6000
+ARG AUTH_SERVICE_UPSTREAM=http://auth-service:5000
+ARG IP_SERVICE_UPSTREAM=http://c3-ip-app:6800
+ARG STATUS_API_UPSTREAM=http://192.168.85.105:8080
+ARG LEGACY_CONSOLE_UPSTREAM=http://legacy-console:80
+ARG WORDPRESS_UPSTREAM=http://cloudam-wordpress:80
+ARG TLS_MODE=off
+ARG WEBSITE_LISTEN=80
+ARG CONSOLE_LISTEN=80
+ARG HTTPS_REDIRECT_LISTEN=8081
+
+LABEL org.opencontainers.image.title="123Proxy website and console" \
+      org.opencontainers.image.revision="${BUILD_REVISION}" \
+      cn.123proxy.deploy-target="${DEPLOY_TARGET}"
+
+ENV DEPLOY_TARGET=${DEPLOY_TARGET} \
+    ACCOUNT_SERVICE_UPSTREAM=${ACCOUNT_SERVICE_UPSTREAM} \
+    AUTH_SERVICE_UPSTREAM=${AUTH_SERVICE_UPSTREAM} \
+    IP_SERVICE_UPSTREAM=${IP_SERVICE_UPSTREAM} \
+    STATUS_API_UPSTREAM=${STATUS_API_UPSTREAM} \
+    LEGACY_CONSOLE_UPSTREAM=${LEGACY_CONSOLE_UPSTREAM} \
+    WORDPRESS_UPSTREAM=${WORDPRESS_UPSTREAM} \
+    TLS_MODE=${TLS_MODE} \
+    WEBSITE_LISTEN=${WEBSITE_LISTEN} \
+    CONSOLE_LISTEN=${CONSOLE_LISTEN} \
+    HTTPS_REDIRECT_LISTEN=${HTTPS_REDIRECT_LISTEN} \
+    WEBSITE_TLS_CERTIFICATE=/cert/123proxy.cn.pem \
+    WEBSITE_TLS_CERTIFICATE_KEY=/cert/123proxy.cn.key \
+    CONSOLE_TLS_CERTIFICATE=/cert/console.123proxy.cn.pem \
+    CONSOLE_TLS_CERTIFICATE_KEY=/cert/console.123proxy.cn.key \
+    REAL_IP_HEADER=X-Forwarded-For
+
+COPY deploy/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY deploy/nginx/site.conf.template /etc/nginx/templates/site.conf.template
+COPY deploy/nginx/real-ip.conf.template /etc/nginx/templates/00-real-ip.conf.template
+COPY deploy/nginx/targets/${DEPLOY_TARGET}/ip-rate-limit.conf /etc/nginx/target/ip-rate-limit.conf
+COPY deploy/nginx/docker-entrypoint.d/15-prepare-123proxy.sh /docker-entrypoint.d/15-prepare-123proxy.sh
+COPY --from=build /src/dist/www /var/www/website
+COPY --from=build /src/dist/console /var/www/console
+
+RUN chmod +x /docker-entrypoint.d/15-prepare-123proxy.sh
+
+EXPOSE 80 443
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget -q -O /dev/null http://127.0.0.1/healthz || exit 1
+
+STOPSIGNAL SIGQUIT

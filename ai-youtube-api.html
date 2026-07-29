@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <meta name="description" content="123Proxy YouTube 采集 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。">
+  <title>YouTube 采集 API - 视频元数据、字幕与评论接口 | 123Proxy</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="assets/solution-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="assets/visual-refinement.css?v=20260728-07">
+  <!-- SEO_META_START -->
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://www.123proxy.cn/ai-youtube-api.html">
+  <link rel="alternate" hreflang="zh-CN" href="https://www.123proxy.cn/ai-youtube-api.html">
+  <link rel="alternate" hreflang="en" href="https://www.123proxy.cn/en/ai-youtube-api.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.123proxy.cn/ai-youtube-api.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="YouTube 采集 API - 视频元数据、字幕与评论接口 | 123Proxy">
+  <meta property="og:description" content="123Proxy YouTube 采集 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。">
+  <meta property="og:url" content="https://www.123proxy.cn/ai-youtube-api.html">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="YouTube 采集 API - 视频元数据、字幕与评论接口 | 123Proxy">
+  <meta name="twitter:description" content="123Proxy YouTube 采集 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。">
+  <meta name="twitter:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"Service","@id":"https://www.123proxy.cn/ai-youtube-api.html#service","name":"YouTube 采集 API","description":"123Proxy YouTube 采集 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。","serviceType":"YouTube 采集 API","url":"https://www.123proxy.cn/ai-youtube-api.html","provider":{"@id":"https://www.123proxy.cn/#organization"},"areaServed":"Worldwide","dateModified":"2026-07-29"},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/ai-youtube-api.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"YouTube 采集 API","item":"https://www.123proxy.cn/ai-youtube-api.html"}]},{"@type":"FAQPage","@id":"https://www.123proxy.cn/ai-youtube-api.html#faq","mainEntity":[{"@type":"Question","name":"API 可以返回哪些 YouTube 数据？","acceptedAnswer":{"@type":"Answer","text":"原页面覆盖视频元数据、字幕或转录、公开评论与回复。正式可用字段、排序参数、语言和分页方式以开通后的 API 文档为准。"}},{"@type":"Question","name":"哪些请求同步返回，哪些需要异步任务？","acceptedAnswer":{"@type":"Answer","text":"轻量元数据请求可能直接返回；深度评论、批量视频和媒体文件交付通常更适合异步任务。具体阈值和状态字段以正式文档为准。"}},{"@type":"Question","name":"支持将音视频直接传到 S3、OSS 或 GCS 吗？","acceptedAnswer":{"@type":"Answer","text":"原页面包含对象存储直传能力。实际支持的存储类型、格式、分辨率、凭证方式和文件命名应在项目测试中确认。"}},{"@type":"Question","name":"接入 API 后还需要自行购买和维护代理吗？","acceptedAnswer":{"@type":"Answer","text":"不需要为该 API 单独维护代理池。123Proxy 封装数据访问和任务执行，客户系统仍需负责合法任务输入、结果校验、存储和数据治理。"}},{"@type":"Question","name":"如何避免重复创建或重复处理任务？","acceptedAnswer":{"@type":"Answer","text":"客户端应为业务任务提供幂等键，持久化 job_id，并把 Webhook 当作可能重试的事件处理；具体签名与重试规则以正式文档为准。"}},{"@type":"Question","name":"如何申请 API Key 和测试额度？","acceptedAnswer":{"@type":"Answer","text":"联系销售并提交数据类型、任务量、所需字段、媒体交付方式和完成周期，确认测试范围后开通 API Key 与配额。"}},{"@type":"Question","name":"遇到限流或临时失败应该怎么处理？","acceptedAnswer":{"@type":"Answer","text":"按返回状态和错误码执行指数退避，限制客户端并发并记录重试次数。正式配额、速率限制和错误码以 API 文档为准。"}},{"@type":"Question","name":"使用范围和合规边界是什么？","acceptedAnswer":{"@type":"Answer","text":"仅处理依法可访问且具有合理使用依据的公开内容，并遵守平台条款、知识产权、隐私和适用法律；API 不用于绕过登录、验证码或访问控制。"}}]}]}</script>
+  <!-- SEO_META_END --></head>
+<body class="site-refined" data-solution="youtubeApi">
+  <div class="page">
+    
+    <div class="utility-bar">
+      <div class="container utility-inner">
+        <div class="utility-left">
+          <span class="utility-status"><span class="status-dot"></span>全球代理网络运行正常</span>
+          <span>为爬虫工程师与 AI 数据团队提供服务</span>
+        </div>
+        <div class="utility-right">
+          <a class="utility-link" href="/status/">服务状态</a>
+          <a class="utility-link" href="/developers/">开发文档</a>
+          <a class="utility-link" href="contact.html">联系我们</a>
+        </div>
+      </div>
+    </div>
+    <header class="header">
+      <nav class="container nav" aria-label="主导航">
+        <a class="brand" href="index.html" aria-label="123Proxy 首页">
+          
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img class="wordmark-proxy-original" src="assets/123proxy-proxy-original.svg" alt="Proxy"></span>
+        </a>
+        <div class="nav-links">
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">代理产品<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            
+    <div class="mega-menu">
+      <div class="mega-layout">
+        <div class="mega-intro">
+          <span class="mega-label">Proxy products</span>
+                  <strong>六类代理产品</strong>
+                  <p>覆盖全球轮换、地区住宅、不限量端口和固定出口。</p>
+          <a href="index.html#products">查看全部代理产品<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="mega-links">
+          
+            <a class="mega-link is-featured" href="high-bandwidth-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="gauge" aria-hidden="true"></i></span>
+              <span><strong>高带宽代理 IP</strong><small>不限流量，面向 AI 大规模数据下载</small></span>
+            </a>
+            <a class="mega-link" href="scraping-rotating-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="route" aria-hidden="true"></i></span>
+              <span><strong>隧道代理</strong><small>混合与纯住宅双池，默认全球随机</small></span>
+            </a>
+            <a class="mega-link" href="residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="house" aria-hidden="true"></i></span>
+              <span><strong>隧道住宅代理</strong><small>8000万+ 住宅 IP，国家/地区定向</small></span>
+            </a>
+            <a class="mega-link" href="unlimited-residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span>
+              <span><strong>不限量动态住宅</strong><small>每端口不限流量与并发</small></span>
+            </a>
+            <a class="mega-link" href="static-datacenter-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="server" aria-hidden="true"></i></span>
+              <span><strong>长效静态代理</strong><small>独享固定机房 IP，稳定长会话</small></span>
+            </a>
+            <a class="mega-link" href="static-residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="radio-tower" aria-hidden="true"></i></span>
+              <span><strong>长效静态住宅</strong><small>固定住宅出口，兼顾身份与稳定性</small></span>
+            </a>
+        </div>
+      </div>
+    </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger is-active" type="button" aria-expanded="false">AI 数据方案<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">AI data workloads</span>
+                  <strong>AI 数据采集代理</strong>
+                  <p>面向视频、图片、代码和文本数据的持续下载与采集。</p>
+                  <a href="ai-data.html">查看 AI 数据方案<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="high-bandwidth-proxy.html"><span class="mega-link-icon"><i data-lucide="gauge" aria-hidden="true"></i></span><span><strong>高带宽代理 IP</strong><small>AI 数据任务的核心代理产品</small></span></a>
+                  <a class="mega-link" href="ai-video-proxy.html"><span class="mega-link-icon"><i data-lucide="video" aria-hidden="true"></i></span><span><strong>视频与多模态数据</strong><small>视频、音频、字幕与元数据下载</small></span></a>
+                  <a class="mega-link" href="ai-image-proxy.html"><span class="mega-link-icon"><i data-lucide="images" aria-hidden="true"></i></span><span><strong>大规模图片数据</strong><small>高并发图片数据集构建</small></span></a>
+                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon"><i data-lucide="file-code-2" aria-hidden="true"></i></span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据采集</small></span></a>
+                  <a class="mega-link" href="ai-text-proxy.html"><span class="mega-link-icon"><i data-lucide="files" aria-hidden="true"></i></span><span><strong>全网文本与文档</strong><small>新闻、论坛、博客与公开文档</small></span></a>
+                  <a class="mega-link" href="ai-youtube-api.html" aria-current="page"><span class="mega-link-icon"><i data-lucide="braces" aria-hidden="true"></i></span><span><strong>YouTube 采集 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="global-network.html">全球网络</a>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">开发者<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu is-compact">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">Developers</span>
+                  <strong>从首次请求到生产采集</strong>
+                  <p>产品手册、工程指南与 9 个可运行代码案例。</p>
+                  <a href="/developers/">开发者中心<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="/developers/getting-started/"><span class="mega-link-icon"><i data-lucide="rocket" aria-hidden="true"></i></span><span><strong>5 分钟快速开始</strong><small>生成代理、cURL 验证与代码接入</small></span></a>
+                  <a class="mega-link" href="/developers/#products"><span class="mega-link-icon"><i data-lucide="book-open" aria-hidden="true"></i></span><span><strong>产品接入手册</strong><small>按产品查看认证、路由与提取方式</small></span></a>
+                  <a class="mega-link" href="/developers/#guides"><span class="mega-link-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><span><strong>工程实践指南</strong><small>并发、SESSION、错误重试与产品选型</small></span></a>
+                  <a class="mega-link" href="/developers/examples/"><span class="mega-link-icon"><i data-lucide="code-2" aria-hidden="true"></i></span><span><strong>9 个完整代码案例</strong><small>HTTP 客户端、爬虫框架与浏览器自动化</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">企业服务<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu is-compact is-enterprise">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">Enterprise</span>
+                  <strong>企业代理与数据服务</strong>
+                  <p>定制代理池、高带宽项目和公开数据采集交付。</p>
+                  <a href="enterprise.html">企业服务总览<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="custom-proxy-pool.html"><span class="mega-link-icon"><i data-lucide="network" aria-hidden="true"></i></span><span><strong>定制代理池</strong><small>按目标、任务与带宽配置资源</small></span></a>
+                  <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon"><i data-lucide="database-zap" aria-hidden="true"></i></span><span><strong>数据采集服务</strong><small>公开数据项目实施与交付</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="pricing.html">价格</a>
+        </div>
+        <div class="nav-actions">
+          <a class="btn btn-ghost" href="https://console.123proxy.cn/login.html">登录</a>
+          <a class="btn btn-primary" href="https://console.123proxy.cn/register.html">免费测试 1GB</a>
+          <button class="btn icon-btn mobile-menu-btn" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="打开导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+        </div>
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <details>
+          <summary>代理产品<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a><a href="scraping-rotating-proxy.html">隧道代理</a><a href="residential-proxy.html">隧道住宅代理</a><a href="unlimited-residential-proxy.html">不限量动态住宅</a><a href="static-datacenter-proxy.html">长效静态代理</a><a href="static-residential-proxy.html">长效静态住宅</a>
+          </div>
+        </details>
+        <details>
+          <summary>AI 数据方案<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
+            <a href="ai-data.html">方案总览</a>
+            <a href="ai-video-proxy.html">视频数据</a>
+            <a href="ai-image-proxy.html">图片数据</a>
+            <a href="ai-github-proxy.html">代码数据</a>
+            <a href="ai-text-proxy.html">文本与文档</a>
+            <a href="ai-youtube-api.html">YouTube API</a>
+          </div>
+        </details>
+        <a href="global-network.html">全球网络<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+        <details>
+          <summary>开发者<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="/developers/">文档首页</a>
+            <a href="/developers/getting-started/">快速开始</a>
+            <a href="/developers/#products">产品接入</a>
+            <a href="/developers/#guides">工程指南</a>
+            <a href="/developers/examples/">代码案例</a>
+          </div>
+        </details>
+        <details>
+          <summary>企业服务<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="enterprise.html">企业服务总览</a>
+            <a href="custom-proxy-pool.html">定制代理池</a>
+            <a href="data-scraping-service.html">数据采集服务</a>
+          </div>
+        </details>
+        <a href="pricing.html">价格<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+        <a href="contact.html">联系我们<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+      </div>
+    </header>
+    
+    <main>
+      <section class="hero solution-hero">
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <div class="hero-breadcrumb"><a href="index.html">首页</a><span>/</span><a href="ai-data.html">AI 数据方案</a><span>/</span><strong>YouTube 采集 API</strong></div>
+            <div class="eyebrow">YOUTUBE DATA API</div>
+            <h1><span class="hero-title-line">通过 API 获取 YouTube</span><span class="hero-title-line">元数据、字幕与评论</span></h1>
+            <p class="hero-lead">提交视频 ID 或公开 URL，获取元数据、字幕与评论；长任务通过异步状态和 Webhook 交付，需要媒体文件时可按项目配置对象存储。</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="contact.html#service"><i data-lucide="key-round" aria-hidden="true"></i>申请 API 测试</a>
+              <a class="btn btn-on-dark" href="#developers"><i data-lucide="braces" aria-hidden="true"></i>查看接入代码</a>
+            </div>
+            <div class="hero-points"><span class="hero-point"><i data-lucide="circle-check" aria-hidden="true"></i>REST API / JSON</span><span class="hero-point"><i data-lucide="circle-check" aria-hidden="true"></i>异步任务 / Webhook</span><span class="hero-point"><i data-lucide="circle-check" aria-hidden="true"></i>字幕 / 评论 / 元数据</span><span class="hero-point"><i data-lucide="circle-check" aria-hidden="true"></i>S3 / OSS / GCS 交付</span></div>
+          </div>
+          <div class="hero-visual solution-hero-visual" aria-label="YouTube 数据任务">
+            <div class="visual-topline"><span>YouTube 数据任务</span><span class="visual-live">接口就绪</span></div>
+            <div class="solution-console">
+              <div class="solution-console-head"><span><i data-lucide="database-zap" aria-hidden="true"></i>YouTube 采集 API</span><small>123Proxy data network</small></div>
+              <div class="solution-source-grid">
+                <div class="solution-source"><span class="solution-source-icon"><i data-lucide="video" aria-hidden="true"></i></span><div><strong>视频元数据</strong><small>METADATA</small></div></div><div class="solution-source"><span class="solution-source-icon"><i data-lucide="captions" aria-hidden="true"></i></span><div><strong>字幕与转录</strong><small>SUBTITLES</small></div></div><div class="solution-source"><span class="solution-source-icon"><i data-lucide="messages-square" aria-hidden="true"></i></span><div><strong>评论与回复</strong><small>COMMENTS</small></div></div><div class="solution-source"><span class="solution-source-icon"><i data-lucide="cloud-upload" aria-hidden="true"></i></span><div><strong>媒体文件</strong><small>OBJECT STORAGE</small></div></div>
+              </div>
+              <div class="solution-route">
+                <div class="solution-route-node"><i data-lucide="braces" aria-hidden="true"></i><strong>API 请求</strong><small>REQUEST</small></div><span class="solution-route-arrow"><i data-lucide="arrow-right" aria-hidden="true"></i></span><div class="solution-route-node is-active"><i data-lucide="list-checks" aria-hidden="true"></i><strong>异步任务</strong><small>JOB</small></div><span class="solution-route-arrow"><i data-lucide="arrow-right" aria-hidden="true"></i></span><div class="solution-route-node"><i data-lucide="send" aria-hidden="true"></i><strong>Webhook / 存储</strong><small>DELIVERY</small></div>
+              </div>
+              <div class="solution-console-metrics"><div><span>接口方式</span><strong>REST / JSON</strong></div><div><span>任务模式</span><strong>同步 / 异步</strong></div><div><span>结果交付</span><strong>Webhook / Storage</strong></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="metric-strip"><div class="container metric-strip-inner"><div class="strip-item"><strong>REST API</strong><span>标准 JSON 接口</span></div><div class="strip-item"><strong>ASYNC JOB</strong><span>批量异步任务</span></div><div class="strip-item"><strong>WEBHOOK</strong><span>任务完成通知</span></div><div class="strip-item"><strong>S3 / OSS / GCS</strong><span>对象存储交付</span></div></div></section>
+
+      <div class="product-subnav">
+        <div class="container subnav-inner">
+          <span class="subnav-name">YouTube 采集 API</span>
+          <div class="subnav-links"><a href="#overview">接口能力</a><a href="#workloads">适用任务</a><a href="#architecture">任务流程</a><a href="#recommendation">API 产品</a><a href="#evaluation">运行指标</a><a href="#developers">接入代码</a><a href="#faq">常见问题</a></div>
+        </div>
+      </div>
+
+      <section class="section" id="overview">
+        <div class="container">
+          <div class="section-head"><div><div class="section-kicker">01 / 接口能力</div><h2><span class="section-title-line">REST API、异步任务与 Webhook</span></h2></div><p>提交视频 ID 或公开 URL，获取任务状态、JSON 结果和对象存储交付。</p></div>
+          <div class="capability-grid"><article class="capability-item"><div class="capability-icon"><i data-lucide="braces" aria-hidden="true"></i></div><h3>视频元数据</h3><p>按视频 ID 或公开 URL 请求标题、描述、标签及公开统计字段。</p></article><article class="capability-item"><div class="capability-icon"><i data-lucide="captions" aria-hidden="true"></i></div><h3>字幕与转录</h3><p>请求可用字幕、语言与时间信息，具体字段以正式 API 文档为准。</p></article><article class="capability-item"><div class="capability-icon"><i data-lucide="messages-square" aria-hidden="true"></i></div><h3>评论与回复</h3><p>按任务拉取公开评论与回复，保留层级、时间和可用公开字段。</p></article><article class="capability-item"><div class="capability-icon"><i data-lucide="cloud-upload" aria-hidden="true"></i></div><h3>对象存储交付</h3><p>媒体文件可按项目直接交付至 S3、OSS 或 GCS，格式与分辨率需测试确认。</p></article></div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="workloads">
+        <div class="container">
+          <div class="section-head"><div><div class="section-kicker">02 / 适用任务</div><h2><span class="section-title-line">视频知识库、多模态语料与评论数据</span></h2></div><p>把长耗时任务放入异步队列，通过 job_id、状态和 Webhook 与现有数据管道衔接。</p></div>
+          <div class="workload-grid"><article class="workload-card"><span class="workload-index">01</span><h3>视频知识库与 RAG</h3><p>获取公开元数据、字幕和来源字段，形成可追踪的视频文档。</p><div class="workload-meta">重点：字段与来源</div></article><article class="workload-card"><span class="workload-index">02</span><h3>多模态数据任务</h3><p>把视频、音频、字幕与元数据交付到同一对象关系中。</p><div class="workload-meta">重点：对象关联</div></article><article class="workload-card"><span class="workload-index">03</span><h3>评论与社区研究</h3><p>按视频任务采集公开评论和回复，保留层级与时间字段。</p><div class="workload-meta">重点：结构完整性</div></article></div>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="container workflow-layout">
+          <div class="workflow-copy">
+            <div class="section-kicker">03 / 任务流程</div>
+            <h2>任务提交、异步处理与结果交付</h2>
+            <p>轻量字段可同步返回，批量评论和媒体任务通过 job_id、Webhook 或对象存储交付。</p>
+            <div class="workflow-list"><div class="workflow-step"><span>01</span><div><strong>定义任务与字段</strong><p>提交视频 ID、公开 URL、所需字段和交付方式。</p></div></div><div class="workflow-step"><span>02</span><div><strong>使用 API Key 鉴权</strong><p>在请求头传递密钥，并使用幂等键避免重复创建任务。</p></div></div><div class="workflow-step"><span>03</span><div><strong>轮询或接收 Webhook</strong><p>保存 job_id，依据状态处理运行、完成与失败。</p></div></div><div class="workflow-step"><span>04</span><div><strong>校验 JSON 与存储对象</strong><p>核对字段、对象关系、错误信息和媒体交付结果。</p></div></div></div>
+          </div>
+          <div class="architecture">
+            <div class="architecture-head"><span>API job architecture</span><span>123Proxy network</span></div>
+            <div class="architecture-flow"><div class="arch-node"><i data-lucide="braces" aria-hidden="true"></i><div><strong>API 客户端</strong><small>REQUEST</small></div></div><div class="arch-node"><i data-lucide="list-checks" aria-hidden="true"></i><div><strong>任务队列</strong><small>JOB</small></div></div><div class="arch-node"><i data-lucide="server-cog" aria-hidden="true"></i><div><strong>采集服务</strong><small>WORKERS</small></div></div><div class="arch-node"><i data-lucide="send" aria-hidden="true"></i><div><strong>Webhook / 存储</strong><small>DELIVERY</small></div></div></div>
+            <div class="architecture-foot"><div class="arch-stat"><span>接口</span><strong>REST / JSON</strong></div><div class="arch-stat"><span>执行模式</span><strong>同步 / 异步</strong></div><div class="arch-stat"><span>结果交付</span><strong>Webhook / Storage</strong></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="recommendation">
+        <div class="container">
+          <div class="section-head"><div><div class="section-kicker">04 / API 产品</div><h2>YouTube 采集 API</h2></div><p>通过统一接口提交任务、查询状态并接收结果，无需单独维护 YouTube 代理池和下载集群。</p></div>
+          <div class="solution-product-layout">
+            <article class="solution-product-primary">
+              <span>API PRODUCT</span>
+              <h3>YouTube 采集 API</h3>
+              <div class="solution-product-points"><span><i data-lucide="circle-check" aria-hidden="true"></i>视频 ID / 公开 URL 任务提交</span><span><i data-lucide="circle-check" aria-hidden="true"></i>元数据、字幕与评论字段</span><span><i data-lucide="circle-check" aria-hidden="true"></i>批量异步任务与 Webhook</span><span><i data-lucide="circle-check" aria-hidden="true"></i>对象存储交付按项目确认</span></div>
+              <div class="hero-actions"><a class="btn btn-primary" href="contact.html#service"><i data-lucide="key-round" aria-hidden="true"></i>申请 API Key</a><a class="btn" href="contact.html#solutions"><i data-lucide="messages-square" aria-hidden="true"></i>咨询方案</a></div>
+            </article>
+            <div class="solution-product-secondary"><div><span>鉴权</span><strong>API Key</strong><small>建议通过请求头传递并妥善保管</small></div><div><span>任务模式</span><strong>同步 / 异步</strong><small>轻量查询与长耗时任务分离</small></div><div><span>结果格式</span><strong>JSON / Webhook</strong><small>状态、结果与错误可追踪</small></div><div><span>媒体交付</span><strong>S3 / OSS / GCS</strong><small>格式、分辨率与存储权限按项目确认</small></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="evaluation">
+        <div class="container">
+          <div class="section-head"><div><div class="section-kicker">05 / 运行指标</div><h2>API 运行指标</h2></div><p>监控任务创建率、完成率、处理时延、字段完整性、Webhook 投递和对象存储写入。</p></div>
+          <dl class="spec-table"><div class="spec-row"><dt>任务创建成功率</dt><dd>通过鉴权和参数校验并返回 job_id 的任务比例</dd></div><div class="spec-row"><dt>任务完成率</dt><dd>在约定时间窗内进入完成状态的任务比例</dd></div><div class="spec-row"><dt>处理时延</dt><dd>按任务类型分别观察 P50、P95 与长尾完成时间</dd></div><div class="spec-row"><dt>字段完整性</dt><dd>所需元数据、字幕、评论及关系字段的可用比例</dd></div><div class="spec-row"><dt>Webhook 投递</dt><dd>回调成功、重试与重复事件的处理结果</dd></div><div class="spec-row"><dt>对象交付完整性</dt><dd>目标存储中媒体对象、元数据与任务记录的一致性</dd></div></dl>
+          <p class="solution-evaluation-note">接口字段、任务配额、媒体格式、分辨率、响应时间及平台可用性以正式 API 文档和实际测试结果为准。</p>
+        </div>
+      </section>
+
+      <section class="section section-dark" id="developers">
+        <div class="container developer-layout">
+          <div class="developer-copy">
+            <div class="section-kicker">06 / 接入代码</div>
+            <h2>Python 异步任务示例</h2>
+            <p>API Key 通过请求头传递，客户端持久化 job_id，并通过轮询或 Webhook 获取结果。</p>
+            <div class="developer-points"><span class="developer-point"><i data-lucide="check" aria-hidden="true"></i>API Key 通过请求头传递</span><span class="developer-point"><i data-lucide="check" aria-hidden="true"></i>使用幂等键避免重复任务</span><span class="developer-point"><i data-lucide="check" aria-hidden="true"></i>持久化 job_id、状态与错误</span></div>
+          </div>
+          <div class="code-window solution-code-window">
+            <div class="code-head"><span>Python / async task</span><span>接入示例</span></div>
+            <pre><code>import requests
+
+response = requests.post(
+    &quot;https://api.123proxy.cn/v1/youtube/video&quot;,
+    headers={&quot;X-API-Key&quot;: &quot;YOUR_API_KEY&quot;},
+    json={
+        &quot;video_id&quot;: &quot;VIDEO_ID&quot;,
+        &quot;features&quot;: [&quot;metadata&quot;, &quot;subtitles&quot;, &quot;comments&quot;],
+        &quot;delivery&quot;: {
+            &quot;webhook_url&quot;: &quot;https://collector.example/webhooks/youtube&quot;,
+            &quot;upload_to&quot;: &quot;s3://my-bucket/videos/&quot;
+        },
+        &quot;idempotency_key&quot;: &quot;dataset-2026-0001&quot;
+    },
+    timeout=30,
+)
+response.raise_for_status()
+job = response.json()
+print(job[&quot;job_id&quot;], job[&quot;status&quot;])</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="faq">
+        <div class="container faq-layout">
+          <div class="faq-intro"><div class="section-kicker">07 / FAQ</div><h2>YouTube 采集 API 常见问题</h2><p>字段、异步任务、Webhook、对象存储、配额与错误处理。</p></div>
+          <div class="faq-list"><details class="faq-item" open><summary>API 可以返回哪些 YouTube 数据？</summary><p>原页面覆盖视频元数据、字幕或转录、公开评论与回复。正式可用字段、排序参数、语言和分页方式以开通后的 API 文档为准。</p></details><details class="faq-item"><summary>哪些请求同步返回，哪些需要异步任务？</summary><p>轻量元数据请求可能直接返回；深度评论、批量视频和媒体文件交付通常更适合异步任务。具体阈值和状态字段以正式文档为准。</p></details><details class="faq-item"><summary>支持将音视频直接传到 S3、OSS 或 GCS 吗？</summary><p>原页面包含对象存储直传能力。实际支持的存储类型、格式、分辨率、凭证方式和文件命名应在项目测试中确认。</p></details><details class="faq-item"><summary>接入 API 后还需要自行购买和维护代理吗？</summary><p>不需要为该 API 单独维护代理池。123Proxy 封装数据访问和任务执行，客户系统仍需负责合法任务输入、结果校验、存储和数据治理。</p></details><details class="faq-item"><summary>如何避免重复创建或重复处理任务？</summary><p>客户端应为业务任务提供幂等键，持久化 job_id，并把 Webhook 当作可能重试的事件处理；具体签名与重试规则以正式文档为准。</p></details><details class="faq-item"><summary>如何申请 API Key 和测试额度？</summary><p>联系销售并提交数据类型、任务量、所需字段、媒体交付方式和完成周期，确认测试范围后开通 API Key 与配额。</p></details><details class="faq-item"><summary>遇到限流或临时失败应该怎么处理？</summary><p>按返回状态和错误码执行指数退避，限制客户端并发并记录重试次数。正式配额、速率限制和错误码以 API 文档为准。</p></details><details class="faq-item"><summary>使用范围和合规边界是什么？</summary><p>仅处理依法可访问且具有合理使用依据的公开内容，并遵守平台条款、知识产权、隐私和适用法律；API 不用于绕过登录、验证码或访问控制。</p></details></div>
+        </div>
+      </section>
+
+      <section class="cta-band">
+        <div class="container cta-inner">
+          <div><h2>申请 YouTube 采集 API 测试</h2><p>提交视频样本、字段清单、日任务量、Webhook 或对象存储需求。</p></div>
+          <div class="cta-actions"><a class="btn btn-primary" href="contact.html#service"><i data-lucide="key-round" aria-hidden="true"></i>申请 API 测试</a><a class="btn btn-on-dark" href="contact.html#solutions"><i data-lucide="messages-square" aria-hidden="true"></i>咨询方案</a></div>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="footer" id="site-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img class="wordmark-proxy-original" src="assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+            <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+          </div>
+          <div class="footer-col">
+            <h3>代理产品</h3>
+            <a href="scraping-rotating-proxy.html">隧道代理</a>
+            <a href="residential-proxy.html">隧道住宅代理</a>
+            <a href="unlimited-residential-proxy.html">不限量动态住宅</a>
+            <a href="static-datacenter-proxy.html">长效静态代理</a>
+            <a href="static-residential-proxy.html">长效静态住宅</a>
+          </div>
+          <div class="footer-col">
+            <h3>AI 数据方案</h3>
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
+            <a href="ai-video-proxy.html">视频数据采集</a>
+            <a href="ai-image-proxy.html">图片数据采集</a>
+            <a href="ai-github-proxy.html">公开代码数据</a>
+            <a href="ai-text-proxy.html">文本与文档</a>
+            <a href="ai-youtube-api.html">YouTube 采集 API</a>
+          </div>
+          <div class="footer-col">
+            <h3>开发者</h3>
+            <a href="/developers/getting-started/">快速入门</a>
+            <a href="/developers/#products">产品接入</a>
+            <a href="/developers/#guides">工程实践指南</a>
+            <a href="/developers/examples/">9 个完整代码案例</a>
+          </div>
+          <div class="footer-col">
+            <h3>公司与支持</h3>
+            <a href="enterprise.html">企业服务</a>
+            <a href="custom-proxy-pool.html">定制代理池</a>
+            <a href="data-scraping-service.html">数据采集服务</a>
+            <a href="contact.html">联系我们</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 123Proxy. All rights reserved.</span>
+          <span>广州市天河区中山大道中38号916 · 粤ICP备2023058453号-1</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="assets/product-static.js?v=20260729-04"></script>
+</body>
+</html>

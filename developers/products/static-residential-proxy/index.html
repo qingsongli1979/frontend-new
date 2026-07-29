@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="description" content="123Proxy 长效静态住宅接入手册：生成住宅 ISP IP 分配链接、解析返回代理并通过账密认证接入。">
+  <title>长效静态住宅接入手册 | 123Proxy 开发者中心</title>
+  <link rel="canonical" href="https://www.123proxy.cn/developers/products/static-residential-proxy/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="长效静态住宅接入手册 | 123Proxy 开发者中心">
+  <meta property="og:description" content="123Proxy 长效静态住宅接入手册：生成住宅 ISP IP 分配链接、解析返回代理并通过账密认证接入。">
+  <meta property="og:url" content="https://www.123proxy.cn/developers/products/static-residential-proxy/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta property="article:modified_time" content="2026-07-29">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/developer-docs.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"TechArticle","@id":"https://www.123proxy.cn/developers/products/static-residential-proxy/#document","headline":"长效静态住宅接入手册","description":"123Proxy 长效静态住宅接入手册：生成住宅 ISP IP 分配链接、解析返回代理并通过账密认证接入。","url":"https://www.123proxy.cn/developers/products/static-residential-proxy/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"isPartOf":{"@id":"https://www.123proxy.cn/developers/#document"},"dateModified":"2026-07-29","about":{"@id":"https://www.123proxy.cn/static-residential-proxy.html#service"}},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/developers/products/static-residential-proxy/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"开发者中心","item":"https://www.123proxy.cn/developers/"},{"@type":"ListItem","position":3,"name":"长效静态住宅接入手册","item":"https://www.123proxy.cn/developers/products/static-residential-proxy/"}]},{"@type":"Service","@id":"https://www.123proxy.cn/static-residential-proxy.html#service","name":"长效静态住宅","url":"https://www.123proxy.cn/static-residential-proxy.html","description":"独享固定住宅 ISP 代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。","serviceType":"Dedicated static residential proxy","category":"Static residential ISP proxy IP","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"需要固定住宅出口的开发者、长期会话任务、AI 数据采集团队"},"additionalProperty":[{"@type":"PropertyValue","name":"接入方式","value":"直连分配的代理 IP"},{"@type":"PropertyValue","name":"出口类型","value":"独享固定住宅 ISP IP"},{"@type":"PropertyValue","name":"覆盖范围","value":"69 个国家和地区"},{"@type":"PropertyValue","name":"流量方式","value":"方案内不限流量"},{"@type":"PropertyValue","name":"免费测试","value":"不提供"}]}]}</script>
+</head>
+<body class="developer-docs" data-developer-page="static-residential">
+  <div class="page">
+    
+    <div class="docs-utility">
+      <div class="docs-frame docs-utility-inner">
+        <a class="docs-network-state" href="/status/"><i></i>全球代理网络运行正常</a>
+        <div>
+          <a href="/global-network.html">全球网络</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+    </div>
+    <header class="docs-header">
+      <div class="docs-frame docs-header-inner">
+        <div class="docs-brand-group">
+          <a class="brand docs-brand" href="/" aria-label="123Proxy 首页">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <span class="docs-brand-divider" aria-hidden="true"></span>
+          <a class="docs-product-name" href="/developers/">开发者中心</a>
+        </div>
+        
+    <div class="docs-search is-compact" data-doc-search-root>
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input type="search" data-doc-search autocomplete="off" placeholder="搜索产品、SESSION、错误码或代码..." aria-label="搜索开发文档" aria-expanded="false">
+      <kbd>Ctrl K</kbd>
+      <div class="docs-search-results" data-doc-search-results hidden></div>
+    </div>
+        <nav class="docs-topnav" aria-label="开发者导航">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/developers/examples/">代码案例</a>
+          <a class="docs-console-link" href="https://console.123proxy.cn/app/">控制台<i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        </nav>
+        <button class="docs-icon-button docs-mobile-toggle" type="button" data-docs-mobile-toggle aria-expanded="false" aria-controls="docsMobileNav" aria-label="打开开发者导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+      </div>
+      <div class="docs-mobile-nav" id="docsMobileNav" data-docs-mobile-nav>
+        <a href="/developers/">文档首页</a>
+        <a href="/developers/getting-started/">快速开始</a>
+        <a href="/developers/#products">产品接入</a>
+        <a href="/developers/examples/">代码案例</a>
+        <a href="/developers/getting-started/#troubleshooting">错误排查</a>
+        <a href="https://console.123proxy.cn/app/">登录控制台</a>
+      </div>
+    </header>
+    
+    <main class="docs-layout docs-frame">
+      <button class="docs-sidebar-open" type="button" data-docs-sidebar-toggle><i data-lucide="panel-left" aria-hidden="true"></i>文档目录</button>
+      
+    <aside class="docs-sidebar" data-docs-sidebar>
+      <nav aria-label="文档目录">
+        <div class="docs-sidebar-group">
+          <span>开始使用</span>
+          
+    <a href="/developers/">
+      <i data-lucide="layout-grid" aria-hidden="true"></i><span>开发者中心</span>
+    </a>
+          
+    <a href="/developers/getting-started/">
+      <i data-lucide="rocket" aria-hidden="true"></i><span>5 分钟快速开始</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>产品接入</span>
+          
+    <a href="/developers/products/scraping-rotating-proxy/">
+      <i data-lucide="route" aria-hidden="true"></i><span>隧道代理</span>
+    </a>
+          
+    <a href="/developers/products/residential-rotating-proxy/">
+      <i data-lucide="globe-2" aria-hidden="true"></i><span>隧道住宅代理</span>
+    </a>
+          
+    <a href="/developers/products/unlimited-residential-proxy/">
+      <i data-lucide="refresh-cw" aria-hidden="true"></i><span>不限量动态住宅</span>
+    </a>
+          
+    <a href="/developers/products/static-datacenter-proxy/">
+      <i data-lucide="server" aria-hidden="true"></i><span>长效静态代理</span>
+    </a>
+          
+    <a href="/developers/products/static-residential-proxy/" class="is-active" aria-current="page">
+      <i data-lucide="house-plug" aria-hidden="true"></i><span>长效静态住宅</span>
+    </a>
+          
+    <a href="/high-bandwidth-proxy.html">
+      <i data-lucide="gauge" aria-hidden="true"></i><span>高带宽代理 IP</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>工程指南</span>
+          
+    <a href="/developers/guides/concurrency-qps-performance/">
+      <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i><span>并发、QPS 与响应时间</span>
+    </a>
+          
+    <a href="/developers/guides/session-geo-rotation/">
+      <i data-lucide="shuffle" aria-hidden="true"></i><span>SESSION 与出口轮转</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>错误、超时与重试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-product-selection/">
+      <i data-lucide="git-compare-arrows" aria-hidden="true"></i><span>代理产品选型</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>框架案例</span>
+          
+    <a href="/developers/examples/">
+      <i data-lucide="code-2" aria-hidden="true"></i><span>完整代码案例</span>
+    </a>
+          
+    <a href="/developers/examples/python-requests-proxy/">
+      <span>Python Requests</span>
+    </a>
+          
+    <a href="/developers/examples/scrapy-proxy/">
+      <span>Scrapy</span>
+    </a>
+          
+    <a href="/developers/examples/playwright-proxy/">
+      <span>Playwright</span>
+    </a>
+          
+    <a href="/developers/examples/selenium-proxy/">
+      <span>Selenium</span>
+    </a>
+          
+    <a href="/developers/examples/puppeteer-proxy/">
+      <span>Puppeteer</span>
+    </a>
+          
+    <a href="/developers/examples/nodejs-axios-proxy/">
+      <span>Node.js Axios</span>
+    </a>
+          
+    <a href="/developers/examples/go-colly-proxy/">
+      <span>Go Colly</span>
+    </a>
+          
+    <a href="/developers/examples/java-jsoup-proxy/">
+      <span>Java Jsoup</span>
+    </a>
+          
+    <a href="/developers/examples/php-curl-proxy/">
+      <span>PHP cURL</span>
+    </a>
+        </div>
+        <div class="docs-sidebar-group">
+          <span>验证与排查</span>
+          
+    <a href="/developers/getting-started/#verify">
+      <i data-lucide="activity" aria-hidden="true"></i><span>可用性测试</span>
+    </a>
+          
+    <a href="/developers/guides/proxy-errors-retries/">
+      <i data-lucide="circle-alert" aria-hidden="true"></i><span>常见错误</span>
+    </a>
+        </div>
+      </nav>
+      <div class="docs-sidebar-support">
+        <span><i data-lucide="life-buoy" aria-hidden="true"></i></span>
+        <strong>接入遇到问题？</strong>
+        <p>附上请求时间、套餐类型和错误信息联系技术支持。</p>
+        <a href="/contact.html#solutions">联系技术支持<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </aside>
+      <article class="docs-article">
+        
+    <nav class="docs-breadcrumb" aria-label="面包屑"><a href="/developers/">开发者中心</a><i data-lucide="chevron-right" aria-hidden="true"></i><span>产品接入</span><i data-lucide="chevron-right" aria-hidden="true"></i><span>长效静态住宅</span></nav>
+    <header class="docs-article-header docs-product-doc-header">
+      <span class="docs-article-label">STATIC RESIDENTIAL ISP PROXY</span>
+      <h1>长效静态住宅接入手册</h1>
+      <p>固定住宅 ISP IP，在使用周期内保持同一住宅网络身份。先生成并调用固定 IP 分配链接，再使用返回的 HOST、PORT、代理用户名和密码接入程序。</p>
+      <div class="docs-product-facts">
+        <span><small>资源</small><strong>固定住宅 ISP IP</strong></span>
+        <span><small>认证</small><strong>仅代理账密</strong></span>
+        <span><small>流量</small><strong>不限流量</strong></span>
+        <span><small>路由</small><strong>无 SESSION / 不轮转</strong></span>
+      </div>
+      <div class="docs-article-actions">
+        <a class="btn btn-primary" href="https://console.123proxy.cn/app/#extract?product=staticResidential"><i data-lucide="server" aria-hidden="true"></i>打开固定 IP 分配</a>
+        <a class="btn docs-secondary-button" href="/pricing.html?product=static-residential"><i data-lucide="tag" aria-hidden="true"></i>查看付费套餐</a>
+      </div>
+    </header>
+
+    <section id="overview">
+      <div class="docs-section-title"><span>01</span><div><small>TWO-STAGE ACCESS</small><h2>分配固定 IP 与使用代理是两个请求</h2></div></div>
+      <div class="docs-allocation-flow">
+        <article><span>01</span><i data-lucide="sliders-horizontal" aria-hidden="true"></i><div><strong>生成分配链接</strong><p>在控制台选择套餐、国家、协议和数量，只生成 URL，不立即占用资源。</p></div></article>
+        <article><span>02</span><i data-lucide="link-2" aria-hidden="true"></i><div><strong>调用分配链接</strong><p>调用后才会消耗套餐可提数量，并返回固定代理信息。</p></div></article>
+        <article><span>03</span><i data-lucide="terminal" aria-hidden="true"></i><div><strong>使用返回代理</strong><p>将返回的 HOST、PORT、USER、PASSWORD 配置到采集程序。</p></div></article>
+      </div>
+      <div class="docs-callout is-important">
+        <i data-lucide="triangle-alert" aria-hidden="true"></i>
+        <div><strong>分配链接不是代理地址</strong><p>不能把分配 URL 放进 Requests、Scrapy、浏览器或代理客户端。只有调用后返回的固定代理信息才能用于代理请求。</p></div>
+      </div>
+    </section>
+
+    <section id="allocation">
+      <div class="docs-section-title"><span>02</span><div><small>ALLOCATION API</small><h2>生成并调用固定 IP 分配链接</h2></div></div>
+      <p>控制台会根据当前套餐生成带套餐标识的链接。链接本身不会分配资源；执行下面的请求后才开始分配，响应最长可能等待约 5 分钟。</p>
+      
+    <div class="docs-code" data-code-group="static-residential-allocation">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="curl" aria-selected="true" class="is-active">cURL</button><button type="button" role="tab" data-code-tab="python" aria-selected="false" class="">Python</button><button type="button" role="tab" data-code-tab="node" aria-selected="false" class="">Node.js</button><button type="button" role="tab" data-code-tab="go" aria-selected="false" class="">Go</button><button type="button" role="tab" data-code-tab="java" aria-selected="false" class="">Java</button><button type="button" role="tab" data-code-tab="php" aria-selected="false" class="">PHP</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="curl"><code>export STATIC_EXTRACT_URL=&quot;YOUR_GENERATED_ALLOCATION_URL&quot;
+
+# 该链接用于分配固定 IP，不是代理地址。
+# 调用会消耗套餐可提数量，响应最长可能等待约 5 分钟。
+curl --fail-with-body --silent --show-error \
+  --max-time 330 \
+  &quot;$STATIC_EXTRACT_URL&quot;</code></pre><pre role="tabpanel" data-code-panel="python" hidden><code>import os
+import requests
+
+# 调用会从套餐中分配固定 IP，不要把此 URL 配置为代理地址。
+response = requests.get(
+    os.environ[&quot;STATIC_EXTRACT_URL&quot;],
+    timeout=330,
+)
+response.raise_for_status()
+
+proxies = []
+for raw_line in response.text.splitlines():
+    line = raw_line.strip()
+    if not line:
+        continue
+    host, port, username, password = line.split(&quot;:&quot;, 3)
+    proxies.append({
+        &quot;host&quot;: host,
+        &quot;port&quot;: int(port),
+        &quot;username&quot;: username,
+        &quot;password&quot;: password,
+    })
+
+print(proxies)</code></pre><pre role="tabpanel" data-code-panel="node" hidden><code>// Node.js 18+
+async function main() {
+  // 调用会从套餐中分配固定 IP，不要把此 URL 配置为代理地址。
+  const response = await fetch(process.env.STATIC_EXTRACT_URL, {
+    signal: AbortSignal.timeout(330000),
+  });
+  if (!response.ok) {
+    throw new Error(&quot;HTTP &quot; + response.status + &quot;: &quot; + await response.text());
+  }
+
+  const proxies = (await response.text())
+    .split(/\r?\n/)
+    .map((line) =&gt; line.trim())
+    .filter(Boolean)
+    .map((line) =&gt; {
+      const [host, port, username, ...passwordParts] = line.split(&quot;:&quot;);
+      return {
+        host,
+        port: Number(port),
+        username,
+        password: passwordParts.join(&quot;:&quot;),
+      };
+    });
+
+  console.log(proxies);
+}
+
+main().catch((error) =&gt; {
+  console.error(error);
+  process.exitCode = 1;
+});</code></pre><pre role="tabpanel" data-code-panel="go" hidden><code>package main
+
+import (
+    &quot;bufio&quot;
+    &quot;fmt&quot;
+    &quot;net/http&quot;
+    &quot;os&quot;
+    &quot;strconv&quot;
+    &quot;strings&quot;
+    &quot;time&quot;
+)
+
+func main() {
+    client := &amp;http.Client{Timeout: 330 * time.Second}
+    response, err := client.Get(os.Getenv(&quot;STATIC_EXTRACT_URL&quot;))
+    if err != nil { panic(err) }
+    defer response.Body.Close()
+    if response.StatusCode &gt;= 400 { panic(response.Status) }
+
+    scanner := bufio.NewScanner(response.Body)
+    for scanner.Scan() {
+        parts := strings.SplitN(strings.TrimSpace(scanner.Text()), &quot;:&quot;, 4)
+        if len(parts) != 4 { panic(&quot;无法识别提取结果&quot;) }
+        port, err := strconv.Atoi(parts[1])
+        if err != nil { panic(err) }
+        fmt.Printf(&quot;host=%s port=%d user=%s password=%s\n&quot;,
+            parts[0], port, parts[2], parts[3])
+    }
+    if err := scanner.Err(); err != nil { panic(err) }
+}</code></pre><pre role="tabpanel" data-code-panel="java" hidden><code>import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+public class AllocateStaticProxy {
+    public static void main(String[] args) throws Exception {
+        HttpClient client = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(30))
+            .build();
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(System.getenv(&quot;STATIC_EXTRACT_URL&quot;)))
+            .timeout(Duration.ofSeconds(330))
+            .GET()
+            .build();
+        HttpResponse&lt;String&gt; response = client.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        );
+        if (response.statusCode() &gt;= 400) {
+            throw new RuntimeException(response.body());
+        }
+        for (String rawLine : response.body().split(&quot;\\R&quot;)) {
+            String line = rawLine.trim();
+            if (line.isEmpty()) continue;
+            String[] parts = line.split(&quot;:&quot;, 4);
+            if (parts.length != 4) {
+                throw new IllegalArgumentException(&quot;无法识别提取结果&quot;);
+            }
+            System.out.printf(
+                &quot;host=%s port=%s user=%s password=%s%n&quot;,
+                parts[0], parts[1], parts[2], parts[3]
+            );
+        }
+    }
+}</code></pre><pre role="tabpanel" data-code-panel="php" hidden><code>&lt;?php
+// 调用会从套餐中分配固定 IP，不要把此 URL 配置为代理地址。
+$curl = curl_init(getenv(&quot;STATIC_EXTRACT_URL&quot;));
+curl_setopt_array($curl, [
+    CURLOPT_RETURNTRANSFER =&gt; true,
+    CURLOPT_CONNECTTIMEOUT =&gt; 30,
+    CURLOPT_TIMEOUT =&gt; 330,
+    CURLOPT_FAILONERROR =&gt; true,
+]);
+$body = curl_exec($curl);
+if ($body === false) {
+    throw new RuntimeException(curl_error($curl));
+}
+curl_close($curl);
+
+$proxies = [];
+foreach (preg_split(&#39;/\R/&#39;, trim($body)) as $line) {
+    if ($line === &#39;&#39;) continue;
+    $parts = explode(&#39;:&#39;, $line, 4);
+    if (count($parts) !== 4) {
+        throw new RuntimeException(&#39;无法识别提取结果&#39;);
+    }
+    [$host, $port, $username, $password] = $parts;
+    $proxies[] = compact(&#39;host&#39;, &#39;port&#39;, &#39;username&#39;, &#39;password&#39;);
+}
+print_r($proxies);</code></pre>
+    </div>
+      <div class="docs-callout is-security">
+        <i data-lucide="shield-check" aria-hidden="true"></i>
+        <div><strong>不要自动重试未知结果的分配请求</strong><p>调用会消耗套餐剩余可提数量。遇到连接中断时，先刷新“已分配固定 IP”列表，确认结果后再决定是否重试。</p></div>
+      </div>
+    </section>
+
+    <section id="response">
+      <div class="docs-section-title"><span>03</span><div><small>ALLOCATION RESPONSE</small><h2>解析每行返回的固定代理</h2></div></div>
+      <p>成功响应为纯文本，每行一个固定代理，顺序固定为 <code>HOST:PORT:USER:PASSWORD</code>。密码中如包含冒号，解析时最多只切分前三个冒号。</p>
+      <div class="docs-result docs-static-result">
+        <span>分配响应示例</span>
+        <code>203.0.113.24:10001:proxy_user:proxy_password</code>
+        <p>示例 IP 属于文档保留地址。真实返回结果会同时出现在控制台“已分配固定 IP”列表。</p>
+      </div>
+      <div class="docs-format-table">
+        <div><code>HOST</code><span>已分配固定代理主机或 IP</span></div>
+        <div><code>PORT</code><span>该固定代理的接入端口</span></div>
+        <div><code>USER</code><span>固定代理认证用户名</span></div>
+        <div><code>PASSWORD</code><span>固定代理认证密码</span></div>
+      </div>
+    </section>
+
+    <section id="use-proxy">
+      <div class="docs-section-title"><span>04</span><div><small>PROXY REQUEST</small><h2>使用已分配代理访问目标</h2></div></div>
+      <p>把分配响应中的四个字段写入环境变量，再运行下面的标准代理代码。这个请求访问测试目标，不会再次调用分配 API。</p>
+      
+    <div class="docs-code" data-code-group="static-residential-proxy">
+      <div class="docs-code-toolbar" role="tablist" aria-label="代码语言">
+        <div>
+          <button type="button" role="tab" data-code-tab="curl" aria-selected="true" class="is-active">cURL</button><button type="button" role="tab" data-code-tab="python" aria-selected="false" class="">Python</button><button type="button" role="tab" data-code-tab="node" aria-selected="false" class="">Node.js</button><button type="button" role="tab" data-code-tab="go" aria-selected="false" class="">Go</button><button type="button" role="tab" data-code-tab="java" aria-selected="false" class="">Java</button><button type="button" role="tab" data-code-tab="php" aria-selected="false" class="">PHP</button>
+        </div>
+        <button class="docs-copy-button" type="button" data-copy-code title="复制当前代码"><i data-lucide="copy" aria-hidden="true"></i><span>复制</span></button>
+      </div>
+      <pre role="tabpanel" data-code-panel="curl"><code>export STATIC_PROXY_HOST=&quot;控制台返回的固定代理IP&quot;
+export STATIC_PROXY_PORT=&quot;控制台返回的代理端口&quot;
+export PROXY_USER=&quot;控制台返回的代理用户名&quot;
+export PROXY_PASS=&quot;控制台返回的代理密码&quot;
+
+curl --fail-with-body --silent --show-error \
+  --proxy &quot;http://${STATIC_PROXY_HOST}:${STATIC_PROXY_PORT}&quot; \
+  --proxy-user &quot;${PROXY_USER}:${PROXY_PASS}&quot; \
+  --connect-timeout 15 \
+  --max-time 30 \
+  &quot;https://api.ipify.org?format=json&quot;</code></pre><pre role="tabpanel" data-code-panel="python" hidden><code>import os
+import requests
+
+host = os.environ[&quot;STATIC_PROXY_HOST&quot;]
+port = int(os.environ[&quot;STATIC_PROXY_PORT&quot;])
+username = os.environ[&quot;PROXY_USER&quot;]
+password = os.environ[&quot;PROXY_PASS&quot;]
+
+proxy_url = f&quot;http://{username}:{password}@{host}:{port}&quot;
+proxies = {&quot;http&quot;: proxy_url, &quot;https&quot;: proxy_url}
+
+response = requests.get(
+    &quot;https://api.ipify.org?format=json&quot;,
+    proxies=proxies,
+    timeout=(15, 30),
+)
+response.raise_for_status()
+print(response.json())</code></pre><pre role="tabpanel" data-code-panel="node" hidden><code>// npm install axios
+const axios = require(&quot;axios&quot;);
+
+const response = await axios.get(
+  &quot;https://api.ipify.org?format=json&quot;,
+  {
+    proxy: {
+      protocol: &quot;http&quot;,
+      host: process.env.STATIC_PROXY_HOST,
+      port: Number(process.env.STATIC_PROXY_PORT),
+      auth: {
+        username: process.env.PROXY_USER,
+        password: process.env.PROXY_PASS,
+      },
+    },
+    timeout: 30000,
+  },
+);
+
+console.log(response.data);</code></pre><pre role="tabpanel" data-code-panel="go" hidden><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;io&quot;
+    &quot;net/http&quot;
+    &quot;net/url&quot;
+    &quot;os&quot;
+    &quot;time&quot;
+)
+
+func main() {
+    proxyURL := &amp;url.URL{
+        Scheme: &quot;http&quot;,
+        Host: os.Getenv(&quot;STATIC_PROXY_HOST&quot;) + &quot;:&quot; + os.Getenv(&quot;STATIC_PROXY_PORT&quot;),
+        User: url.UserPassword(os.Getenv(&quot;PROXY_USER&quot;), os.Getenv(&quot;PROXY_PASS&quot;)),
+    }
+    client := &amp;http.Client{
+        Transport: &amp;http.Transport{Proxy: http.ProxyURL(proxyURL)},
+        Timeout: 30 * time.Second,
+    }
+    response, err := client.Get(&quot;https://api.ipify.org?format=json&quot;)
+    if err != nil { panic(err) }
+    defer response.Body.Close()
+    if response.StatusCode &gt;= 400 { panic(response.Status) }
+    body, err := io.ReadAll(response.Body)
+    if err != nil { panic(err) }
+    fmt.Println(string(body))
+}</code></pre><pre role="tabpanel" data-code-panel="java" hidden><code>import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+
+public class ProxyCheck {
+    public static void main(String[] args) throws Exception {
+        System.setProperty(&quot;jdk.http.auth.tunneling.disabledSchemes&quot;, &quot;&quot;);
+        String host = System.getenv(&quot;STATIC_PROXY_HOST&quot;);
+        int port = Integer.parseInt(System.getenv(&quot;STATIC_PROXY_PORT&quot;));
+        String user = System.getenv(&quot;PROXY_USER&quot;);
+        char[] password = System.getenv(&quot;PROXY_PASS&quot;).toCharArray();
+
+        HttpClient client = HttpClient.newBuilder()
+            .proxy(ProxySelector.of(new InetSocketAddress(host, port)))
+            .authenticator(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(user, password);
+                }
+            })
+            .connectTimeout(Duration.ofSeconds(15))
+            .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(&quot;https://api.ipify.org?format=json&quot;))
+            .timeout(Duration.ofSeconds(30))
+            .GET()
+            .build();
+        HttpResponse&lt;String&gt; response = client.send(
+            request,
+            HttpResponse.BodyHandlers.ofString()
+        );
+        if (response.statusCode() &gt;= 400) throw new RuntimeException(response.body());
+        System.out.println(response.body());
+    }
+}</code></pre><pre role="tabpanel" data-code-panel="php" hidden><code>&lt;?php
+$host = getenv(&quot;STATIC_PROXY_HOST&quot;);
+$port = (int) getenv(&quot;STATIC_PROXY_PORT&quot;);
+$user = getenv(&quot;PROXY_USER&quot;);
+$password = getenv(&quot;PROXY_PASS&quot;);
+
+$curl = curl_init(&quot;https://api.ipify.org?format=json&quot;);
+curl_setopt_array($curl, [
+    CURLOPT_RETURNTRANSFER =&gt; true,
+    CURLOPT_PROXY =&gt; $host,
+    CURLOPT_PROXYPORT =&gt; (int) $port,
+    CURLOPT_PROXYUSERPWD =&gt; $user . &quot;:&quot; . $password,
+    CURLOPT_CONNECTTIMEOUT =&gt; 15,
+    CURLOPT_TIMEOUT =&gt; 30,
+]);
+$body = curl_exec($curl);
+if ($body === false) {
+    throw new RuntimeException(curl_error($curl));
+}
+$status = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+curl_close($curl);
+if ($status &gt;= 400) throw new RuntimeException($body);
+echo $body . PHP_EOL;</code></pre>
+    </div>
+      <div class="docs-callout">
+        <i data-lucide="circle-check" aria-hidden="true"></i>
+        <div><strong>固定代理在使用周期内不轮转</strong><p>同一代理保持固定住宅 ISP 身份，适合长期账号、区域内容和稳定会话。</p></div>
+      </div>
+    </section>
+
+    <section id="authentication">
+      <div class="docs-section-title"><span>05</span><div><small>AUTHENTICATION BOUNDARY</small><h2>静态代理只支持账密认证</h2></div></div>
+      <div class="docs-boundary-grid">
+        <div class="is-supported"><i data-lucide="key-round" aria-hidden="true"></i><span><strong>支持：代理用户名与密码</strong><small>程序通过分配结果中的 USER 和 PASSWORD 连接代理。</small></span></div>
+        <div><i data-lucide="shield-x" aria-hidden="true"></i><span><strong>不支持：123Proxy 套餐 IP 白名单认证</strong><small>不能仅凭采集服务器公网 IP 连接静态代理。</small></span></div>
+        <div><i data-lucide="link" aria-hidden="true"></i><span><strong>不支持：SESSION</strong><small>出口本身固定，不需要在认证用户名中加入 SESSION。</small></span></div>
+        <div><i data-lucide="refresh-cw-off" aria-hidden="true"></i><span><strong>不支持：自动轮转</strong><small>需要周期换 IP 时请选择动态住宅或隧道代理。</small></span></div>
+      </div>
+      <div class="docs-callout">
+        <i data-lucide="building-2" aria-hidden="true"></i>
+        <div><strong>固定出口可以登记到目标系统白名单</strong><p>这表示将固定代理出口 IP 加到合作方 API 或企业系统的来源 IP 白名单；连接 123Proxy 代理本身仍必须使用代理账密。</p></div>
+      </div>
+    </section>
+
+    <section id="countries">
+      <div class="docs-section-title"><span>06</span><div><small>LOCATION INVENTORY</small><h2>地区在分配时按库存选择</h2></div></div>
+      <p>国家范围按住宅 ISP 实时库存分配，最终可选项以控制台为准。页面显示中文地区名称，实际分配前应以控制台当前可选库存为准。</p>
+      
+    <details class="docs-country-details">
+      <summary><span><i data-lucide="map" aria-hidden="true"></i>查看长效静态住宅支持的国家和地区</span><strong>69 个</strong><i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+      <div class="docs-country-grid">
+        <span>阿联酋</span><span>阿根廷</span><span>奥地利</span><span>澳大利亚</span><span>孟加拉国</span><span>比利时</span><span>保加利亚</span><span>巴西</span><span>加拿大</span><span>瑞士</span><span>智利</span><span>哥伦比亚</span><span>塞浦路斯</span><span>捷克</span><span>德国</span><span>丹麦</span><span>阿尔及利亚</span><span>爱沙尼亚</span><span>埃及</span><span>西班牙</span><span>芬兰</span><span>法国</span><span>英国</span><span>格鲁吉亚</span><span>希腊</span><span>中国香港</span><span>洪都拉斯</span><span>克罗地亚</span><span>匈牙利</span><span>印度尼西亚</span><span>爱尔兰</span><span>以色列</span><span>印度</span><span>意大利</span><span>日本</span><span>肯尼亚</span><span>柬埔寨</span><span>韩国</span><span>哈萨克斯坦</span><span>斯里兰卡</span><span>立陶宛</span><span>拉脱维亚</span><span>摩洛哥</span><span>马耳他</span><span>墨西哥</span><span>马来西亚</span><span>尼日利亚</span><span>荷兰</span><span>挪威</span><span>新西兰</span><span>秘鲁</span><span>菲律宾</span><span>巴基斯坦</span><span>波兰</span><span>葡萄牙</span><span>罗马尼亚</span><span>塞尔维亚</span><span>沙特阿拉伯</span><span>瑞典</span><span>新加坡</span><span>斯洛伐克</span><span>泰国</span><span>土耳其</span><span>中国台湾</span><span>乌克兰</span><span>美国</span><span>委内瑞拉</span><span>越南</span><span>南非</span>
+      </div>
+    </details>
+      
+    </section>
+
+    <section id="lifecycle">
+      <div class="docs-section-title"><span>07</span><div><small>RESOURCE LIFECYCLE</small><h2>管理已分配固定 IP</h2></div></div>
+      <div class="docs-checklist">
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>分配后保存凭证</strong><small>从控制台已分配列表读取，不依赖旧的分配请求响应。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>按项目隔离固定出口</strong><small>记录套餐、业务、国家和固定代理之间的映射。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>到期前处理续费</strong><small>固定身份任务应提前确认续费和资源状态。</small></span></div>
+        <div><i data-lucide="check" aria-hidden="true"></i><span><strong>健康异常及时替换</strong><small>记录连接错误、目标响应和固定出口健康状态。</small></span></div>
+      </div>
+    </section>
+
+    <section id="troubleshooting">
+      <div class="docs-section-title"><span>08</span><div><small>TROUBLESHOOTING</small><h2>常见问题</h2></div></div>
+      <div class="docs-troubleshooting">
+        <details open><summary>为什么分配链接不能配置到代理客户端？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>分配链接是用于领取固定 IP 的 API 请求。必须先调用并解析返回的 HOST、PORT、USER、PASSWORD，再使用这些字段连接代理。</p></details>
+        <details><summary>静态代理是否支持 IP 白名单认证？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>不支持。两类静态代理连接 123Proxy 时都必须使用返回的代理用户名和密码。</p></details>
+        <details><summary>重复调用分配链接会发生什么？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>每次成功调用都可能继续消耗套餐可提数量。发生超时或断连时先检查已分配列表，不要直接循环重试。</p></details>
+        <details><summary>固定住宅 IP 会自动轮转吗？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>不会。固定住宅 ISP IP 在使用周期内保持稳定，不支持 SESSION 或自动轮转。</p></details>
+        <details><summary>是否提供免费测试？<i data-lucide="chevron-down" aria-hidden="true"></i></summary><p>不提供。两类静态代理需要直接购买付费套餐，再在控制台按库存分配固定 IP。</p></details>
+      </div>
+    </section>
+
+    <nav class="docs-next">
+      <span>运行标准代理案例</span>
+      <a href="/developers/examples/python-requests-proxy/"><div><small>Python Requests</small><strong>把固定代理分配结果代入客户端</strong></div><i data-lucide="arrow-right" aria-hidden="true"></i></a>
+    </nav>
+      </article>
+      
+    <aside class="docs-toc">
+      <strong>本页内容</strong>
+      <nav>
+        <a href="#overview">两阶段接入</a><a href="#allocation">调用分配链接</a><a href="#response">解析返回</a><a href="#use-proxy">使用固定代理</a><a href="#authentication">认证边界</a><a href="#countries">支持地区</a><a href="#lifecycle">资源管理</a><a href="#troubleshooting">常见问题</a>
+      </nav>
+      <a class="docs-toc-console" href="https://console.123proxy.cn/app/"><i data-lucide="terminal" aria-hidden="true"></i>打开控制台</a>
+    </aside>
+    </main>
+    
+    <footer class="docs-footer">
+      <div class="docs-frame docs-footer-inner">
+        <div>
+          <a class="brand docs-footer-brand" href="/">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img src="/assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+        </div>
+        <div class="docs-footer-links">
+          <a href="/developers/getting-started/">快速开始</a>
+          <a href="/developers/#products">产品接入</a>
+          <a href="/pricing.html">价格</a>
+          <a href="/contact.html#solutions">技术支持</a>
+        </div>
+      </div>
+      <div class="docs-frame docs-footer-bottom">
+        <span>© 2026 123Proxy. All rights reserved.</span>
+        <span>文档内容以当前控制台可用能力为准</span>
+      </div>
+    </footer>
+  </div>
+  <script type="application/json" id="developerSearchIndex">[{"title":"开发者中心","section":"开始使用","href":"/developers/","keywords":"开发文档 文档首页 产品选择 代码示例"},{"title":"5 分钟快速开始","section":"开始使用","href":"/developers/getting-started/","keywords":"curl python http socks 认证 控制台 生成代理"},{"title":"隧道代理接入手册","section":"产品接入","href":"/developers/products/scraping-rotating-proxy/","keywords":"Scraping rotating proxy 混合池 纯住宅池 session 白名单 地区 并发 流量"},{"title":"隧道住宅代理接入手册","section":"产品接入","href":"/developers/products/residential-rotating-proxy/","keywords":"Residential rotating proxy 8000万 190 国家码 +us session 住宅IP 按流量"},{"title":"不限量动态住宅接入手册","section":"产品接入","href":"/developers/products/unlimited-residential-proxy/","keywords":"不限流量 不限并发 连续端口 端口范围 3-30分钟 套餐级地区"},{"title":"长效静态代理接入手册","section":"产品接入","href":"/developers/products/static-datacenter-proxy/","keywords":"固定数据中心IP 分配链接 提取API 账密认证 无白名单 不轮转"},{"title":"长效静态住宅接入手册","section":"产品接入","href":"/developers/products/static-residential-proxy/","keywords":"固定住宅ISP IP 分配链接 提取API 账密认证 无白名单 长效"},{"title":"代理并发、QPS与响应时间","section":"工程指南","href":"/developers/guides/concurrency-qps-performance/","keywords":"并发线程 qps 吞吐量 响应时间 p95 浏览器资源 worker little law"},{"title":"SESSION、地区定位与出口轮转","section":"工程指南","href":"/developers/guides/session-geo-rotation/","keywords":"session sticky geo country region rotation 全球随机 国家定位 固定出口"},{"title":"代理错误、超时与重试排查","section":"工程指南","href":"/developers/guides/proxy-errors-retries/","keywords":"407 403 429 timeout tls dns tcp retry backoff connection pool"},{"title":"代理产品选型边界","section":"工程指南","href":"/developers/guides/proxy-product-selection/","keywords":"代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"},{"title":"代理爬虫代码案例","section":"框架案例","href":"/developers/examples/","keywords":"crawler examples 爬虫框架 完整代码 网关域名 可运行"},{"title":"Python Requests代理爬虫","section":"框架案例","href":"/developers/examples/python-requests-proxy/","keywords":"python requests beautifulsoup proxy quotes pagination jsonl"},{"title":"Scrapy代理配置","section":"框架案例","href":"/developers/examples/scrapy-proxy/","keywords":"scrapy proxy middleware books pagination detail feed jsonlines"},{"title":"Python Playwright代理","section":"框架案例","href":"/developers/examples/playwright-proxy/","keywords":"playwright python browser proxy javascript rendered quotes"},{"title":"Python Selenium代理","section":"框架案例","href":"/developers/examples/selenium-proxy/","keywords":"selenium python chrome proxy authentication extension javascript residential unlimited"},{"title":"Node.js Puppeteer代理","section":"框架案例","href":"/developers/examples/puppeteer-proxy/","keywords":"nodejs puppeteer proxy authenticate infinite scroll browser"},{"title":"Node.js Axios代理","section":"框架案例","href":"/developers/examples/nodejs-axios-proxy/","keywords":"nodejs axios cheerio proxy keep alive retry residential pagination jsonl"},{"title":"Golang Colly代理","section":"框架案例","href":"/developers/examples/go-colly-proxy/","keywords":"golang go colly proxy switcher pagination csv"},{"title":"Java Jsoup代理","section":"框架案例","href":"/developers/examples/java-jsoup-proxy/","keywords":"java jsoup proxy authentication maven books csv"},{"title":"PHP cURL代理","section":"框架案例","href":"/developers/examples/php-curl-proxy/","keywords":"php curl proxy domdocument xpath json"},{"title":"代理认证","section":"核心概念","href":"/developers/getting-started/#authentication","keywords":"用户名 密码 账密 whitelist allowlist IP白名单 407"},{"title":"HTTP(S) 与 SOCKS5","section":"核心概念","href":"/developers/getting-started/#protocols","keywords":"http https socks5 proxy curl"},{"title":"SESSION 与出口轮转","section":"核心概念","href":"/developers/products/residential-rotating-proxy/#session","keywords":"sticky session 粘性会话 ttl 国家码 轮换 换ip"},{"title":"连续端口与套餐级轮转","section":"核心概念","href":"/developers/products/unlimited-residential-proxy/#ports","keywords":"port range 端口范围 worker 3-30分钟 不限并发"},{"title":"静态 IP 分配链接","section":"核心概念","href":"/developers/products/static-datacenter-proxy/#allocation","keywords":"allocation extract api 分配链接 固定IP 返回格式"},{"title":"代理可用性测试","section":"错误排查","href":"/developers/getting-started/#verify","keywords":"测试 出口ip 超时 407 curl check"}]</script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/developer-docs.js?v=20260729-04"></script>
+</body>
+</html>

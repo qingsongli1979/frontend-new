@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>控制台概览 | 123Proxy</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="console.css?v=20260729-02">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
+  <script src="console.js?v=20260729-02" defer></script>
+  <script type="module" src="overview.js?v=20260728-11"></script>
+  <script type="module" src="products.js?v=20260729-02"></script>
+  <script type="module" src="resources.js?v=20260728-10"></script>
+  <script type="module" src="commerce.js?v=20260729-02"></script>
+  <script type="module" src="extractor.js?v=20260728-12"></script>
+  <script type="module" src="account.js?v=20260727-03"></script>
+</head>
+<body>
+  <div class="console-shell">
+    <aside class="sidebar" aria-label="控制台导航">
+      <div class="brand-row">
+        <a href="https://www.123proxy.cn/" class="brand-link" aria-label="返回 123Proxy 官网">
+          <svg class="brand-mark" viewBox="0 0 44 44" role="img" aria-label="123Proxy 三色数字标志">
+            <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+            <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+            <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+            <text x="22" y="15.2" fill="#ffffff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+            <text x="10" y="39.2" fill="#ffffff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+            <text x="34" y="39.2" fill="#ffffff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+          </svg>
+          <span class="brand-wordmark">
+            <img class="wordmark-proxy-original" src="../assets/123proxy-proxy-original.svg" alt="Proxy">
+          </span>
+        </a>
+        <span class="console-tag">CONSOLE</span>
+      </div>
+
+      <nav class="side-nav">
+        <div class="nav-group">
+          <span class="nav-group-label">工作台</span>
+          <a class="nav-item is-active" href="#overview" data-view="overview" aria-current="page">
+            <i data-lucide="layout-dashboard" aria-hidden="true"></i>
+            <span>概览</span>
+          </a>
+        </div>
+
+        <div class="nav-group product-nav-group">
+          <span class="nav-group-label">代理产品</span>
+          <a class="nav-item is-product" href="#product-tunnel" data-product="tunnel">
+            <i data-lucide="shuffle" aria-hidden="true"></i>
+            <span>隧道代理</span>
+          </a>
+          <a class="nav-item is-product" href="#product-residential" data-product="residential">
+            <i data-lucide="globe-2" aria-hidden="true"></i>
+            <span>隧道住宅代理</span>
+          </a>
+          <a class="nav-item is-product" href="#product-unlimited" data-product="unlimited">
+            <i data-lucide="refresh-cw" aria-hidden="true"></i>
+            <span>不限量动态住宅</span>
+          </a>
+          <a class="nav-item is-product" href="#product-static-datacenter" data-product="staticDatacenter">
+            <i data-lucide="server" aria-hidden="true"></i>
+            <span>长效静态代理</span>
+          </a>
+          <a class="nav-item is-product" href="#product-static-residential" data-product="staticResidential">
+            <i data-lucide="house-plug" aria-hidden="true"></i>
+            <span>长效静态住宅</span>
+          </a>
+          <a class="nav-item is-product" href="#product-bandwidth" data-product="bandwidth">
+            <i data-lucide="gauge" aria-hidden="true"></i>
+            <span>高带宽代理 IP</span>
+            <em>项目</em>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">资源管理</span>
+          <a class="nav-item is-submenu" href="#packages" data-view="packages">
+            <i data-lucide="package-open" aria-hidden="true"></i>
+            <span>所有套餐</span>
+            <em>--</em>
+          </a>
+          <a class="nav-item is-submenu" href="#usage" data-view="usage">
+            <i data-lucide="chart-no-axes-combined" aria-hidden="true"></i>
+            <span>用量明细</span>
+          </a>
+          <a class="nav-item is-submenu" href="#users" data-view="users">
+            <i data-lucide="users-round" aria-hidden="true"></i>
+            <span>代理用户</span>
+          </a>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-group-label">交易与账户</span>
+          <a class="nav-item is-submenu" href="#orders" data-view="orders">
+            <i data-lucide="receipt-text" aria-hidden="true"></i>
+            <span>订单管理</span>
+          </a>
+          <a class="nav-item is-submenu" href="#billing" data-view="billing">
+            <i data-lucide="file-text" aria-hidden="true"></i>
+            <span>账单与发票</span>
+          </a>
+          <a class="nav-item is-submenu" href="#settings" data-view="settings">
+            <i data-lucide="settings" aria-hidden="true"></i>
+            <span>账户设置</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="https://www.123proxy.cn/developers/">
+          <i data-lucide="book-open-text" aria-hidden="true"></i>
+          <span><strong>开发文档</strong><small>API、SDK 与代码示例</small></span>
+          <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+        </a>
+        <a href="https://www.123proxy.cn/contact.html#solutions" target="_blank" rel="noreferrer">
+          <i data-lucide="headphones" aria-hidden="true"></i>
+          <span><strong>技术支持</strong><small>7x24 小时服务</small></span>
+          <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button mobile-menu" type="button" aria-label="打开导航">
+            <i data-lucide="menu" aria-hidden="true"></i>
+          </button>
+          <div class="breadcrumb">
+            <span>控制台</span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+            <strong>概览</strong>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <div class="network-state">
+            <span></span>
+            <strong>代理网络运行正常</strong>
+          </div>
+          <div class="balance-compact">
+            <span>余额</span>
+            <strong id="topbarBalance">¥--</strong>
+            <button id="rechargeButton" type="button">充值</button>
+          </div>
+          <div class="user-menu-wrap">
+            <button
+              class="user-menu"
+              id="userMenuButton"
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-controls="userAccountMenu"
+            >
+              <span class="avatar" id="userAvatar">U</span>
+              <span class="user-copy">
+                <strong id="userDisplayName">正在载入</strong>
+                <small id="userAccountType">控制台账户</small>
+              </span>
+              <i data-lucide="chevron-down" aria-hidden="true"></i>
+            </button>
+            <div class="user-dropdown" id="userAccountMenu" role="menu" hidden>
+              <div class="user-dropdown-heading">
+                <strong>账户管理</strong>
+                <small>套餐、账单与安全设置</small>
+              </div>
+              <a href="#settings" role="menuitem">
+                <i data-lucide="settings" aria-hidden="true"></i>
+                <span><strong>账户设置</strong><small>资料、安全与 API Token</small></span>
+              </a>
+              <a href="#billing" role="menuitem">
+                <i data-lucide="wallet-cards" aria-hidden="true"></i>
+                <span><strong>账单与充值</strong><small>余额、记录与发票</small></span>
+              </a>
+              <button class="user-dropdown-logout" type="button" role="menuitem" data-user-menu-logout>
+                <i data-lucide="log-out" aria-hidden="true"></i>
+                <span><strong>退出登录</strong><small>结束当前控制台会话</small></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content" id="overview">
+        <div class="console-view is-active" id="overviewView" data-view-panel="overview">
+        <section class="page-heading is-compact">
+          <div>
+            <h1>控制台</h1>
+            <p>管理套餐并进入当前代理任务。</p>
+          </div>
+          <div class="page-actions">
+            <a class="button button-secondary" id="overviewTrialButton" href="https://www.123proxy.cn/contact.html#service" target="_blank" rel="noreferrer">
+              <i data-lucide="flask-conical" aria-hidden="true"></i>
+              申请免费测试
+            </a>
+            <button class="button button-primary" id="buyPackageButton" type="button">
+              <i data-lucide="plus" aria-hidden="true"></i>
+              购买套餐
+            </button>
+          </div>
+        </section>
+
+        <div class="overview-notice" id="overviewNotice" role="status" hidden></div>
+
+        <section class="resource-strip" id="overviewResourceStrip" aria-label="账户资源概览" aria-busy="true">
+          <div class="resource-cell">
+            <span class="resource-icon is-blue"><i data-lucide="wallet-cards" aria-hidden="true"></i></span>
+            <div>
+              <small>账户余额</small>
+              <strong><em>¥</em><span id="overviewBalance">--</span></strong>
+              <span>可用于标准套餐购买</span>
+            </div>
+          </div>
+          <div class="resource-cell">
+            <span class="resource-icon is-green"><i data-lucide="circle-check-big" aria-hidden="true"></i></span>
+            <div>
+              <small>可用套餐</small>
+              <strong><span id="overviewUsablePlans">--</span><em> 个</em></strong>
+              <span id="overviewProductCoverage">正在读取套餐</span>
+            </div>
+          </div>
+          <div class="resource-cell">
+            <span class="resource-icon is-ink"><i data-lucide="gauge" aria-hidden="true"></i></span>
+            <div>
+              <small>可用代理流量</small>
+              <strong><span id="overviewTraffic">--</span><em> GB</em></strong>
+              <span>流量套餐合计</span>
+            </div>
+          </div>
+          <div class="resource-action" id="pendingResourceAction">
+            <small>待提取固定 IP</small>
+            <strong id="pendingResourceText">正在检查待提取资源</strong>
+            <button id="pendingResourceButton" type="button" disabled>
+              立即提取
+              <i data-lucide="arrow-right" aria-hidden="true"></i>
+            </button>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel package-panel" id="packages">
+            <header class="panel-head">
+              <div>
+                <h2>我的代理套餐</h2>
+                <p>按任务查看额度、有效期和接入状态</p>
+              </div>
+              <div class="segmented" role="tablist" aria-label="套餐状态筛选">
+                <button class="is-active" type="button" data-filter="all" role="tab" aria-selected="true">全部</button>
+                <button type="button" data-filter="active" role="tab" aria-selected="false">使用中</button>
+                <button type="button" data-filter="attention" role="tab" aria-selected="false">需处理</button>
+              </div>
+            </header>
+
+            <div class="package-table" id="overviewPackageTable" role="table" aria-label="我的代理套餐" aria-busy="true">
+              <div class="package-row package-header" role="row">
+                <span role="columnheader">产品与套餐</span>
+                <span role="columnheader">可用资源</span>
+                <span role="columnheader">有效期</span>
+                <span role="columnheader">状态</span>
+                <span role="columnheader">操作</span>
+              </div>
+              <div id="overviewPackageRows" role="rowgroup">
+                <div class="package-state-row" role="row">
+                  <i data-lucide="loader-circle" aria-hidden="true"></i>
+                  <span>正在加载套餐</span>
+                </div>
+              </div>
+            </div>
+
+            <footer class="panel-footer">
+              <a id="allPackagesLink" href="#packages" data-resource-link="packages">
+                查看全部套餐与历史记录
+                <i data-lucide="arrow-right" aria-hidden="true"></i>
+              </a>
+              <span id="overviewPackageCount">--</span>
+            </footer>
+          </section>
+
+          <aside class="panel quick-panel" id="quick-start">
+            <header class="panel-head">
+              <div>
+                <h2>快速使用</h2>
+                <p>从已有套餐进入代理提取</p>
+              </div>
+            </header>
+
+            <div class="quick-form is-simple">
+              <label>
+                <span>选择套餐</span>
+                <span class="quick-select">
+                  <select id="quickPackageSelect" aria-label="选择有效套餐" disabled>
+                    <option>正在加载套餐</option>
+                  </select>
+                  <i data-lucide="chevrons-up-down" aria-hidden="true"></i>
+                </span>
+              </label>
+              <div class="quick-package-summary" id="quickPackageSummary">
+                <small>套餐状态</small>
+                <strong>等待数据</strong>
+                <span>载入后可直接进入对应提取页面</span>
+              </div>
+
+              <div class="quick-actions">
+                <button class="button button-primary" id="quickUseButton" type="button" disabled>
+                  <i data-lucide="route" aria-hidden="true"></i>
+                  进入提取
+                </button>
+                <a class="button button-secondary" href="https://www.123proxy.cn/developers/examples/">
+                  <i data-lucide="code-2" aria-hidden="true"></i>
+                  代码示例
+                </a>
+              </div>
+              <p class="quick-note"><i data-lucide="info" aria-hidden="true"></i>轮转代理的地区、SESSION 与套餐白名单在提取页设置</p>
+            </div>
+          </aside>
+        </div>
+        </div>
+
+        <section class="console-view product-workspace" id="productView" data-view-panel="product" hidden>
+          <header class="page-heading product-page-heading is-compact">
+            <div>
+              <h1 id="productTitle">隧道代理</h1>
+              <p id="productDescription">通过固定隧道入口接入全球随机代理池。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-primary" id="productExtractAction" type="button" hidden>
+                <i data-lucide="route" aria-hidden="true"></i>
+                提取代理
+              </button>
+              <button class="button button-secondary" id="productDocsAction" type="button">
+                <i data-lucide="book-open-text" aria-hidden="true"></i>
+                接入文档
+              </button>
+              <button class="button button-primary" id="productPrimaryAction" type="button">
+                <i data-lucide="shopping-cart" aria-hidden="true"></i>
+                购买套餐
+              </button>
+            </div>
+          </header>
+
+          <div class="overview-notice" id="productNotice" role="status" aria-live="polite" hidden></div>
+
+          <section class="product-summary-band">
+            <div class="product-summary-fact"><small id="productFactOneLabel">出口范围</small><strong id="productFactOne">全球随机</strong></div>
+            <div class="product-summary-fact"><small id="productFactTwoLabel">计费方式</small><strong id="productFactTwo">流量 / 并发线程</strong></div>
+            <div class="product-summary-fact"><small id="productFactThreeLabel">代理池</small><strong id="productFactThree">混合池 / 纯住宅池</strong></div>
+          </section>
+
+          <div class="product-workspace-grid">
+            <section class="panel product-account-panel">
+              <header class="panel-head">
+                <div>
+                  <h2>我的套餐</h2>
+                  <p id="productResourceDescription">购买后在这里使用和管理</p>
+                </div>
+              </header>
+              <div class="current-product-resource" id="currentProductResource"></div>
+              <div class="product-config-actions">
+                <button id="productUseAction" type="button" disabled>
+                  <span class="config-action-icon"><i data-lucide="route" aria-hidden="true"></i></span>
+                  <span><strong>提取代理</strong><small>配置接入地址、认证、出口与代码示例</small></span>
+                  <i data-lucide="arrow-right" aria-hidden="true"></i>
+                </button>
+                <button id="productUsageAction" type="button">
+                  <span class="config-action-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span>
+                  <span><strong>查看用量</strong><small>套餐余量与累计用量</small></span>
+                  <i data-lucide="arrow-right" aria-hidden="true"></i>
+                </button>
+                <button id="productAuthAction" type="button">
+                  <span class="config-action-icon"><i data-lucide="shield-check" aria-hidden="true"></i></span>
+                  <span><strong>轮转套餐认证</strong><small>账密认证或套餐 IP 白名单</small></span>
+                  <i data-lucide="arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+            </section>
+
+            <section class="panel purchase-options-panel">
+              <header class="panel-head">
+                <div>
+                  <h2 id="purchasePanelTitle">购买隧道代理</h2>
+                </div>
+              </header>
+              <div class="purchase-option-list" id="purchaseOptionList"></div>
+              <footer class="purchase-panel-footer">
+                <span><i data-lucide="info" aria-hidden="true"></i>出口地区与 SESSION 在使用代理时设置</span>
+              </footer>
+            </section>
+          </div>
+        </section>
+
+        <section class="console-view resource-workspace" id="packagesView" data-view-panel="packages" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>所有套餐</h1>
+              <p>查看有效套餐、剩余资源与历史记录。</p>
+            </div>
+            <div class="page-actions">
+              <a class="button button-primary" href="#purchase?product=tunnel" data-purchase-product="tunnel">
+                <i data-lucide="plus" aria-hidden="true"></i>
+                购买套餐
+              </a>
+            </div>
+          </header>
+
+          <div class="overview-notice" id="packagesNotice" role="status" aria-live="polite" hidden></div>
+
+          <section class="management-metrics" aria-label="套餐统计">
+            <div><small>有效套餐</small><strong id="packagesActiveMetric">--</strong><span>当前可使用</span></div>
+            <div><small>需要处理</small><strong id="packagesAttentionMetric">--</strong><span>待提取或资源已用完</span></div>
+            <div><small>历史记录</small><strong id="packagesHistoryMetric">--</strong><span>包含已过期套餐</span></div>
+          </section>
+
+          <section class="resource-filter-bar" aria-label="套餐筛选">
+            <label>
+              <span>套餐状态</span>
+              <select id="packagesStatusFilter">
+                <option value="all">全部状态</option>
+                <option value="active">使用中</option>
+                <option value="attention">需处理</option>
+                <option value="expired">已过期</option>
+              </select>
+            </label>
+            <label>
+              <span>代理产品</span>
+              <select id="packagesProductFilter">
+                <option value="all">全部产品</option>
+                <option value="tunnel">隧道代理</option>
+                <option value="residential">隧道住宅代理</option>
+                <option value="unlimited">不限量动态住宅</option>
+                <option value="staticDatacenter">长效静态代理</option>
+                <option value="staticResidential">长效静态住宅</option>
+              </select>
+            </label>
+            <label class="resource-search">
+              <span>搜索套餐</span>
+              <span><i data-lucide="search" aria-hidden="true"></i><input id="packagesSearch" type="search" placeholder="产品、套餐或订单号"></span>
+            </label>
+            <button class="button button-secondary resource-reload" id="packagesReload" type="button">
+              <i data-lucide="refresh-cw" aria-hidden="true"></i>
+              刷新
+            </button>
+          </section>
+
+          <section class="panel management-table-panel">
+            <div class="management-table packages-management-table" role="table" aria-label="所有套餐">
+              <div class="management-row is-head" role="row">
+                <span role="columnheader">产品与套餐</span>
+                <span role="columnheader">可用资源</span>
+                <span role="columnheader">购买 / 到期时间</span>
+                <span role="columnheader">状态</span>
+                <span role="columnheader">操作</span>
+              </div>
+              <div id="packagesTableRows" role="rowgroup">
+                <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载套餐记录</strong></div>
+              </div>
+            </div>
+            <footer class="management-table-footer">
+              <span id="packagesResultCount">--</span>
+              <div class="pagination-controls">
+                <button id="packagesPrevPage" type="button" aria-label="上一页" disabled><i data-lucide="chevron-left" aria-hidden="true"></i></button>
+                <span id="packagesPageLabel">第 1 / 1 页</span>
+                <button id="packagesNextPage" type="button" aria-label="下一页" disabled><i data-lucide="chevron-right" aria-hidden="true"></i></button>
+              </div>
+            </footer>
+          </section>
+        </section>
+
+        <section class="console-view usage-workspace resource-workspace" id="usageView" data-view-panel="usage" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>用量明细</h1>
+              <p>按时间查看代理流量记录、认证用户与计费金额。</p>
+            </div>
+          </header>
+          <div class="overview-notice" id="usageNotice" role="status" aria-live="polite" hidden></div>
+          <div id="usageWorkspace">
+            <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在读取流量明细</strong></div>
+          </div>
+        </section>
+
+        <section class="console-view resource-workspace" id="usersView" data-view-panel="users" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>代理用户</h1>
+              <p>管理用于代理账密认证的子用户和流量限额。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-primary" id="createProxyUserButton" type="button">
+                <i data-lucide="user-round-plus" aria-hidden="true"></i>
+                创建代理用户
+              </button>
+            </div>
+          </header>
+
+          <div class="overview-notice" id="usersNotice" role="status" aria-live="polite" hidden></div>
+
+          <section class="management-metrics users-metrics" aria-label="代理用户统计">
+            <div><small>代理用户</small><strong id="usersCountMetric">--</strong><span>当前账户已创建</span></div>
+            <div><small>已设限额</small><strong id="usersLimitedMetric">--</strong><span>设置独立流量上限</span></div>
+            <div><small>累计使用</small><strong><span id="usersTrafficMetric">--</span> <em>GB</em></strong><span>全部代理用户合计</span></div>
+          </section>
+
+          <section class="users-context-bar">
+            <span><i data-lucide="shield-check" aria-hidden="true"></i></span>
+            <div>
+              <strong>代理账密用于协议认证</strong>
+              <p>IP 白名单仅适用于轮转代理产品，跟随具体套餐并在代理提取页面配置。</p>
+            </div>
+            <button class="button button-secondary" id="usersReload" type="button">
+              <i data-lucide="refresh-cw" aria-hidden="true"></i>
+              刷新
+            </button>
+          </section>
+
+          <section class="panel management-table-panel">
+            <div class="management-table users-management-table" role="table" aria-label="代理用户列表">
+              <div class="management-row is-head" role="row">
+                <span role="columnheader">代理用户名</span>
+                <span role="columnheader">代理密码</span>
+                <span role="columnheader">累计使用</span>
+                <span role="columnheader">流量限额</span>
+                <span role="columnheader">操作</span>
+              </div>
+              <div id="usersTableRows" role="rowgroup">
+                <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载代理用户</strong></div>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section class="console-view commerce-workspace" id="purchaseView" data-view-panel="purchase" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <span class="eyebrow">LIVE PLAN CATALOG</span>
+              <h1>购买代理套餐</h1>
+              <p>选择产品、计费方式、套餐规格与购买时长。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-secondary" id="purchaseReload" type="button">
+                <i data-lucide="refresh-cw" aria-hidden="true"></i>
+                刷新价格
+              </button>
+            </div>
+          </header>
+          <div class="overview-notice" id="purchaseNotice" role="status" aria-live="polite" hidden></div>
+          <div id="purchaseWorkspace">
+            <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载实时套餐</strong></div>
+          </div>
+        </section>
+
+        <section class="console-view commerce-workspace" id="orderView" data-view-panel="order" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <span class="eyebrow">ORDER DETAILS</span>
+              <h1>订单详情</h1>
+              <p>查看套餐规格、订单状态与支付信息。</p>
+            </div>
+          </header>
+          <div class="overview-notice" id="orderNotice" role="status" aria-live="polite" hidden></div>
+          <div id="orderWorkspace">
+            <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在读取订单</strong></div>
+          </div>
+        </section>
+
+        <section class="console-view extraction-workspace" id="extractView" data-view-panel="extract" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <span class="eyebrow">PROXY ACCESS</span>
+              <h1 id="extractPageTitle">使用代理套餐</h1>
+              <p id="extractPageDescription">选择套餐并生成代理接入信息。</p>
+            </div>
+            <div class="page-actions">
+              <button class="button button-secondary" id="extractBackToProduct" type="button">
+                <i data-lucide="arrow-left" aria-hidden="true"></i>
+                返回产品
+              </button>
+            </div>
+          </header>
+          <div class="overview-notice" id="extractNotice" role="status" aria-live="polite" hidden></div>
+          <div id="extractWorkspace">
+            <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载套餐与认证信息</strong></div>
+          </div>
+        </section>
+
+        <section class="console-view commerce-workspace" id="ordersView" data-view-panel="orders" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>订单管理</h1>
+              <p>查看代理套餐订单、支付状态与订单明细。</p>
+            </div>
+            <div class="page-actions">
+              <a class="button button-primary" href="#purchase?product=tunnel" data-purchase-product="tunnel">
+                <i data-lucide="plus" aria-hidden="true"></i>
+                购买套餐
+              </a>
+            </div>
+          </header>
+          <div class="overview-notice" id="ordersNotice" role="status" aria-live="polite" hidden></div>
+          <div id="ordersWorkspace">
+            <div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载订单</strong></div>
+          </div>
+        </section>
+
+        <section class="console-view commerce-workspace" id="billingView" data-view-panel="billing" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>账单与发票</h1>
+              <p>管理账户余额、充值记录、账单与发票。</p>
+            </div>
+          </header>
+          <div class="overview-notice" id="billingNotice" role="status" aria-live="polite" hidden></div>
+          <div id="billingWorkspace"></div>
+        </section>
+
+        <section class="console-view commerce-workspace" id="settingsView" data-view-panel="settings" hidden>
+          <header class="page-heading is-compact">
+            <div>
+              <h1>账户设置</h1>
+              <p>管理个人资料、登录安全与 API Token。</p>
+            </div>
+          </header>
+          <div class="overview-notice" id="settingsNotice" role="status" aria-live="polite" hidden></div>
+          <div id="settingsWorkspace"></div>
+        </section>
+
+        <footer class="console-footer">
+          <span>© 2026 123Proxy</span>
+          <nav>
+            <a href="https://www.123proxy.cn/agreement.html">服务协议</a>
+            <a href="https://www.123proxy.cn/contact.html#solutions" target="_blank" rel="noreferrer">技术支持</a>
+            <a href="https://www.123proxy.cn/status/">服务状态</a>
+          </nav>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="console-dialog package-dialog" id="packageManageDialog" aria-labelledby="packageManageTitle">
+    <div class="dialog-card">
+      <header>
+        <div>
+          <small>PACKAGE MANAGEMENT</small>
+          <h2 id="packageManageTitle">管理套餐</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-user" id="packageManageSummary">--</p>
+        <div class="package-operation-list" id="packageManageActions"></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>关闭</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="console-dialog package-dialog" id="packageRenewDialog" aria-labelledby="packageRenewTitle">
+    <form method="dialog" id="packageRenewForm">
+      <header>
+        <div>
+          <small>PACKAGE RENEWAL</small>
+          <h2 id="packageRenewTitle">续费套餐</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-user" id="packageRenewSummary">--</p>
+        <div class="package-renew-facts">
+          <div><span>当前到期时间</span><strong id="packageRenewExpiry">--</strong></div>
+          <div><span>本次续费周期</span><strong>1 个月</strong></div>
+        </div>
+        <p class="dialog-confirm-copy">确认后将按原套餐产品创建续费订单，并进入订单支付页面。最终价格与续费资格以后端返回为准。</p>
+        <div class="dialog-message" id="packageRenewMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-primary" type="submit">创建续费订单</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="console-dialog package-dialog" id="packageTextDialog" aria-labelledby="packageTextTitle">
+    <form method="dialog" id="packageTextForm">
+      <header>
+        <div>
+          <small id="packageTextEyebrow">PACKAGE NOTE</small>
+          <h2 id="packageTextTitle">修改套餐备注</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-user" id="packageTextSummary">--</p>
+        <label class="dialog-field">
+          <span id="packageTextLabel">套餐备注</span>
+          <input id="packageTextValue" type="text" maxlength="20" autocomplete="off">
+          <select id="packageTextUserSelect" aria-label="选择代理用户" hidden></select>
+          <small id="packageTextHelp">最多 20 个中英文字符；留空保存可清除备注。</small>
+        </label>
+        <div class="dialog-message" id="packageTextMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-primary" type="submit">保存</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="console-dialog package-dialog" id="packageNotifyDialog" aria-labelledby="packageNotifyTitle">
+    <form method="dialog" id="packageNotifyForm">
+      <header>
+        <div>
+          <small>PACKAGE NOTIFICATION</small>
+          <h2 id="packageNotifyTitle">套餐提醒</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-user" id="packageNotifySummary">--</p>
+        <label class="dialog-switch-row">
+          <input id="packageNotifyEnabled" type="checkbox">
+          <span><strong>启用套餐到期提醒</strong><small>后端将按套餐通知设置发送提醒。</small></span>
+        </label>
+        <div class="dialog-field-grid">
+          <label class="dialog-field">
+            <span>通知手机号</span>
+            <input id="packageNotifyPhone" type="tel" autocomplete="tel" placeholder="至少填写一种联系方式">
+          </label>
+          <label class="dialog-field">
+            <span>通知邮箱</span>
+            <input id="packageNotifyEmail" type="email" autocomplete="email" placeholder="name@example.com">
+          </label>
+        </div>
+        <label class="dialog-field" id="packageNotifyThresholdField">
+          <span>剩余流量阈值（GB）</span>
+          <input id="packageNotifyThreshold" type="number" min="0" step="0.01" value="0">
+          <small>流量套餐低于该余量时可触发通知；填写 0 表示不设置额外流量阈值。</small>
+        </label>
+        <div class="dialog-message" id="packageNotifyMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-primary" type="submit">保存提醒</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="console-dialog" id="createProxyUserDialog" aria-labelledby="createProxyUserTitle">
+    <form method="dialog" id="createProxyUserForm">
+      <header>
+        <div>
+          <small>PROXY AUTH USER</small>
+          <h2 id="createProxyUserTitle">创建代理用户</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <label class="dialog-field">
+          <span>用户名后缀</span>
+          <input id="proxyUserPrefix" type="text" minlength="5" maxlength="15" pattern="[A-Za-z0-9]{5,15}" autocomplete="off" placeholder="5-15 位字母或数字" required>
+          <small>系统会在后缀前加入当前账户前缀，创建后生成独立代理密码。</small>
+        </label>
+        <div class="dialog-message" id="createProxyUserMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-primary" id="confirmCreateProxyUser" type="submit">确认创建</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="console-dialog" id="limitProxyUserDialog" aria-labelledby="limitProxyUserTitle">
+    <form method="dialog" id="limitProxyUserForm">
+      <header>
+        <div>
+          <small>TRAFFIC LIMIT</small>
+          <h2 id="limitProxyUserTitle">设置流量限额</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-user" id="limitProxyUserName">--</p>
+        <label class="dialog-field">
+          <span>流量限额（GB）</span>
+          <input id="proxyUserLimit" type="number" min="0" step="1" inputmode="numeric" required>
+          <small>输入 0 表示不限制该代理用户的累计流量。</small>
+        </label>
+        <div class="dialog-message" id="limitProxyUserMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-primary" id="confirmLimitProxyUser" type="submit">保存限额</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="console-dialog" id="deleteProxyUserDialog" aria-labelledby="deleteProxyUserTitle">
+    <form method="dialog" id="deleteProxyUserForm">
+      <header>
+        <div>
+          <small>DELETE PROXY USER</small>
+          <h2 id="deleteProxyUserTitle">删除代理用户</h2>
+        </div>
+        <button class="dialog-close" type="button" data-dialog-close aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="dialog-body">
+        <p class="dialog-confirm-copy">删除后，使用 <strong id="deleteProxyUserName">--</strong> 的代理连接会立即失效。</p>
+        <div class="dialog-message" id="deleteProxyUserMessage" hidden></div>
+      </div>
+      <footer>
+        <button class="button button-secondary" type="button" data-dialog-close>取消</button>
+        <button class="button button-danger" id="confirmDeleteProxyUser" type="submit">确认删除</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+{
+  "proxyTargets": [
+    {
+      "url": "http://myip.ipip.net"
+    }
+  ],
+  "proxyChecks": [
+    {
+      "id": "tun-us-01",
+      "name": "隧道代理 / 美国节点 A",
+      "host": "170.39.119.61",
+      "port": 36923,
+      "product": "proxy-tunnel",
+      "region": "gateway-us"
+    },
+    {
+      "id": "tun-asia-01",
+      "name": "隧道代理 / 亚洲节点 A",
+      "host": "175.100.199.121",
+      "port": 36920,
+      "product": "proxy-tunnel",
+      "region": "gateway-asia"
+    },
+    {
+      "id": "tun-us-02",
+      "name": "隧道代理 / 美国节点 B",
+      "host": "23.158.232.65",
+      "port": 36929,
+      "product": "proxy-tunnel",
+      "region": "gateway-us"
+    },
+    {
+      "id": "res-us-01",
+      "name": "隧道住宅代理 / 美国节点 A",
+      "host": "185.28.119.64",
+      "port": 36000,
+      "product": "proxy-residential",
+      "region": "gateway-us"
+    },
+    {
+      "id": "res-eu-01",
+      "name": "隧道住宅代理 / 欧洲节点 A",
+      "host": "107.152.46.223",
+      "port": 36000,
+      "product": "proxy-residential",
+      "region": "gateway-eu"
+    },
+    {
+      "id": "res-us-02",
+      "name": "隧道住宅代理 / 美国节点 B",
+      "host": "23.158.232.65",
+      "port": 36000,
+      "product": "proxy-residential",
+      "region": "gateway-us"
+    },
+    {
+      "id": "unl-us-01",
+      "name": "不限量动态住宅 / 美国节点 A",
+      "host": "185.28.119.64",
+      "port": 10253,
+      "product": "proxy-unlimited",
+      "region": "gateway-us"
+    },
+    {
+      "id": "unl-eu-01",
+      "name": "不限量动态住宅 / 欧洲节点 A",
+      "host": "107.152.46.223",
+      "port": 10255,
+      "product": "proxy-unlimited",
+      "region": "gateway-eu"
+    },
+    {
+      "id": "unl-us-02",
+      "name": "不限量动态住宅 / 美国节点 B",
+      "host": "23.158.232.65",
+      "port": 10255,
+      "product": "proxy-unlimited",
+      "region": "gateway-us"
+    }
+  ],
+  "serviceChecks": [
+    {
+      "id": "website",
+      "name": "123Proxy 官网",
+      "urlEnv": "WEBSITE_CHECK_URL",
+      "defaultUrl": "https://www.123proxy.cn/healthz",
+      "expectText": "ok"
+    },
+    {
+      "id": "console",
+      "name": "123Proxy 控制台",
+      "urlEnv": "CONSOLE_CHECK_URL",
+      "defaultUrl": "https://console.123proxy.cn/healthz",
+      "expectText": "ok"
+    },
+    {
+      "id": "api",
+      "name": "123Proxy API",
+      "urlEnv": "API_CHECK_URL",
+      "defaultUrl": "https://console.123proxy.cn/ip/mytraffic",
+      "expectJson": true,
+      "auth": {
+        "type": "bearer",
+        "tokenEnv": "API_HEALTH_TOKEN"
+      }
+    }
+  ],
+  "components": [
+    {
+      "id": "proxy-tunnel",
+      "name": "隧道代理",
+      "kind": "proxy-group",
+      "selector": "product",
+      "value": "proxy-tunnel",
+      "pushTokenEnv": "KUMA_TOKEN_PROXY_TUNNEL"
+    },
+    {
+      "id": "proxy-residential",
+      "name": "隧道住宅代理",
+      "kind": "proxy-group",
+      "selector": "product",
+      "value": "proxy-residential",
+      "pushTokenEnv": "KUMA_TOKEN_PROXY_RESIDENTIAL"
+    },
+    {
+      "id": "proxy-unlimited",
+      "name": "不限量动态住宅",
+      "kind": "proxy-group",
+      "selector": "product",
+      "value": "proxy-unlimited",
+      "pushTokenEnv": "KUMA_TOKEN_PROXY_UNLIMITED"
+    },
+    {
+      "id": "gateway-us",
+      "name": "美国网关",
+      "kind": "proxy-group",
+      "selector": "region",
+      "value": "gateway-us",
+      "pushTokenEnv": "KUMA_TOKEN_GATEWAY_US"
+    },
+    {
+      "id": "gateway-eu",
+      "name": "欧洲网关",
+      "kind": "proxy-group",
+      "selector": "region",
+      "value": "gateway-eu",
+      "pushTokenEnv": "KUMA_TOKEN_GATEWAY_EU"
+    },
+    {
+      "id": "gateway-asia",
+      "name": "亚洲网关",
+      "kind": "proxy-group",
+      "selector": "region",
+      "value": "gateway-asia",
+      "pushTokenEnv": "KUMA_TOKEN_GATEWAY_ASIA"
+    },
+    {
+      "id": "website",
+      "name": "网站",
+      "kind": "service",
+      "serviceCheck": "website",
+      "pushTokenEnv": "KUMA_TOKEN_WEBSITE"
+    },
+    {
+      "id": "console",
+      "name": "控制台",
+      "kind": "service",
+      "serviceCheck": "console",
+      "pushTokenEnv": "KUMA_TOKEN_CONSOLE"
+    },
+    {
+      "id": "api",
+      "name": "API 服务",
+      "kind": "service",
+      "serviceCheck": "api",
+      "pushTokenEnv": "KUMA_TOKEN_API"
+    }
+  ]
+}

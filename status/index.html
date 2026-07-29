@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <title>服务状态 | 123Proxy</title>
+  <meta name="description" content="查看 123Proxy 隧道代理、隧道住宅代理、不限量动态住宅、区域网关、网站、控制台与 API 的实时运行状态。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://www.123proxy.cn/status/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="123Proxy">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="服务状态 | 123Proxy">
+  <meta property="og:description" content="查看 123Proxy 隧道代理、隧道住宅代理、不限量动态住宅、区域网关、网站、控制台与 API 的实时运行状态。">
+  <meta property="og:url" content="https://www.123proxy.cn/status/">
+  <meta property="og:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/assets/product-detail.css?v=20260729-04">
+  <link rel="stylesheet" href="/assets/status-page.css?v=20260729-04">
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg"},{"@type":"WebPage","@id":"https://www.123proxy.cn/status/#webpage","name":"服务状态 | 123Proxy","description":"查看 123Proxy 隧道代理、隧道住宅代理、不限量动态住宅、区域网关、网站、控制台与 API 的实时运行状态。","url":"https://www.123proxy.cn/status/","inLanguage":"zh-CN","publisher":{"@id":"https://www.123proxy.cn/#organization"},"about":[{"@type":"Service","name":"隧道代理","serviceType":"代理产品","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"隧道住宅代理","serviceType":"代理产品","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"不限量动态住宅","serviceType":"代理产品","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"美国网关","serviceType":"区域网关","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"欧洲网关","serviceType":"区域网关","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"亚洲网关","serviceType":"区域网关","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"123Proxy 网站","serviceType":"平台服务","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"用户控制台","serviceType":"平台服务","provider":{"@id":"https://www.123proxy.cn/#organization"}},{"@type":"Service","name":"API 服务","serviceType":"平台服务","provider":{"@id":"https://www.123proxy.cn/#organization"}}]}]}</script>
+</head>
+<body class="site-refined status-page" data-status-page>
+  <div class="page">
+    
+    <div class="utility-bar">
+      <div class="container utility-inner">
+        <div class="utility-left">
+          <span class="utility-status"><span class="status-dot"></span>全球代理网络运行正常</span>
+          <span>为爬虫工程师与 AI 数据团队提供服务</span>
+        </div>
+        <div class="utility-right">
+          <a class="utility-link is-active" href="/status/" aria-current="page">服务状态</a>
+          <a class="utility-link" href="/developers/">开发文档</a>
+          <a class="utility-link" href="contact.html">联系我们</a>
+        </div>
+      </div>
+    </div>
+    <header class="header">
+      <nav class="container nav" aria-label="主导航">
+        <a class="brand" href="index.html" aria-label="123Proxy 首页">
+          
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img class="wordmark-proxy-original" src="assets/123proxy-proxy-original.svg" alt="Proxy"></span>
+        </a>
+        <div class="nav-links">
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">代理产品<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            
+    <div class="mega-menu">
+      <div class="mega-layout">
+        <div class="mega-intro">
+          <span class="mega-label">Proxy products</span>
+                  <strong>六类代理产品</strong>
+                  <p>覆盖全球轮换、地区住宅、不限量端口和固定出口。</p>
+          <a href="index.html#products">查看全部代理产品<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <div class="mega-links">
+          
+            <a class="mega-link is-featured" href="high-bandwidth-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="gauge" aria-hidden="true"></i></span>
+              <span><strong>高带宽代理 IP</strong><small>不限流量，面向 AI 大规模数据下载</small></span>
+            </a>
+            <a class="mega-link" href="scraping-rotating-proxy.html" aria-current="page">
+              <span class="mega-link-icon"><i data-lucide="route" aria-hidden="true"></i></span>
+              <span><strong>隧道代理</strong><small>混合与纯住宅双池，默认全球随机</small></span>
+            </a>
+            <a class="mega-link" href="residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="house" aria-hidden="true"></i></span>
+              <span><strong>隧道住宅代理</strong><small>8000万+ 住宅 IP，国家/地区定向</small></span>
+            </a>
+            <a class="mega-link" href="unlimited-residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span>
+              <span><strong>不限量动态住宅</strong><small>每端口不限流量与并发</small></span>
+            </a>
+            <a class="mega-link" href="static-datacenter-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="server" aria-hidden="true"></i></span>
+              <span><strong>长效静态代理</strong><small>独享固定机房 IP，稳定长会话</small></span>
+            </a>
+            <a class="mega-link" href="static-residential-proxy.html">
+              <span class="mega-link-icon"><i data-lucide="radio-tower" aria-hidden="true"></i></span>
+              <span><strong>长效静态住宅</strong><small>固定住宅出口，兼顾身份与稳定性</small></span>
+            </a>
+        </div>
+      </div>
+    </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">AI 数据方案<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">AI data workloads</span>
+                  <strong>AI 数据采集代理</strong>
+                  <p>面向视频、图片、代码和文本数据的持续下载与采集。</p>
+                  <a href="ai-data.html">查看 AI 数据方案<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="high-bandwidth-proxy.html"><span class="mega-link-icon"><i data-lucide="gauge" aria-hidden="true"></i></span><span><strong>高带宽代理 IP</strong><small>AI 数据任务的核心代理产品</small></span></a>
+                  <a class="mega-link" href="ai-video-proxy.html"><span class="mega-link-icon"><i data-lucide="video" aria-hidden="true"></i></span><span><strong>视频与多模态数据</strong><small>视频、音频、字幕与元数据下载</small></span></a>
+                  <a class="mega-link" href="ai-image-proxy.html"><span class="mega-link-icon"><i data-lucide="images" aria-hidden="true"></i></span><span><strong>大规模图片数据</strong><small>高并发图片数据集构建</small></span></a>
+                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon"><i data-lucide="file-code-2" aria-hidden="true"></i></span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据采集</small></span></a>
+                  <a class="mega-link" href="ai-text-proxy.html"><span class="mega-link-icon"><i data-lucide="files" aria-hidden="true"></i></span><span><strong>全网文本与文档</strong><small>新闻、论坛、博客与公开文档</small></span></a>
+                  <a class="mega-link" href="ai-youtube-api.html"><span class="mega-link-icon"><i data-lucide="braces" aria-hidden="true"></i></span><span><strong>YouTube 采集 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="global-network.html">全球网络</a>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">开发者<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu is-compact">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">Developers</span>
+                  <strong>从首次请求到生产采集</strong>
+                  <p>产品手册、工程指南与 9 个可运行代码案例。</p>
+                  <a href="/developers/">开发者中心<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="/developers/getting-started/"><span class="mega-link-icon"><i data-lucide="rocket" aria-hidden="true"></i></span><span><strong>5 分钟快速开始</strong><small>生成代理、cURL 验证与代码接入</small></span></a>
+                  <a class="mega-link" href="/developers/#products"><span class="mega-link-icon"><i data-lucide="book-open" aria-hidden="true"></i></span><span><strong>产品接入手册</strong><small>按产品查看认证、路由与提取方式</small></span></a>
+                  <a class="mega-link" href="/developers/#guides"><span class="mega-link-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><span><strong>工程实践指南</strong><small>并发、SESSION、错误重试与产品选型</small></span></a>
+                  <a class="mega-link" href="/developers/examples/"><span class="mega-link-icon"><i data-lucide="code-2" aria-hidden="true"></i></span><span><strong>9 个完整代码案例</strong><small>HTTP 客户端、爬虫框架与浏览器自动化</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">企业服务<i data-lucide="chevron-down" aria-hidden="true"></i></button>
+            <div class="mega-menu is-compact is-enterprise">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">Enterprise</span>
+                  <strong>企业代理与数据服务</strong>
+                  <p>定制代理池、高带宽项目和公开数据采集交付。</p>
+                  <a href="enterprise.html">企业服务总览<i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <div class="mega-links">
+                  <a class="mega-link is-featured" href="custom-proxy-pool.html"><span class="mega-link-icon"><i data-lucide="network" aria-hidden="true"></i></span><span><strong>定制代理池</strong><small>按目标、任务与带宽配置资源</small></span></a>
+                  <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon"><i data-lucide="database-zap" aria-hidden="true"></i></span><span><strong>数据采集服务</strong><small>公开数据项目实施与交付</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="pricing.html">价格</a>
+        </div>
+        <div class="nav-actions">
+          <a class="btn btn-ghost" href="https://console.123proxy.cn/login.html">登录</a>
+          <a class="btn btn-primary" href="https://console.123proxy.cn/register.html">免费测试 1GB</a>
+          <button class="btn icon-btn mobile-menu-btn" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="打开导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+        </div>
+      </nav>
+
+      <div class="mobile-menu" id="mobileMenu">
+        <details>
+          <summary>代理产品<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a><a href="scraping-rotating-proxy.html">隧道代理</a><a href="residential-proxy.html">隧道住宅代理</a><a href="unlimited-residential-proxy.html">不限量动态住宅</a><a href="static-datacenter-proxy.html">长效静态代理</a><a href="static-residential-proxy.html">长效静态住宅</a>
+          </div>
+        </details>
+        <details>
+          <summary>AI 数据方案<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
+            <a href="ai-data.html">方案总览</a>
+            <a href="ai-video-proxy.html">视频数据</a>
+            <a href="ai-image-proxy.html">图片数据</a>
+            <a href="ai-github-proxy.html">代码数据</a>
+            <a href="ai-text-proxy.html">文本与文档</a>
+            <a href="ai-youtube-api.html">YouTube API</a>
+          </div>
+        </details>
+        <a href="global-network.html">全球网络<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+        <details>
+          <summary>开发者<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="/developers/">文档首页</a>
+            <a href="/developers/getting-started/">快速开始</a>
+            <a href="/developers/#products">产品接入</a>
+            <a href="/developers/#guides">工程指南</a>
+            <a href="/developers/examples/">代码案例</a>
+          </div>
+        </details>
+        <details>
+          <summary>企业服务<i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+          <div class="mobile-submenu">
+            <a href="enterprise.html">企业服务总览</a>
+            <a href="custom-proxy-pool.html">定制代理池</a>
+            <a href="data-scraping-service.html">数据采集服务</a>
+          </div>
+        </details>
+        <a href="pricing.html">价格<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+        <a href="contact.html">联系我们<i data-lucide="chevron-right" aria-hidden="true"></i></a>
+      </div>
+    </header>
+    <main>
+      <section class="status-hero">
+        <div class="container status-hero-inner">
+          <div class="status-heading">
+            <span class="status-eyebrow">123PROXY SERVICE STATUS</span>
+            <h1>服务状态</h1>
+            <p>查看代理产品、区域网关与平台服务的实时可用性。</p>
+          </div>
+          <div class="status-overall is-loading" data-overall-status role="status" aria-live="polite">
+            <span class="status-overall-symbol"><i data-lucide="activity" aria-hidden="true"></i></span>
+            <div class="status-overall-copy">
+              <small>当前运行状态</small>
+              <strong data-overall-title>正在获取监测状态</strong>
+              <p data-overall-description>连接监测服务并汇总各项检查结果。</p>
+            </div>
+            <div class="status-overall-actions">
+              <span class="status-updated"><small>最近更新</small><strong data-status-updated>--</strong></span>
+              <button class="btn status-refresh" type="button" data-status-refresh>
+                <i data-lucide="refresh-cw" aria-hidden="true"></i><span>刷新状态</span>
+              </button>
+            </div>
+          </div>
+          <div class="status-source-note" data-status-source-note hidden></div>
+        </div>
+      </section>
+
+      <section class="status-summary" aria-label="服务状态摘要">
+        <div class="container status-summary-grid">
+          <div><span>检测服务</span><strong data-summary-total>9</strong><small>代理、网关与平台</small></div>
+          <div><span>运行正常</span><strong data-summary-operational>--</strong><small>最近一次检测</small></div>
+          <div><span>受影响</span><strong data-summary-affected>--</strong><small>降级、故障或维护</small></div>
+          <div><span>检测周期</span><strong>60s</strong><small>页面自动刷新</small></div>
+        </div>
+      </section>
+
+      <section class="status-services">
+        <div class="container">
+          <div class="status-section-intro">
+            <div>
+              <span>LIVE COMPONENTS</span>
+              <h2>服务组件</h2>
+            </div>
+            <div class="status-legend" aria-label="状态图例">
+              <span><i class="is-operational"></i>正常</span>
+              <span><i class="is-degraded"></i>性能下降</span>
+              <span><i class="is-outage"></i>服务中断</span>
+              <span><i class="is-maintenance"></i>维护中</span>
+              <span><i class="is-unknown"></i>暂无数据</span>
+            </div>
+          </div>
+          
+    <section class="status-group" id="proxy-products">
+      <header class="status-group-head">
+        <div>
+          <span>PROXY PRODUCTS</span>
+          <h2>代理产品</h2>
+        </div>
+        <p>从固定网关完成认证、建立连接，并通过代理出口发起合成请求。</p>
+      </header>
+      <div class="status-component-list">
+        
+    <article class="status-component" data-status-component="proxy-tunnel">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="route" aria-hidden="true"></i></span>
+        <div>
+          <h3>隧道代理</h3>
+          <p>爬虫混合池与纯住宅池</p>
+          <code data-component-endpoint>proxy.123proxy.cn:36923</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="隧道代理过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="proxy-residential">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="house" aria-hidden="true"></i></span>
+        <div>
+          <h3>隧道住宅代理</h3>
+          <p>国家地区与 SESSION 路由</p>
+          <code data-component-endpoint>residential.123proxy.cn:33000</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="隧道住宅代理过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="proxy-unlimited">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="refresh-cw" aria-hidden="true"></i></span>
+        <div>
+          <h3>不限量动态住宅</h3>
+          <p>套餐级地区与周期轮转</p>
+          <code data-component-endpoint>unlimit.residential.123proxy.cn:10253</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="不限量动态住宅过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+      </div>
+    </section>
+    <section class="status-group" id="regional-gateways">
+      <header class="status-group-head">
+        <div>
+          <span>REGIONAL GATEWAYS</span>
+          <h2>区域网关</h2>
+        </div>
+        <p>持续检查区域入口的解析、连接和跨区域请求链路。</p>
+      </header>
+      <div class="status-component-list">
+        
+    <article class="status-component" data-status-component="gateway-us">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="map-pin" aria-hidden="true"></i></span>
+        <div>
+          <h3>美国网关</h3>
+          <p>美国区域接入节点</p>
+          <code data-component-endpoint>US Gateway</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="美国网关过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="gateway-eu">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="map-pin" aria-hidden="true"></i></span>
+        <div>
+          <h3>欧洲网关</h3>
+          <p>欧洲区域接入节点</p>
+          <code data-component-endpoint>EU Gateway</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="欧洲网关过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="gateway-asia">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="map-pin" aria-hidden="true"></i></span>
+        <div>
+          <h3>亚洲网关</h3>
+          <p>亚洲区域接入节点</p>
+          <code data-component-endpoint>Asia Gateway</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="亚洲网关过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+      </div>
+    </section>
+    <section class="status-group" id="platform-services">
+      <header class="status-group-head">
+        <div>
+          <span>PLATFORM SERVICES</span>
+          <h2>平台服务</h2>
+        </div>
+        <p>通过 HTTPS 检查公开网站、控制台与 API 的可访问性和响应时间。</p>
+      </header>
+      <div class="status-component-list">
+        
+    <article class="status-component" data-status-component="website">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="globe-2" aria-hidden="true"></i></span>
+        <div>
+          <h3>123Proxy 网站</h3>
+          <p>官网与公开内容</p>
+          <code data-component-endpoint>www.123proxy.cn</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="123Proxy 网站过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="console">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="panel-top" aria-hidden="true"></i></span>
+        <div>
+          <h3>用户控制台</h3>
+          <p>登录、套餐与资源管理</p>
+          <code data-component-endpoint>console.123proxy.cn</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="用户控制台过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+    <article class="status-component" data-status-component="api">
+      <div class="status-component-main">
+        <span class="status-component-icon"><i data-lucide="braces" aria-hidden="true"></i></span>
+        <div>
+          <h3>API 服务</h3>
+          <p>公开 API 与服务接口</p>
+          <code data-component-endpoint>api.123proxy.cn</code>
+        </div>
+      </div>
+      <div class="status-component-history">
+        <div class="status-history-label">
+          <span>过去 90 天</span>
+          <small data-component-message>等待监测数据</small>
+        </div>
+        <div class="status-history-track" data-component-history aria-label="API 服务过去 90 天状态"></div>
+      </div>
+      <div class="status-component-metrics">
+        <div>
+          <span>响应时间</span>
+          <strong data-component-latency>--</strong>
+        </div>
+        <div>
+          <span>90 天可用率</span>
+          <strong data-component-uptime>--</strong>
+        </div>
+      </div>
+      <span class="status-badge is-unknown" data-component-status><i></i>等待数据</span>
+    </article>
+      </div>
+    </section>
+        </div>
+      </section>
+
+      <section class="status-events">
+        <div class="container">
+          <div class="status-section-intro">
+            <div>
+              <span>INCIDENTS & MAINTENANCE</span>
+              <h2>事件与维护</h2>
+            </div>
+            <p>展示当前事件、近期恢复记录与计划维护窗口。</p>
+          </div>
+          <div class="status-event-grid">
+            <section class="status-event-column" aria-labelledby="incidentTitle">
+              <header>
+                <span class="status-event-icon"><i data-lucide="triangle-alert" aria-hidden="true"></i></span>
+                <div><h3 id="incidentTitle">服务事件</h3><p>最近 90 天的公开事件</p></div>
+              </header>
+              <div class="status-event-list" data-status-incidents>
+                <div class="status-empty"><strong>正在读取事件记录</strong><span>请稍候</span></div>
+              </div>
+            </section>
+            <section class="status-event-column" aria-labelledby="maintenanceTitle">
+              <header>
+                <span class="status-event-icon"><i data-lucide="calendar-clock" aria-hidden="true"></i></span>
+                <div><h3 id="maintenanceTitle">计划维护</h3><p>未来维护窗口与影响范围</p></div>
+              </header>
+              <div class="status-event-list" data-status-maintenance>
+                <div class="status-empty"><strong>正在读取维护计划</strong><span>请稍候</span></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-method">
+        <div class="container status-method-inner">
+          <div>
+            <span>MONITORING METHOD</span>
+            <h2>从真实请求链路判断可用性</h2>
+            <p>代理服务由外部探针完成 DNS、连接、认证与出口请求；网站和 API 通过 HTTPS 状态码与响应时间检测。单一探针异常会先复核，再汇总为公开状态。</p>
+          </div>
+          <div class="status-method-grid">
+            <div><i data-lucide="route" aria-hidden="true"></i><span><strong>代理链路</strong><small>连接 / 认证 / 出口请求</small></span></div>
+            <div><i data-lucide="map" aria-hidden="true"></i><span><strong>区域网关</strong><small>美国 / 欧洲 / 亚洲</small></span></div>
+            <div><i data-lucide="server-cog" aria-hidden="true"></i><span><strong>平台服务</strong><small>网站 / 控制台 / API</small></span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="footer" id="site-footer">
+      <div class="container">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <a class="brand" href="index.html">
+    <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+      <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+      <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+      <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+      <text x="22" y="15.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+      <text x="10" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+      <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+    </svg>
+    <span class="brand-wordmark"><img class="wordmark-proxy-original" src="assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
+            <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+          </div>
+          <div class="footer-col">
+            <h3>代理产品</h3>
+            <a href="scraping-rotating-proxy.html">隧道代理</a>
+            <a href="residential-proxy.html">隧道住宅代理</a>
+            <a href="unlimited-residential-proxy.html">不限量动态住宅</a>
+            <a href="static-datacenter-proxy.html">长效静态代理</a>
+            <a href="static-residential-proxy.html">长效静态住宅</a>
+          </div>
+          <div class="footer-col">
+            <h3>AI 数据方案</h3>
+            <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
+            <a href="ai-video-proxy.html">视频数据采集</a>
+            <a href="ai-image-proxy.html">图片数据采集</a>
+            <a href="ai-github-proxy.html">公开代码数据</a>
+            <a href="ai-text-proxy.html">文本与文档</a>
+            <a href="ai-youtube-api.html">YouTube 采集 API</a>
+          </div>
+          <div class="footer-col">
+            <h3>开发者</h3>
+            <a href="/developers/getting-started/">快速入门</a>
+            <a href="/developers/#products">产品接入</a>
+            <a href="/developers/#guides">工程实践指南</a>
+            <a href="/developers/examples/">9 个完整代码案例</a>
+          </div>
+          <div class="footer-col">
+            <h3>公司与支持</h3>
+            <a href="enterprise.html">企业服务</a>
+            <a href="custom-proxy-pool.html">定制代理池</a>
+            <a href="data-scraping-service.html">数据采集服务</a>
+            <a href="contact.html">联系我们</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2026 123Proxy. All rights reserved.</span>
+          <span>广州市天河区中山大道中38号916 · 粤ICP备2023058453号-1</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script>
+    window.__STATUS_CONFIG__ = {
+      endpoint: "/status-api/v1/summary",
+      refreshIntervalMs: 60000,
+      requestTimeoutMs: 8000
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="/assets/product-static.js?v=20260729-04"></script>
+  <script src="/assets/status-page.js?v=20260729-04"></script>
+</body>
+</html>

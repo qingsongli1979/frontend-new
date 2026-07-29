@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  http:
+    image: registry.cn-hongkong.aliyuncs.com/123proxy/intelligroup-frontend-sz:${RELEASE_TAG}
+    environment:
+      DEPLOY_TARGET: sz
+      TLS_MODE: "on"
+      WEBSITE_LISTEN: "443 ssl http2"
+      CONSOLE_LISTEN: "443 ssl http2"
+      HTTPS_REDIRECT_LISTEN: "80"
+      WEBSITE_TLS_CERTIFICATE: /cert/123proxy.cn.pem
+      WEBSITE_TLS_CERTIFICATE_KEY: /cert/123proxy.cn.key
+      CONSOLE_TLS_CERTIFICATE: /cert/console.123proxy.cn.pem
+      CONSOLE_TLS_CERTIFICATE_KEY: /cert/console.123proxy.cn.key
+      REAL_IP_HEADER: X-Forwarded-For
+      ACCOUNT_SERVICE_UPSTREAM: http://47.254.19.92:6000
+      AUTH_SERVICE_UPSTREAM: http://47.254.19.92:5000
+      IP_SERVICE_UPSTREAM: http://47.254.19.92:6800
+      STATUS_API_UPSTREAM: http://192.168.85.105:8080
+      LEGACY_CONSOLE_UPSTREAM: http://47.254.19.92:80
+      WORDPRESS_UPSTREAM: http://47.254.19.92:8000
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /data/cert:/cert:ro
+    logging:
+      driver: json-file
+      options:
+        max-file: "10"
+        max-size: 10m
+    restart: always
+
