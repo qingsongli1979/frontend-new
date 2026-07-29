@@ -80,6 +80,7 @@ const requiredFiles = [
   "deploy/nginx/nginx.conf",
   "deploy/nginx/site.conf.template",
   "deploy/nginx/real-ip.conf.template",
+  "deploy/nginx/api-cors.conf",
   "deploy/nginx/docker-entrypoint.d/15-prepare-123proxy.sh",
   "deploy/nginx/targets/cn/ip-rate-limit.conf",
   "deploy/nginx/targets/sz/ip-rate-limit.conf",
@@ -140,7 +141,6 @@ for (const required of [
   "try_files /app/index.html =404",
   "/apiv1/managements/login-page",
   "agencyconsole/agency-manager",
-  "console_cors_origin",
   "LEGACY_CONSOLE_UPSTREAM",
   "WEBSITE_LISTEN",
   "CONSOLE_LISTEN",
@@ -150,7 +150,22 @@ for (const required of [
 ]) {
   expect(nginxTemplate.includes(required), `deploy/nginx/site.conf.template: missing ${required}`);
 }
+expect(
+  (nginxTemplate.match(/include \/etc\/nginx\/api-cors\.conf;/g) || []).length === 5,
+  "deploy/nginx/site.conf.template: all account, auth and IP API routes must use normalized CORS"
+);
 expect(!nginxTemplate.includes("ssl_certificate "), "Nginx image must not embed production certificates");
+
+const corsConfig = await readFile(path.join(rootDir, "deploy", "nginx", "api-cors.conf"), "utf8");
+for (const required of [
+  "proxy_hide_header Access-Control-Allow-Origin",
+  "add_header Access-Control-Allow-Origin $console_cors_origin always",
+  "add_header Access-Control-Allow-Credentials $console_cors_credentials always",
+  "Content-Disposition",
+  "if ($request_method = OPTIONS)"
+]) {
+  expect(corsConfig.includes(required), `deploy/nginx/api-cors.conf: missing ${required}`);
+}
 
 const buildScript = await readFile(path.join(rootDir, "build_web_cn.sh"), "utf8");
 expect(buildScript.includes("set -Eeuo pipefail"), "build_web_cn.sh: strict mode is required");
@@ -165,6 +180,10 @@ const dockerfile = await readFile(path.join(rootDir, "Dockerfile"), "utf8");
 expect(
   dockerfile.includes("STATUS_API_UPSTREAM=http://192.168.85.105:8080"),
   "Dockerfile: status API must default to the private monitoring endpoint"
+);
+expect(
+  dockerfile.includes("COPY deploy/nginx/api-cors.conf /etc/nginx/api-cors.conf"),
+  "Dockerfile: normalized API CORS policy must be included in the image"
 );
 expect(dockerfile.includes("ARG INDEXNOW_KEY"), "Dockerfile: missing optional IndexNow build argument");
 expect(!dockerfile.includes("COPY ./react/cert"), "Dockerfile: production certificates must not be embedded");

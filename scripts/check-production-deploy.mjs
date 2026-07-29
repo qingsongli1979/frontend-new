@@ -16,6 +16,7 @@ const buildScript = await read("build_web_cn.sh");
 const releaseDockerfile = await read("Dockerfile.release");
 const nginxConfig = await read("deploy/nginx/nginx.conf");
 const nginxTemplate = await read("deploy/nginx/site.conf.template");
+const corsConfig = await read("deploy/nginx/api-cors.conf");
 const tlsEntrypoint = await read("deploy/nginx/docker-entrypoint.d/15-prepare-123proxy.sh");
 const cnRateLimit = await read("deploy/nginx/targets/cn/ip-rate-limit.conf");
 const szRateLimit = await read("deploy/nginx/targets/sz/ip-rate-limit.conf");
@@ -51,6 +52,7 @@ for (const required of [
   "COPY dist/www /var/www/website",
   "COPY dist/console /var/www/console",
   "COPY deploy/nginx/targets/${DEPLOY_TARGET}/ip-rate-limit.conf",
+  "COPY deploy/nginx/api-cors.conf /etc/nginx/api-cors.conf",
   "WEBSITE_TLS_CERTIFICATE=/cert/123proxy.cn.pem",
   "CONSOLE_TLS_CERTIFICATE=/cert/console.123proxy.cn.pem",
   "EXPOSE 80 443"
@@ -62,6 +64,7 @@ expect(!releaseDockerfile.includes("COPY ./react/cert"), "Dockerfile.release: le
 expect(!dockerIgnore.split(/\r?\n/).includes("dist"), ".dockerignore: dist must be available to Dockerfile.release");
 
 expect(nginxConfig.includes("zone=console_ip:10m rate=5r/s"), "nginx.conf: missing Shenzhen-compatible IP rate-limit zone");
+expect(nginxConfig.includes("console_cors_credentials"), "nginx.conf: missing trusted CORS credentials map");
 for (const required of [
   "listen ${WEBSITE_LISTEN}",
   "listen ${CONSOLE_LISTEN}",
@@ -71,6 +74,17 @@ for (const required of [
   "include /etc/nginx/target/ip-rate-limit.conf"
 ]) {
   expect(nginxTemplate.includes(required), `site.conf.template: missing ${required}`);
+}
+expect(
+  (nginxTemplate.match(/include \/etc\/nginx\/api-cors\.conf;/g) || []).length === 5,
+  "site.conf.template: account, auth and IP routes must share the CORS policy"
+);
+for (const required of [
+  "proxy_hide_header Access-Control-Allow-Origin",
+  "add_header Access-Control-Allow-Origin $console_cors_origin always",
+  "add_header Access-Control-Allow-Credentials $console_cors_credentials always"
+]) {
+  expect(corsConfig.includes(required), `api-cors.conf: missing ${required}`);
 }
 expect(cnRateLimit.includes("primary Swarm"), "CN target must explicitly document backend-side rate limiting");
 expect(szRateLimit.includes("limit_req zone=console_ip burst=1 nodelay"), "SZ target: missing legacy /ip/ limit");
@@ -127,6 +141,7 @@ for (const required of [
   "/ssosrv/oauth/token",
   "/ip/default/offers",
   "/ip/default/userorder",
+  "/accsrv/adm/bankinsert",
   "console.123proxy.cn /app/",
   "www.123proxy.cn /ip/default/offers",
   "/status-api/v1/summary",

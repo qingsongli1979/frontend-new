@@ -133,6 +133,9 @@ local_https_check() {
   expected_status_check www.123proxy.cn /ip/default/offers 200
   cors_header_check console.123proxy.cn /ip/default/offers https://www.123proxy.cn
   cors_header_check console.123proxy.cn /ip/default/userorder https://www.123proxy.cn
+  cors_header_check console.123proxy.cn /accsrv/information https://www.123proxy.cn
+  cors_header_check console.123proxy.cn /accsrv/adm/bankinsert https://www.123proxy.cn
+  cors_header_check console.123proxy.cn /ssosrv/oauth/token https://www.123proxy.cn
   upstream_route_check www.123proxy.cn /status-api/v1/summary
 }
 
