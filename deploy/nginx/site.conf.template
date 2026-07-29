@@ -60,6 +60,22 @@ server {
         add_header Cache-Control "no-store" always;
     }
 
+    location = /ip/default/offers {
+        limit_except GET {
+            deny all;
+        }
+
+        set $ip_upstream ${IP_SERVICE_UPSTREAM};
+        proxy_pass $ip_upstream;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $forwarded_proto;
+        add_header Cache-Control "no-store" always;
+    }
+
     location = /document/docs/intro/ {
         return 301 /developers/;
     }
@@ -138,11 +154,28 @@ server {
         return 301 https://www.123proxy.cn/agreement.html;
     }
 
+    location = /apiv1/managements/login-page {
+        return 302 /agency-login.html$is_args$args;
+    }
+
+    location = /managements/login-page {
+        return 302 /agency-login.html$is_args$args;
+    }
+
+    location ~ ^/(?:apiv1/)?agencyconsole/agency-manager/?$ {
+        return 302 /agency-manager.html$is_args$args;
+    }
+
+    location ~ ^/(?:apiv1/)?agencyconsole/agency-manager-detail/[^/]+/?$ {
+        try_files /agency-manager.html =404;
+        expires -1;
+    }
+
     location = /agreement.html {
         return 301 https://www.123proxy.cn/agreement.html;
     }
 
-    location ~ ^/(?:login|register|forgot-password|aggrement)\.html$ {
+    location ~ ^/(?:login|register|forgot-password|aggrement|agency-login|agency-manager)\.html$ {
         try_files $uri =404;
         expires -1;
     }
@@ -151,8 +184,13 @@ server {
         return 302 /app/;
     }
 
+    location = /app/ {
+        try_files /app/index.html =404;
+        expires -1;
+    }
+
     location ^~ /app/ {
-        try_files $uri $uri/ /app/index.html;
+        try_files $uri =404;
         expires -1;
     }
 

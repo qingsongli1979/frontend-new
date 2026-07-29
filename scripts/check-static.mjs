@@ -463,6 +463,9 @@ for (const obsolete of [
 }
 
 const pricingSource = await readFile(path.join(rootDir, "assets", "pricing.js"), "utf8");
+expect(pricingSource.includes('const PRICE_API = "/ip/default/offers"'), "assets/pricing.js: price API must use the website same-origin proxy");
+expect(pricingSource.includes('mode: "same-origin"'), "assets/pricing.js: live pricing request must remain same-origin");
+expect(!pricingSource.includes("https://console.123proxy.cn/ip/default/offers"), "assets/pricing.js: cross-origin price API detected");
 for (const guideHref of [
   "/developers/products/scraping-rotating-proxy/",
   "/developers/products/residential-rotating-proxy/",
@@ -667,7 +670,8 @@ for (const file of [
 const authRoutes = [
   [path.join("console", "login.html"), 'data-auth-page="login"', "loginForm"],
   [path.join("console", "register.html"), 'data-auth-page="register"', "registerForm"],
-  [path.join("console", "forgot-password.html"), 'data-auth-page="forgot-password"', "forgotForm"]
+  [path.join("console", "forgot-password.html"), 'data-auth-page="forgot-password"', "forgotForm"],
+  [path.join("console", "agency-login.html"), 'data-agency-page="login"', "agencyLoginForm"]
 ];
 
 for (const [file, pageMarker, formId] of authRoutes) {
@@ -690,6 +694,8 @@ const documentationLinkFiles = [
     path.join("console", "login.html"),
     path.join("console", "register.html"),
     path.join("console", "forgot-password.html"),
+    path.join("console", "agency-login.html"),
+    path.join("console", "agency-manager.html"),
     path.join("console", "app", "index.html"),
     "agreement.html"
   ])
@@ -749,7 +755,11 @@ expect(legacyAgreement.includes('url=https://www.123proxy.cn/agreement.html'), "
 
 const consoleAuthCss = await readFile(path.join(rootDir, "console", "assets", "auth.css"), "utf8");
 const consoleAuthJs = await readFile(path.join(rootDir, "console", "assets", "auth.js"), "utf8");
+const consoleAgencyCss = await readFile(path.join(rootDir, "console", "assets", "agency.css"), "utf8");
+const consoleAgencyJs = await readFile(path.join(rootDir, "console", "assets", "agency.js"), "utf8");
 expect(consoleAuthCss.includes("123Proxy console authentication"), "console/assets/auth.css: missing console asset");
 expect(consoleAuthJs.includes("123Proxy console authentication"), "console/assets/auth.js: missing console asset");
+expect(consoleAgencyCss.includes("123Proxy agency partner console"), "console/assets/agency.css: missing agency asset");
+expect(consoleAgencyJs.includes("123Proxy agency partner console"), "console/assets/agency.js: missing agency asset");
 
-console.log(`Static audit passed: ${routePairs.length * 2} public routes, 3 console auth routes, 1 public agreement, 1 legacy redirect, 1 noindex comparison page, metadata, JSON-LD, sitemap.xml, robots.txt`);
+console.log(`Static audit passed: ${routePairs.length * 2} public routes, 4 console auth routes, 1 agency manager, 1 public agreement, 1 legacy redirect, 1 noindex comparison page, metadata, JSON-LD, sitemap.xml, robots.txt`);

@@ -10,7 +10,9 @@ console/
 ├── register.html
 ├── forgot-password.html
 ├── aggrement.html
-├── assets/       # Authentication assets and shared console brand assets
+├── agency-login.html
+├── agency-manager.html
+├── assets/       # Authentication, agency and shared console brand assets
 ├── app/          # Authenticated console application
 └── previews/     # Design review screenshots; never part of the runtime package
 ```
@@ -24,6 +26,8 @@ host root:
 console/login.html            -> https://console.123proxy.cn/login.html
 console/register.html         -> https://console.123proxy.cn/register.html
 console/forgot-password.html  -> https://console.123proxy.cn/forgot-password.html
+console/agency-login.html     -> https://console.123proxy.cn/agency-login.html
+console/agency-manager.html   -> https://console.123proxy.cn/agency-manager.html
 console/assets/*              -> https://console.123proxy.cn/assets/*
 console/app/*                 -> https://console.123proxy.cn/app/*
 ```
@@ -34,6 +38,11 @@ proxy product and resource-management pages use the existing account, package,
 usage and proxy-user APIs. Resource management includes all package history,
 real-time package balances, cumulative proxy-user usage, and confirmed
 create/update/delete operations for proxy authentication users.
+
+The agency partner surface preserves the legacy backend contract while using
+the new console shell. Legacy `/apiv1/managements/login-page` and
+`/apiv1/agencyconsole/agency-manager` routes are redirected to these static
+pages by the production Nginx configuration.
 
 For authenticated local verification, run:
 

@@ -82,6 +82,9 @@ for (const required of ["commerce.js", "extractor.js", "#purchase?product=tunnel
   assert.equal(consoleHtml.includes(required), true, `console app is missing ${required}`);
 }
 assert.equal(pricingScript.includes('const CONSOLE_ORIGIN = "https://console.123proxy.cn"'), true);
+assert.equal(pricingScript.includes('const PRICE_API = "/ip/default/offers"'), true);
+assert.equal(pricingScript.includes('mode: "same-origin"'), true);
+assert.equal(pricingScript.includes("https://console.123proxy.cn/ip/default/offers"), false);
 assert.equal(pricingScript.includes("/console/app/"), true);
 assert.equal(pricingScript.includes("/console/app/index.html"), false);
 assert.equal(pricingScript.includes("consolePurchaseUrl(consoleProduct)"), true);

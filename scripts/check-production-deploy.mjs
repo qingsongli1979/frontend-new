@@ -23,6 +23,9 @@ const swarm = await read("deploy/production/frontend-out.yml");
 const compose = await read("deploy/production/docker-compose.yml");
 const deployScript = await read("deploy/production/deploy.sh");
 const rollbackScript = await read("deploy/production/rollback.sh");
+const certificateDeployScript = await read("deploy/certificates/deploy-certificates.sh");
+const certificateRenewScript = await read("deploy/certificates/renew-certificates.sh");
+const certificateValidator = await read("deploy/certificates/validate-certificates.sh");
 const dockerIgnore = await read(".dockerignore");
 
 for (const required of [
@@ -122,7 +125,11 @@ for (const required of [
   "/accsrv/information",
   "/ssosrv/oauth/token",
   "/ip/default/offers",
+  "console.123proxy.cn /app/",
+  "www.123proxy.cn /ip/default/offers",
   "/status-api/v1/summary",
+  "../certificates/validate-certificates.sh",
+  "CERT_MIN_VALID_DAYS",
   "RELEASE_TAG"
 ]) {
   expect(deployScript.includes(required), `deploy.sh: missing ${required}`);
@@ -130,4 +137,40 @@ for (const required of [
 expect(rollbackScript.includes("docker service rollback"), "rollback.sh: missing Swarm rollback");
 expect(rollbackScript.includes("ROLLBACK_TAG"), "rollback.sh: missing Compose immutable-tag rollback");
 
-console.log("Production deployment audit passed: dual images, target upstreams, TLS mounts, rollout and rollback");
+for (const required of [
+  "--dns dns_ali",
+  "Ali_Key",
+  "Ali_Secret",
+  "123proxy.cn",
+  "www.123proxy.cn",
+  "console.123proxy.cn",
+  "--fullchain-file",
+  "--cron",
+  "certificate_checksum"
+]) {
+  expect(certificateRenewScript.includes(required), `renew-certificates.sh: missing ${required}`);
+}
+
+for (const required of [
+  "CERT_REMOTE_TARGETS",
+  "StrictHostKeyChecking=yes",
+  "SSH_IDENTITY_FILE",
+  "SSH_KNOWN_HOSTS_FILE",
+  "validate-certificates.sh",
+  "docker kill --signal HUP"
+]) {
+  expect(certificateDeployScript.includes(required), `deploy-certificates.sh: missing ${required}`);
+}
+
+for (const required of [
+  "openssl x509",
+  "openssl pkey",
+  "-checkend",
+  "subjectAltName",
+  "certificate and private key do not match",
+  "fullchain"
+]) {
+  expect(certificateValidator.includes(required), `validate-certificates.sh: missing ${required}`);
+}
+
+console.log("Production deployment audit passed: dual images, managed TLS, target upstreams, rollout and rollback");

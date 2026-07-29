@@ -83,6 +83,11 @@ sudo find /data/cert -type f -name '*.pem' -exec chmod 644 {} \;
 
 私钥不得提交到 Git、复制进构建目录或打进镜像。
 
+域名托管在阿里云 DNS 时，使用项目内的 DNS-01 自动签发、节点分发和
+Nginx 热重载流程。首次安装、RAM 最小权限和续期验证步骤见
+`deploy/certificates/README.md`。`deploy.sh` 会在发布前校验证书域名、
+有效期、私钥配对和 fullchain，不合格的证书会直接中止发布。
+
 ## 4. 发布主 Swarm 环境
 
 前端必须加入能解析 `account-service`、`auth-service`、`c3-ip-app` 和
@@ -127,9 +132,11 @@ bash deploy/production/deploy.sh sz
 ```bash
 curl -fsSI https://www.123proxy.cn/
 curl -fsSI https://www.123proxy.cn/pricing.html
+curl -fsS https://www.123proxy.cn/ip/default/offers
 curl -fsSI https://www.123proxy.cn/developers/
 curl -fsSI https://console.123proxy.cn/login.html
 curl -fsSI https://console.123proxy.cn/app/
+curl -fsSI https://console.123proxy.cn/agency-login.html
 curl -fsS https://www.123proxy.cn/status-api/v1/summary
 ```
 

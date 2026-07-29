@@ -7,6 +7,7 @@ TARGET="${1:-${TARGET:-}}"
 RELEASE_TAG="${RELEASE_TAG:-}"
 CERT_DIR="${CERT_DIR:-/data/cert}"
 WAIT_SECONDS="${WAIT_SECONDS:-240}"
+CERT_MIN_VALID_DAYS="${CERT_MIN_VALID_DAYS:-14}"
 
 case "$TARGET" in
   cn|sz) ;;
@@ -18,17 +19,9 @@ esac
 
 : "${RELEASE_TAG:?RELEASE_TAG is required}"
 
-for certificate_file in \
-  123proxy.cn.pem \
-  123proxy.cn.key \
-  console.123proxy.cn.pem \
-  console.123proxy.cn.key
-do
-  if [[ ! -r "${CERT_DIR}/${certificate_file}" ]]; then
-    echo "Missing production TLS file: ${CERT_DIR}/${certificate_file}" >&2
-    exit 1
-  fi
-done
+"${SCRIPT_DIR}/../certificates/validate-certificates.sh" \
+  "$CERT_DIR" \
+  "$CERT_MIN_VALID_DAYS"
 
 wait_for_swarm_service() {
   local service="$1"
@@ -90,9 +83,30 @@ local_https_check() {
     esac
   }
 
+  expected_status_check() {
+    local host="$1"
+    local path="$2"
+    local expected="$3"
+    local status
+
+    status="$(curl --silent --show-error --insecure \
+      --output /dev/null \
+      --write-out '%{http_code}' \
+      --resolve "${host}:443:127.0.0.1" \
+      "https://${host}${path}")"
+
+    if [[ "$status" != "$expected" ]]; then
+      echo "Route check failed: https://${host}${path} returned ${status}, expected ${expected}" >&2
+      return 1
+    fi
+    echo "Route check passed: https://${host}${path} returned ${status}"
+  }
+
   upstream_route_check console.123proxy.cn /accsrv/information
   upstream_route_check console.123proxy.cn /ssosrv/oauth/token
   upstream_route_check console.123proxy.cn /ip/default/offers
+  expected_status_check console.123proxy.cn /app/ 200
+  expected_status_check www.123proxy.cn /ip/default/offers 200
   upstream_route_check www.123proxy.cn /status-api/v1/summary
 }
 

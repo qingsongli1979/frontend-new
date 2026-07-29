@@ -10,6 +10,7 @@ const host = process.env.HOST || "127.0.0.1";
 const consoleProxyEnabled = process.argv.includes("--console-proxy");
 const consoleApiOrigin = "https://console.123proxy.cn";
 const consoleApiPrefixes = ["/accsrv/", "/ip/", "/ssosrv/"];
+const publicApiPaths = new Set(["/ip/default/offers"]);
 
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
@@ -56,7 +57,9 @@ async function proxyConsoleRequest(request, response) {
 createServer(async (request, response) => {
   try {
     const requestPath = decodeURIComponent(new URL(request.url, `http://${host}:${port}`).pathname);
-    if (consoleProxyEnabled && consoleApiPrefixes.some((prefix) => requestPath.startsWith(prefix))) {
+    const shouldProxyConsoleApi = consoleProxyEnabled
+      && consoleApiPrefixes.some((prefix) => requestPath.startsWith(prefix));
+    if (publicApiPaths.has(requestPath) || shouldProxyConsoleApi) {
       await proxyConsoleRequest(request, response);
       return;
     }

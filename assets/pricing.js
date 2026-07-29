@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const PRICE_API = "https://console.123proxy.cn/ip/default/offers";
+  const PRICE_API = "/ip/default/offers";
   const CONSOLE_ORIGIN = "https://console.123proxy.cn";
   const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
   const isEnglish = document.documentElement.lang === "en";
@@ -520,7 +520,7 @@
     try {
       const response = await fetch(PRICE_API, {
         method: "GET",
-        mode: "cors",
+        mode: "same-origin",
         cache: "no-store",
         headers: { Accept: "application/json" }
       });

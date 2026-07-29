@@ -1,0 +1,19 @@
+[Unit]
+Description=Issue, renew and distribute 123Proxy TLS certificates
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/123proxy/certificates.env
+ExecStart=/opt/123proxy-certificates/renew-certificates.sh
+User=root
+Group=root
+UMask=0077
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+StateDirectory=acme-123proxy 123proxy-certificates
+StateDirectoryMode=0700
+ReadWritePaths=/data/cert
