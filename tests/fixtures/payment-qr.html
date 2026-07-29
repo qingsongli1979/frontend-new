@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Payment QR verification</title>
+  <style>
+    body {
+      display: grid;
+      min-height: 100vh;
+      margin: 0;
+      place-items: center;
+      background: #f3f5f8;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      padding: 28px;
+      background: #fff;
+      border: 1px solid #dce2e9;
+    }
+
+    #qr {
+      width: 220px;
+      height: 220px;
+    }
+
+    #qr canvas,
+    #qr img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <script src="/console/app/vendor/qrcode.min.js?v=1.0.0" defer></script>
+  <script type="module">
+    import { renderQrCode } from "/console/app/payment.js";
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const status = document.querySelector("#status");
+      try {
+        await renderQrCode(
+          document.querySelector("#qr"),
+          "weixin://wxpay/bizpayurl?pr=123proxy-payment-verification",
+          { size: 220 }
+        );
+        status.textContent = "ready";
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    });
+  </script>
+</head>
+<body>
+  <main>
+    <div id="qr" aria-label="微信支付二维码"></div>
+    <p id="status">loading</p>
+  </main>
+</body>
+</html>

@@ -414,6 +414,12 @@ function routeCurrentHash() {
     window.ConsoleCommerce?.openOrder(params.get("tradeNo") || "");
     return;
   }
+  if (route === "payment-return") {
+    markActiveNav(document.querySelector('[data-view="orders"]'));
+    showPanel("order", "支付结果");
+    window.ConsoleCommerce?.handlePaymentReturn(params);
+    return;
+  }
   if (route === "extract") {
     const productKey = params.get("product") || "tunnel";
     markActiveNav(document.querySelector(`[data-product="${productKey}"]`));

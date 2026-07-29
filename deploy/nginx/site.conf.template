@@ -159,6 +159,14 @@ server {
         return 301 https://www.123proxy.cn/agreement.html;
     }
 
+    location = /apiv1/console/orderDetail {
+        return 302 "/app/#payment-return?provider=alipay&tradeNo=$arg_alipayreturn";
+    }
+
+    location = /console/orderDetail {
+        return 302 "/app/#payment-return?provider=alipay&tradeNo=$arg_alipayreturn";
+    }
+
     location = /apiv1/managements/login-page {
         return 302 /agency-login.html$is_args$args;
     }

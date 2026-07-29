@@ -1,3 +1,5 @@
+import { renderQrCode } from "./payment.js";
+
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 20000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -850,9 +852,15 @@ async function submitRecharge(event) {
     document.querySelector("#rechargePaymentStage").hidden = false;
     document.querySelector("#rechargePaymentAmount").textContent = `¥${formatMoney(amount)}`;
     document.querySelector("#rechargePaymentOrder").textContent = payload.tradeNo || "--";
-    const canvas = document.querySelector("#accountRechargeQr");
-    if (window.QRCode?.toCanvas) {
-      await window.QRCode.toCanvas(canvas, payload.url || "", { width: 220, margin: 1 });
+    const qr = document.querySelector("#accountRechargeQr");
+    const qrError = document.querySelector("#accountRechargeQrError");
+    try {
+      await renderQrCode(qr, payload.url || "", { size: 220 });
+      qrError.hidden = true;
+    } catch {
+      qr.hidden = true;
+      qrError.textContent = "二维码加载失败，请返回后重新发起充值。";
+      qrError.hidden = false;
     }
     startPaymentPolling(payload.tradeNo);
   } catch (error) {
@@ -1223,7 +1231,8 @@ function ensureDialogs() {
           </div>
           <div class="recharge-payment-stage" id="rechargePaymentStage" hidden>
             <strong id="rechargePaymentAmount">¥--</strong>
-            <canvas id="accountRechargeQr" width="220" height="220"></canvas>
+            <div class="payment-qr" id="accountRechargeQr" aria-live="polite"></div>
+            <div class="form-message" id="accountRechargeQrError" hidden></div>
             <p>交易单号 <code id="rechargePaymentOrder">--</code></p>
             <small id="rechargePaymentHint">请使用微信扫描二维码，支付成功后将自动更新余额。</small>
           </div>

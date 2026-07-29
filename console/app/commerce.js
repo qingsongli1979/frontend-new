@@ -1,3 +1,10 @@
+import {
+  clearPendingPayment,
+  loadPendingPayment,
+  renderQrCode,
+  savePendingPayment
+} from "./payment.js";
+
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -712,8 +719,17 @@ async function startAlipayPayment(order) {
   const popup = window.open("", "_blank");
   if (!popup) throw new CommerceRequestError("浏览器阻止了支付窗口，请允许弹窗后重试");
   popup.document.write("<p style='font-family:sans-serif;padding:32px'>正在进入支付宝...</p>");
+  savePendingPayment({
+    provider: "alipay",
+    orderTradeNo: order.tradeNo
+  });
   const html = await request(`/accsrv/clouduserorder/alipay/${encodeURIComponent(order.tradeNo)}?by=6`);
   state.paymentTradeNo = extractPaymentTradeNo(html);
+  savePendingPayment({
+    provider: "alipay",
+    orderTradeNo: order.tradeNo,
+    paymentTradeNo: state.paymentTradeNo
+  });
   popup.document.open();
   popup.document.write(String(html));
   popup.document.close();
@@ -725,25 +741,31 @@ async function startWechatPayment(order) {
   const payload = await request(`/accsrv/clouduserorder/wxpay/${encodeURIComponent(order.tradeNo)}`);
   if (!payload?.url) throw new CommerceRequestError("微信支付二维码生成失败");
   state.paymentTradeNo = String(payload.tradeNo || "");
-  openWechatDialog(payload.url, order);
+  savePendingPayment({
+    provider: "wechat",
+    orderTradeNo: order.tradeNo,
+    paymentTradeNo: state.paymentTradeNo
+  });
+  await openWechatDialog(payload.url, order);
   startPaymentPolling(order, "wechat");
 }
 
-function openWechatDialog(url, order) {
+async function openWechatDialog(url, order) {
   const dialog = document.querySelector("#wechatPaymentDialog");
   if (!dialog) return;
   document.querySelector("#wechatPaymentOrder").textContent = order.tradeNo;
-  const canvas = document.querySelector("#wechatPaymentQr");
+  const qr = document.querySelector("#wechatPaymentQr");
   const fallback = document.querySelector("#wechatPaymentFallback");
-  fallback.textContent = url;
+  fallback.textContent = "";
   fallback.hidden = true;
-  if (window.QRCode?.toCanvas) {
-    window.QRCode.toCanvas(canvas, url, { width: 220, margin: 1, color: { dark: "#0c111b", light: "#ffffff" } })
-      .catch(() => { fallback.hidden = false; });
-  } else {
+  dialog.showModal();
+  try {
+    await renderQrCode(qr, url, { size: 220 });
+  } catch {
+    qr.hidden = true;
+    fallback.textContent = "二维码加载失败，请关闭窗口后重新发起支付。";
     fallback.hidden = false;
   }
-  dialog.showModal();
 }
 
 function stopPaymentPolling() {
@@ -757,6 +779,7 @@ function startPaymentPolling(order, provider) {
     const paid = await pollPayment(order, provider).catch(() => false);
     if (paid) {
       stopPaymentPolling();
+      clearPendingPayment();
       document.querySelector("#wechatPaymentDialog")?.close();
       invalidateConsoleData();
       showToast("支付成功，套餐正在生效");
@@ -794,6 +817,68 @@ async function checkExternalPayment(order) {
     showToast("订单状态已刷新");
   } catch (error) {
     setNotice("#orderNotice", "error", error.message || "支付状态检查失败");
+  }
+}
+
+function renderPaymentReturnState(type, title, message) {
+  const workspace = document.querySelector("#orderWorkspace");
+  if (!workspace) return;
+  const icon = type === "success" ? "circle-check-big" : type === "error" ? "circle-alert" : "loader-circle";
+  workspace.innerHTML = `
+    <section class="panel payment-return-panel">
+      <div class="payment-complete is-${type}">
+        <i data-lucide="${icon}" aria-hidden="true"></i>
+        <strong>${escapeHtml(title)}</strong>
+        <p>${escapeHtml(message)}</p>
+        <div class="payment-return-actions">
+          <a class="button button-primary" href="#packages">查看我的套餐</a>
+          <a class="button button-secondary" href="#orders">查看订单</a>
+        </div>
+      </div>
+    </section>`;
+  refreshIcons();
+}
+
+function notifyPaymentComplete(orderTradeNo) {
+  try {
+    window.opener?.postMessage({
+      type: "123proxy-payment-complete",
+      orderTradeNo
+    }, window.location.origin);
+  } catch {
+    // The payment result page still works when the opener has already closed.
+  }
+}
+
+async function handlePaymentReturn(params = new URLSearchParams()) {
+  const paymentTradeNo = String(params.get("tradeNo") || "");
+  const pending = loadPendingPayment(paymentTradeNo);
+  if (!paymentTradeNo) {
+    renderPaymentReturnState("error", "缺少支付流水号", "无法确认本次支付，请前往订单管理查看订单状态。");
+    return;
+  }
+  if (!pending?.orderTradeNo) {
+    renderPaymentReturnState("pending", "支付结果已返回", "未找到原套餐订单，请前往订单管理刷新订单状态。");
+    return;
+  }
+
+  state.paymentOrder = pending.orderTradeNo;
+  state.paymentTradeNo = paymentTradeNo;
+  renderPaymentReturnState("pending", "正在确认支付结果", "正在向支付后台核验到账状态，请勿关闭页面。");
+
+  try {
+    const order = await request(`/accsrv/clouduserorder/${encodeURIComponent(pending.orderTradeNo)}`);
+    const paid = order?.status === "PAID" || await pollPayment(order, "alipay");
+    if (!paid) {
+      renderPaymentReturnState("pending", "支付结果确认中", "支付平台尚未返回最终状态，请稍后在订单管理中刷新。");
+      return;
+    }
+    clearPendingPayment();
+    invalidateConsoleData();
+    notifyPaymentComplete(pending.orderTradeNo);
+    renderPaymentReturnState("success", "支付成功", "套餐订单已确认，相关代理资源正在生效。");
+  } catch (error) {
+    renderPaymentReturnState("error", "支付状态确认失败", error.message || "请前往订单管理重新检查支付状态。");
   }
 }
 
@@ -976,7 +1061,7 @@ function ensureDialogs() {
       <div class="dialog-card">
         <header><div><small>WECHAT PAY</small><h2>微信扫码支付</h2></div><button class="dialog-close" type="button" data-commerce-dialog-close aria-label="关闭"><i data-lucide="x"></i></button></header>
         <div class="dialog-body wechat-payment-body">
-          <canvas id="wechatPaymentQr" width="220" height="220"></canvas>
+          <div class="payment-qr" id="wechatPaymentQr" aria-live="polite"></div>
           <code id="wechatPaymentFallback" hidden></code>
           <p>订单 <strong id="wechatPaymentOrder">--</strong></p>
           <small>支付成功后页面将自动更新。</small>
@@ -1010,15 +1095,28 @@ function bindGlobalActions() {
   });
 }
 
+function bindPaymentCompletionMessages() {
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin || event.data?.type !== "123proxy-payment-complete") return;
+    stopPaymentPolling();
+    clearPendingPayment();
+    invalidateConsoleData();
+    showToast("支付成功，套餐正在生效");
+    window.location.hash = "#packages";
+  });
+}
+
 if (typeof window !== "undefined" && typeof document !== "undefined") {
   ensureDialogs();
   bindGlobalActions();
+  bindPaymentCompletionMessages();
   window.ConsoleCommerce = {
     openPurchase,
     openOrder,
     openOrders,
     openBilling,
     openSettings,
+    handlePaymentReturn,
     purchaseRoute,
     extractRoute,
     reload: () => {

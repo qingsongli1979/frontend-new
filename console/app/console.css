@@ -684,13 +684,22 @@
   font-size: 26px;
 }
 
-.recharge-payment-stage canvas {
+.recharge-payment-stage .payment-qr {
   display: block;
   width: 220px;
   height: 220px;
   margin: 0 auto 12px;
   border: 10px solid #fff;
   box-shadow: 0 0 0 1px var(--line);
+}
+
+.payment-qr canvas,
+.payment-qr img,
+.payment-qr svg,
+.payment-qr table {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .recharge-payment-stage p,
@@ -4129,9 +4138,11 @@ svg {
   text-align: center;
 }
 
-.wechat-payment-body canvas {
+.wechat-payment-body .payment-qr {
   width: 220px;
   height: 220px;
+  padding: 8px;
+  background: #fff;
   border: 1px solid var(--line);
 }
 
@@ -4140,6 +4151,18 @@ svg {
   padding: 10px;
   overflow-wrap: anywhere;
   font-size: 8px;
+}
+
+.payment-return-panel {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.payment-return-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .wechat-payment-body p {

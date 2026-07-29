@@ -11,6 +11,12 @@ import {
   orderSpecification,
   productNameForOrder
 } from "../console/app/commerce.js";
+import {
+  PENDING_PAYMENT_KEY,
+  loadPendingPayment,
+  normalizePaymentUri,
+  savePendingPayment
+} from "../console/app/payment.js";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -74,6 +80,24 @@ assert.equal(
   extractPaymentTradeNo('<a href="/return?alipayreturn=PAY-123&x=1">pay</a>'),
   "PAY-123"
 );
+assert.equal(normalizePaymentUri("weixin://wxpay/bizpayurl?pr=test"), "weixin://wxpay/bizpayurl?pr=test");
+assert.throws(() => normalizePaymentUri("javascript:alert(1)"), /无效/);
+
+const paymentStorage = new Map();
+const storage = {
+  getItem: (key) => paymentStorage.get(key) || null,
+  setItem: (key, value) => paymentStorage.set(key, value),
+  removeItem: (key) => paymentStorage.delete(key)
+};
+savePendingPayment({
+  provider: "alipay",
+  orderTradeNo: "ORDER-123",
+  paymentTradeNo: "PAY-123",
+  createdAt: 1000
+}, storage);
+assert.equal(JSON.parse(storage.getItem(PENDING_PAYMENT_KEY)).orderTradeNo, "ORDER-123");
+assert.equal(loadPendingPayment("PAY-123", storage, 2000).provider, "alipay");
+assert.equal(loadPendingPayment("PAY-OTHER", storage, 2000), null);
 
 const consoleHtml = await readFile(path.join(rootDir, "console", "app", "index.html"), "utf8");
 const consoleCss = await readFile(path.join(rootDir, "console", "app", "console.css"), "utf8");
@@ -81,6 +105,8 @@ const pricingScript = await readFile(path.join(rootDir, "assets", "pricing.js"),
 for (const required of ["commerce.js", "extractor.js", "#purchase?product=tunnel"]) {
   assert.equal(consoleHtml.includes(required), true, `console app is missing ${required}`);
 }
+assert.equal(consoleHtml.includes("vendor/qrcode.min.js?v=1.0.0"), true);
+assert.equal(consoleHtml.includes("cdn.jsdelivr.net/npm/qrcode"), false);
 assert.equal(pricingScript.includes('const CONSOLE_ORIGIN = "https://console.123proxy.cn"'), true);
 assert.equal(pricingScript.includes('const PRICE_API = "/ip/default/offers"'), true);
 assert.equal(pricingScript.includes('mode: "same-origin"'), true);
@@ -107,6 +133,7 @@ assert.equal(commerceScript.includes("mailto:sales@123proxy.cn"), false);
 assert.equal(commerceScript.includes("https://www.123proxy.cn/contact.html#service"), true);
 assert.equal(commerceScript.includes("data-open-trial"), false);
 assert.equal(commerceScript.includes("trialRequestDialog"), false);
+assert.equal(commerceScript.includes("handlePaymentReturn"), true);
 assert.equal(productsScript.includes('const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html#service"'), true);
 assert.match(productsScript, /"申请测试",\s*TRIAL_CONTACT_URL/);
 assert.equal(commerceScript.includes("isTrialOffer"), false);
