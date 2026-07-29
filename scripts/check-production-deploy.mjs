@@ -65,6 +65,15 @@ expect(!dockerIgnore.split(/\r?\n/).includes("dist"), ".dockerignore: dist must 
 
 expect(nginxConfig.includes("zone=console_ip:10m rate=5r/s"), "nginx.conf: missing Shenzhen-compatible IP rate-limit zone");
 expect(nginxConfig.includes("console_cors_credentials"), "nginx.conf: missing trusted CORS credentials map");
+expect(
+  nginxConfig.includes("access_log /var/log/nginx/access.log main;"),
+  "nginx.conf: access log must persist under /var/log/nginx"
+);
+expect(
+  nginxConfig.includes("error_log /var/log/nginx/error.log warn;"),
+  "nginx.conf: error log must persist under /var/log/nginx"
+);
+expect(!nginxConfig.includes("/dev/stderr"), "nginx.conf: errors must not be duplicated to stderr");
 for (const required of [
   "listen ${WEBSITE_LISTEN}",
   "listen ${CONSOLE_LISTEN}",
@@ -75,6 +84,10 @@ for (const required of [
 ]) {
   expect(nginxTemplate.includes(required), `site.conf.template: missing ${required}`);
 }
+expect(
+  nginxTemplate.includes("proxy_pass ${STATUS_API_UPSTREAM}/;"),
+  "site.conf.template: status proxy must map /status-api/ directly to the configured upstream"
+);
 expect(
   (nginxTemplate.match(/include \/etc\/nginx\/api-cors\.conf;/g) || []).length === 5,
   "site.conf.template: account, auth and IP routes must share the CORS policy"
@@ -108,6 +121,7 @@ for (const required of [
   "max_replicas_per_node: 1",
   "failure_action: rollback",
   "/data/cert:/cert:ro",
+  "/data/logs:/var/log",
   "ACCOUNT_SERVICE_UPSTREAM: http://account-service:6000",
   "AUTH_SERVICE_UPSTREAM: http://auth-service:5000",
   "IP_SERVICE_UPSTREAM: http://c3-ip-app:6800",
@@ -119,6 +133,7 @@ for (const required of [
 for (const required of [
   "intelligroup-frontend-sz:${RELEASE_TAG}",
   "/data/cert:/cert:ro",
+  "/data/logs:/var/log",
   "ACCOUNT_SERVICE_UPSTREAM: http://47.254.19.92:6000",
   "AUTH_SERVICE_UPSTREAM: http://47.254.19.92:5000",
   "IP_SERVICE_UPSTREAM: http://47.254.19.92:6800",

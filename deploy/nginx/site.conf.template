@@ -49,9 +49,7 @@ server {
     }
 
     location ^~ /status-api/ {
-        rewrite ^/status-api/(.*)$ /$1 break;
-        set $status_api_upstream ${STATUS_API_UPSTREAM};
-        proxy_pass $status_api_upstream;
+        proxy_pass ${STATUS_API_UPSTREAM}/;
         proxy_connect_timeout 3s;
         proxy_read_timeout 10s;
         proxy_set_header X-Real-IP $remote_addr;

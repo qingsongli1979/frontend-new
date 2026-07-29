@@ -25,10 +25,10 @@ services:
       - "443:443"
     volumes:
       - /data/cert:/cert:ro
+      - /data/logs:/var/log
     logging:
       driver: json-file
       options:
         max-file: "10"
         max-size: 10m
     restart: always
-

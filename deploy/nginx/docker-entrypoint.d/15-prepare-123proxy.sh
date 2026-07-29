@@ -3,6 +3,13 @@
 set -eu
 
 TLS_DIR=/etc/nginx/tls
+NGINX_LOG_DIR=/var/log/nginx
+
+mkdir -p "$NGINX_LOG_DIR"
+touch "$NGINX_LOG_DIR/access.log" "$NGINX_LOG_DIR/error.log"
+chmod 0755 "$NGINX_LOG_DIR"
+chmod 0644 "$NGINX_LOG_DIR/access.log" "$NGINX_LOG_DIR/error.log"
+
 mkdir -p "$TLS_DIR"
 
 case "${TLS_MODE:-off}" in

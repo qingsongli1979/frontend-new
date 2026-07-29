@@ -83,6 +83,26 @@ sudo find /data/cert -type f -name '*.pem' -exec chmod 644 {} \;
 
 私钥不得提交到 Git、复制进构建目录或打进镜像。
 
+### Nginx 日志
+
+两个生产清单都会将宿主机 `/data/logs` 挂载到容器 `/var/log`。Nginx 写入：
+
+```text
+/var/log/nginx/access.log
+/var/log/nginx/error.log
+```
+
+宿主机对应文件为：
+
+```text
+/data/logs/nginx/access.log
+/data/logs/nginx/error.log
+```
+
+Nginx 访问日志和错误日志只写入上述文件，不复制到容器 stdout 或 stderr。
+文件日志不受 Docker `json-file` 的 `max-size` 与 `max-file` 设置控制，生产服务器
+需要使用宿主机 `logrotate` 单独轮转 `/data/logs/nginx/*.log`。
+
 域名托管在阿里云 DNS 时，使用项目内的 DNS-01 自动签发、节点分发和
 Nginx 热重载流程。首次安装、RAM 最小权限和续期验证步骤见
 `deploy/certificates/README.md`。`deploy.sh` 会在发布前校验证书域名、

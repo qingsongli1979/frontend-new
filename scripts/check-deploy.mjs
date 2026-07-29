@@ -125,6 +125,7 @@ expect(
 );
 
 const nginxTemplate = await readFile(path.join(rootDir, "deploy", "nginx", "site.conf.template"), "utf8");
+const nginxConfig = await readFile(path.join(rootDir, "deploy", "nginx", "nginx.conf"), "utf8");
 for (const required of [
   "server_name www.123proxy.cn",
   "server_name console.123proxy.cn",
@@ -158,10 +159,21 @@ for (const required of [
   expect(nginxTemplate.includes(required), `deploy/nginx/site.conf.template: missing ${required}`);
 }
 expect(
+  nginxTemplate.includes("proxy_pass ${STATUS_API_UPSTREAM}/;"),
+  "deploy/nginx/site.conf.template: status proxy must use a startup-expanded prefix mapping"
+);
+expect(
+  !nginxTemplate.includes("set $status_api_upstream"),
+  "deploy/nginx/site.conf.template: status proxy must not use runtime upstream indirection"
+);
+expect(
   (nginxTemplate.match(/include \/etc\/nginx\/api-cors\.conf;/g) || []).length === 5,
   "deploy/nginx/site.conf.template: all account, auth and IP API routes must use normalized CORS"
 );
 expect(!nginxTemplate.includes("ssl_certificate "), "Nginx image must not embed production certificates");
+expect(nginxConfig.includes("access_log /var/log/nginx/access.log main;"), "Nginx access log file is missing");
+expect(nginxConfig.includes("error_log /var/log/nginx/error.log warn;"), "Nginx error log file is missing");
+expect(!nginxConfig.includes("/dev/stderr"), "Nginx errors must not be written to stderr");
 
 const corsConfig = await readFile(path.join(rootDir, "deploy", "nginx", "api-cors.conf"), "utf8");
 for (const required of [
