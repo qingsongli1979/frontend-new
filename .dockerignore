@@ -1,0 +1,12 @@
+.git
+.agents
+.openai
+node_modules
+npm-debug.log*
+*.md
+*.zip
+**/*.key
+**/*.pem
+cert
+original-*.jpg
+original-*.png
