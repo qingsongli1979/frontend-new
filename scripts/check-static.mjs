@@ -574,7 +574,7 @@ for (const file of [
 ]) {
   const html = await readFile(path.join(rootDir, file), "utf8");
   expect(
-    html.includes("assets/visual-refinement.css?v=20260728-07"),
+    html.includes("assets/visual-refinement.css?v=20260730-01"),
     `${file}: stale visual refinement asset version`
   );
 }
