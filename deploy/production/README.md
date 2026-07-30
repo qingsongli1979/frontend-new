@@ -20,7 +20,7 @@ registry.cn-hongkong.aliyuncs.com/123proxy/intelligroup-frontend-sz:<release>
 | 登录认证 | `auth-service:5000` | `47.254.19.92:5000` |
 | 代理业务 API | `c3-ip-app:6800` | `47.254.19.92:6800` |
 | 博客 | `cloudam-wordpress:80` | `47.254.19.92:8000` |
-| `/ip/` 限流 | 后端原有策略 | Nginx 额外限制 `5r/s` |
+| `/ip/` 限流 | 后端按账号与套餐控制 | 后端按账号与套餐控制 |
 | 服务发现 | Swarm overlay 网络 | 固定跨区上游 |
 
 旧主环境配置中的 `api.flashdata.dev` 和 `data.flashdata.dev` 不属于

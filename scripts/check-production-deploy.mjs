@@ -63,7 +63,7 @@ expect(!releaseDockerfile.includes("COPY cert"), "Dockerfile.release: certificat
 expect(!releaseDockerfile.includes("COPY ./react/cert"), "Dockerfile.release: legacy certificate copy detected");
 expect(!dockerIgnore.split(/\r?\n/).includes("dist"), ".dockerignore: dist must be available to Dockerfile.release");
 
-expect(nginxConfig.includes("zone=console_ip:10m rate=5r/s"), "nginx.conf: missing Shenzhen-compatible IP rate-limit zone");
+expect(!nginxConfig.includes("zone=console_ip"), "nginx.conf: /ip/ APIs must not use a source-IP rate-limit zone");
 expect(nginxConfig.includes("console_cors_credentials"), "nginx.conf: missing trusted CORS credentials map");
 expect(
   nginxConfig.includes("access_log /var/log/nginx/access.log main;"),
@@ -100,7 +100,10 @@ for (const required of [
   expect(corsConfig.includes(required), `api-cors.conf: missing ${required}`);
 }
 expect(cnRateLimit.includes("primary Swarm"), "CN target must explicitly document backend-side rate limiting");
-expect(szRateLimit.includes("limit_req zone=console_ip burst=1 nodelay"), "SZ target: missing legacy /ip/ limit");
+expect(
+  !/\blimit_req\s+zone=/.test(szRateLimit),
+  "SZ target: authenticated /ip/ APIs must not be throttled by source IP"
+);
 
 for (const required of [
   "TLS_MODE:-off",
