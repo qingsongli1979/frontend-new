@@ -103,7 +103,7 @@ img {
 
 .page {
   min-width: 320px;
-  overflow: hidden;
+  overflow-x: clip;
 }
 
 .container {
