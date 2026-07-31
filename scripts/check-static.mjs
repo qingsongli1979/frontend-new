@@ -574,7 +574,7 @@ for (const file of [
 ]) {
   const html = await readFile(path.join(rootDir, file), "utf8");
   expect(
-    html.includes("assets/visual-refinement.css?v=20260730-01"),
+    html.includes("assets/visual-refinement.css?v=20260731-01"),
     `${file}: stale visual refinement asset version`
   );
 }
@@ -588,9 +588,9 @@ expect(codeSolutionPage.includes("公开代码同步任务"), "ai-github-proxy.h
 
 const pricingPage = await readFile(path.join(rootDir, "pricing.html"), "utf8");
 expect(pricingPage.includes('class="pricing-refined site-refined"'), "pricing.html: refined pricing class missing");
-expect(pricingPage.includes('assets/pricing.js?v=20260729-03'), "pricing.html: pricing asset cache version is stale");
+expect(pricingPage.includes('assets/pricing.js?v=20260731-01'), "pricing.html: pricing asset cache version is stale");
 const englishPricingPage = await readFile(path.join(rootDir, "en", "pricing.html"), "utf8");
-expect(englishPricingPage.includes('../assets/pricing.js?v=20260729-03'), "en/pricing.html: pricing asset cache version is stale");
+expect(englishPricingPage.includes('../assets/pricing.js?v=20260731-01'), "en/pricing.html: pricing asset cache version is stale");
 for (const description of refinedProductDescriptions) {
   expect(homepage.includes(description), `index.html: missing canonical product menu copy: ${description}`);
   expect(pricingPage.includes(description), `pricing.html: product menu copy differs from homepage: ${description}`);

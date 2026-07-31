@@ -450,6 +450,15 @@ const productList = [
   ["static-residential-proxy.html", "长效静态住宅", "固定住宅出口，兼顾身份与稳定性", "radio-tower"]
 ];
 
+const pricingList = [
+  ["pricing.html?product=tunnel", "隧道代理", "¥45/线程", "或 ¥3/GB", "route"],
+  ["pricing.html?product=residential", "隧道住宅代理", "¥3/GB 起", "按实际流量计费", "house"],
+  ["pricing.html?product=unlimited", "不限量动态住宅", "¥600 起", "按端口与周期计费", "refresh-cw"],
+  ["pricing.html?product=static-datacenter", "长效静态代理", "¥20/个 起", "按固定 IP 与周期计费", "server"],
+  ["pricing.html?product=static-residential", "长效静态住宅", "¥40/个 起", "按住宅 IP 与周期计费", "radio-tower"],
+  ["contact.html#solutions", "高带宽与定制方案", "项目报价", "按带宽、目标与规模配置", "gauge"]
+];
+
 const currentKey = document.body.dataset.product;
 const pageData = productPages[currentKey];
 
@@ -502,6 +511,25 @@ function productMegaMenu() {
             <a class="mega-link${index === 0 ? " is-featured" : ""}" href="${href}"${href === pageData.file ? ' aria-current="page"' : ""}>
               <span class="mega-link-icon">${icon(itemIcon)}</span>
               <span><strong>${name}</strong><small>${desc}</small></span>
+            </a>`).join("")}
+        </div>
+      </div>
+    </div>`;
+}
+
+function pricingMegaMenu() {
+  return `<div class="mega-menu is-pricing">
+      <div class="mega-layout">
+        <div class="mega-intro">
+          <span class="mega-label">Pricing</span>
+          <strong>代理价格与计费方式</strong>
+          <p>快速比较流量、线程、端口与固定 IP 方案。</p>
+          <a href="pricing.html">查看全部价格与免费测试${icon("arrow-right")}</a>
+        </div>
+        <div class="mega-links">
+          ${pricingList.map(([href, name, price, note, itemIcon], index) => `<a class="mega-link${index === 0 ? " is-featured" : ""}" href="${href}">
+              <span class="mega-link-icon">${icon(itemIcon)}</span>
+              <span><strong>${name}</strong><small class="mega-price"><b>${price}</b><em>${note}</em></small></span>
             </a>`).join("")}
         </div>
       </div>
@@ -591,7 +619,10 @@ function headerMarkup() {
               </div>
             </div>
           </div>
-          <a href="pricing.html">价格</a>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">价格${icon("chevron-down")}</button>
+            ${pricingMegaMenu()}
+          </div>
         </div>
         <div class="nav-actions">
           <a class="btn btn-ghost" href="https://console.123proxy.cn/login.html">登录</a>
@@ -638,7 +669,12 @@ function headerMarkup() {
             <a href="data-scraping-service.html">数据采集服务</a>
           </div>
         </details>
-        <a href="pricing.html">价格${icon("chevron-right")}</a>
+        <details>
+          <summary>价格${icon("chevron-down")}</summary>
+          <div class="mobile-submenu">
+            ${pricingList.slice(0, 5).map(([href, name, price]) => `<a href="${href}">${name}<span>${price}</span></a>`).join("")}
+          </div>
+        </details>
         <a href="contact.html">联系我们${icon("chevron-right")}</a>
       </div>
     </header>`;

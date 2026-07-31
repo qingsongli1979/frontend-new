@@ -326,6 +326,42 @@
   line-height: 1.5;
 }
 
+.home-refined .mega-price,
+:is(.pricing-refined, .site-refined) .mega-price {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 3px 7px;
+}
+
+.home-refined .mega-price b,
+.home-refined .mega-price em,
+:is(.pricing-refined, .site-refined) .mega-price b,
+:is(.pricing-refined, .site-refined) .mega-price em {
+  font-style: normal;
+}
+
+.home-refined .mega-price b,
+:is(.pricing-refined, .site-refined) .mega-price b {
+  color: var(--ref-blue-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.home-refined .mega-price em,
+:is(.pricing-refined, .site-refined) .mega-price em {
+  color: var(--ref-muted);
+  font-size: 10px;
+}
+
+.home-refined .mobile-submenu a > span:last-child,
+:is(.pricing-refined, .site-refined) .mobile-submenu a > span:last-child {
+  margin-left: auto;
+  color: var(--ref-blue-dark);
+  font-size: 11px;
+  font-weight: 700;
+}
+
 .home-refined .mega-link[aria-current="page"] strong,
 :is(.pricing-refined, .site-refined) .mega-link[aria-current="page"] strong,
 .home-refined .mega-link.is-current strong,

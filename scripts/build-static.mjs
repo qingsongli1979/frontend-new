@@ -14,9 +14,9 @@ import { renderStatusDocument, statusZh } from "./status-content.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(scriptDir, "..");
-const assetVersion = "20260730-02";
-const pricingAssetVersion = "20260729-03";
-const refinementAssetVersion = "20260730-01";
+const assetVersion = "20260731-01";
+const pricingAssetVersion = "20260731-01";
+const refinementAssetVersion = "20260731-01";
 
 const chineseProducts = [
   ["tunnel", "scraping-rotating-proxy.html"],
@@ -90,10 +90,22 @@ function englishProductLinks() {
   });
 }
 
+function englishPricingLinks() {
+  return [
+    ["pricing.html?product=tunnel", "Scraping rotating proxy", "¥45 / thread", "or ¥3 / GB", "route"],
+    ["pricing.html?product=residential", "Residential rotating proxy", "From ¥3 / GB", "Traffic billing", "house"],
+    ["pricing.html?product=unlimited", "Unlimited residential", "From ¥600", "Per port and period", "refresh-cw"],
+    ["pricing.html?product=static-datacenter", "Static datacenter proxy", "From ¥20 / IP", "Per IP and period", "server"],
+    ["pricing.html?product=static-residential", "Static residential proxy", "From ¥40 / IP", "Per residential IP", "radio-tower"],
+    ["../contact.html#solutions", "High-bandwidth and custom", "Project quote", "Bandwidth and scale", "gauge"]
+  ];
+}
+
 function englishHeader(page) {
   const pricingUrl = "pricing.html";
   const zhPath = `../${page.zhFile || "index.html"}`;
   const products = englishProductLinks();
+  const pricing = englishPricingLinks();
   return `
     <div class="utility-bar">
       <div class="container utility-inner">
@@ -137,7 +149,25 @@ function englishHeader(page) {
           <a href="global-network.html">Global network</a>
           <a href="/developers/">Developers</a>
           <a href="enterprise.html">Enterprise</a>
-          <a href="${pricingUrl}"${pricingUrl.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>Pricing</a>
+          <div class="nav-item">
+            <button class="nav-trigger" type="button" aria-expanded="false">Pricing${icon("chevron-down")}</button>
+            <div class="mega-menu is-pricing">
+              <div class="mega-layout">
+                <div class="mega-intro">
+                  <span class="mega-label">Pricing</span>
+                  <strong>Plans and billing models</strong>
+                  <p>Compare traffic, threads, ports, and fixed-IP plans.</p>
+                  <a href="${pricingUrl}">View all prices and free trials${icon("arrow-right")}</a>
+                </div>
+                <div class="mega-links">
+                  ${pricing.map(([href, name, price, note, itemIcon], index) => `<a class="mega-link${index === 0 ? " is-featured" : ""}" href="${href}">
+                      <span class="mega-link-icon">${icon(itemIcon)}</span>
+                      <span><strong>${escapeHtml(name)}</strong><small class="mega-price"><b>${escapeHtml(price)}</b><em>${escapeHtml(note)}</em></small></span>
+                    </a>`).join("")}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="nav-actions">
           <a class="btn btn-ghost" href="https://console.123proxy.cn/" target="_blank" rel="noreferrer">Log in</a>
@@ -153,7 +183,10 @@ function englishHeader(page) {
         <a href="high-bandwidth-proxy.html">AI data infrastructure${icon("chevron-right")}</a>
         <a href="global-network.html">Global network${icon("chevron-right")}</a>
         <a href="/developers/">Developers${icon("chevron-right")}</a>
-        <a href="${pricingUrl}"${pricingUrl.startsWith("http") ? ' target="_blank" rel="noreferrer"' : ""}>Pricing${icon("chevron-right")}</a>
+        <details>
+          <summary>Pricing${icon("chevron-down")}</summary>
+          <div class="mobile-submenu">${pricing.slice(0, 5).map(([href, name, price]) => `<a href="${href}">${escapeHtml(name)}<span>${escapeHtml(price)}</span></a>`).join("")}</div>
+        </details>
         <a href="${zhPath}" lang="zh-CN" hreflang="zh-CN">中文${icon("chevron-right")}</a>
       </div>
     </header>`;
@@ -953,8 +986,8 @@ function activatePricingNavigation(header) {
       '<button class="nav-trigger" type="button" aria-expanded="false">代理产品'
     )
     .replace(
-      '<a href="pricing.html">价格</a>',
-      '<a class="nav-direct is-active" href="pricing.html" aria-current="page">价格</a>'
+      '<button class="nav-trigger" type="button" aria-expanded="false">价格',
+      '<button class="nav-trigger is-active" type="button" aria-expanded="false">价格'
     );
 }
 
@@ -1024,8 +1057,8 @@ globalThis.__PRICING_FOOTER__ = footerMarkup();`, shellContext);
   const englishHeaderMarkup = englishHeader(pricingEn)
     .replace('class="nav-trigger is-active"', 'class="nav-trigger"')
     .replace(
-      '<a href="pricing.html">Pricing</a>',
-      '<a class="nav-direct is-active" href="pricing.html" aria-current="page">Pricing</a>'
+      '<button class="nav-trigger" type="button" aria-expanded="false">Pricing',
+      '<button class="nav-trigger is-active" type="button" aria-expanded="false">Pricing'
     );
   const englishDir = path.join(rootDir, "en");
   await mkdir(englishDir, { recursive: true });
