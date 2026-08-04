@@ -2,9 +2,11 @@ import {
   clearPendingRecharge,
   extractPaymentTradeNo,
   loadPendingRecharge,
+  openPaymentWindow,
   renderQrCode,
-  savePendingRecharge
-} from "./payment.js";
+  savePendingRecharge,
+  submitPaymentHtml
+} from "./payment.js?v=20260804-01";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 20000;
@@ -836,14 +838,13 @@ async function submitRecharge(event) {
   const submit = form.querySelector('button[type="submit"]');
   submit.disabled = true;
   if (method === "alipay") {
-    const paymentWindow = window.open("", "_blank");
+    const paymentWindow = openPaymentWindow();
     if (!paymentWindow) {
       submit.disabled = false;
       message.hidden = false;
       message.textContent = "浏览器阻止了支付窗口，请允许弹窗后重试。";
       return;
     }
-    paymentWindow.document.write("<p style='font-family:sans-serif;padding:32px'>正在进入支付宝...</p>");
     savePendingRecharge({ provider: "alipay", amount });
     try {
       const html = await request(`/accsrv/0xalipay/${amount}`);
@@ -853,15 +854,12 @@ async function submitRecharge(event) {
         paymentTradeNo: extractPaymentTradeNo(paymentHtml),
         amount
       });
-      paymentWindow.document.open();
-      paymentWindow.document.write(paymentHtml);
-      paymentWindow.document.close();
-      paymentWindow.focus();
+      submitPaymentHtml(paymentHtml, paymentWindow);
       document.querySelector("#accountRechargeDialog")?.close();
       showToast("支付宝支付页面已打开");
     } catch (error) {
       clearPendingRecharge();
-      paymentWindow?.close();
+      paymentWindow.popup?.close();
       message.hidden = false;
       message.textContent = error.message || "支付宝充值创建失败";
     } finally {

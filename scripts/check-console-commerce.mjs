@@ -18,6 +18,7 @@ import {
   extractPaymentTradeNo as extractSharedPaymentTradeNo,
   loadPendingPayment,
   loadPendingRecharge,
+  normalizePaymentAction,
   normalizePaymentUri,
   savePendingPayment,
   savePendingRecharge
@@ -91,6 +92,9 @@ assert.equal(
 );
 assert.equal(normalizePaymentUri("weixin://wxpay/bizpayurl?pr=test"), "weixin://wxpay/bizpayurl?pr=test");
 assert.throws(() => normalizePaymentUri("javascript:alert(1)"), /无效/);
+assert.equal(normalizePaymentAction("https://openapi.alipay.com/gateway.do"), "https://openapi.alipay.com/gateway.do");
+assert.throws(() => normalizePaymentAction(""), /无效/);
+assert.throws(() => normalizePaymentAction("javascript:alert(1)"), /无效/);
 
 const paymentStorage = new Map();
 const storage = {
@@ -154,6 +158,8 @@ assert.equal(commerceScript.includes("https://www.123proxy.cn/contact.html#servi
 assert.equal(commerceScript.includes("data-open-trial"), false);
 assert.equal(commerceScript.includes("trialRequestDialog"), false);
 assert.equal(commerceScript.includes("handlePaymentReturn"), true);
+assert.match(commerceScript, /submitPaymentHtml\(html, paymentWindow\)/);
+assert.doesNotMatch(commerceScript, /popup\.document\.write\(String\(html\)\)/);
 assert.equal(productsScript.includes('const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html#service"'), true);
 assert.match(productsScript, /"申请测试",\s*TRIAL_CONTACT_URL/);
 assert.equal(commerceScript.includes("isTrialOffer"), false);

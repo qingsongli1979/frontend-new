@@ -125,6 +125,8 @@ assert.match(consoleCss, /\.money-input em\s*\{[^}]*height:\s*100%/s);
 assert.match(consoleCss, /\.money-input input\s*\{[^}]*height:\s*100%/s);
 assert.match(accountScript, /\/accsrv\/0xalicheckorderstatus\//);
 assert.match(accountScript, /handleRechargeReturn/);
+assert.match(accountScript, /submitPaymentHtml\(paymentHtml, paymentWindow\)/);
+assert.doesNotMatch(accountScript, /paymentWindow\.document\.write\(paymentHtml\)/);
 assert.doesNotMatch(accountScript, /\/ip\/clouduserorder\/imply/);
 
 console.log("Console account audit passed: traffic ledger, billing, recharge, invoices and account settings");

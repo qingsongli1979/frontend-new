@@ -2,9 +2,11 @@ import {
   clearPendingPayment,
   extractPaymentTradeNo,
   loadPendingPayment,
+  openPaymentWindow,
   renderQrCode,
-  savePendingPayment
-} from "./payment.js";
+  savePendingPayment,
+  submitPaymentHtml
+} from "./payment.js?v=20260804-01";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
@@ -703,25 +705,28 @@ async function payOrder(order, method) {
 }
 
 async function startAlipayPayment(order) {
-  const popup = window.open("", "_blank");
-  if (!popup) throw new CommerceRequestError("浏览器阻止了支付窗口，请允许弹窗后重试");
-  popup.document.write("<p style='font-family:sans-serif;padding:32px'>正在进入支付宝...</p>");
+  const paymentWindow = openPaymentWindow();
+  if (!paymentWindow) throw new CommerceRequestError("浏览器阻止了支付窗口，请允许弹窗后重试");
   savePendingPayment({
     provider: "alipay",
     orderTradeNo: order.tradeNo
   });
-  const html = await request(`/accsrv/clouduserorder/alipay/${encodeURIComponent(order.tradeNo)}?by=6`);
-  state.paymentTradeNo = extractPaymentTradeNo(html);
-  savePendingPayment({
-    provider: "alipay",
-    orderTradeNo: order.tradeNo,
-    paymentTradeNo: state.paymentTradeNo
-  });
-  popup.document.open();
-  popup.document.write(String(html));
-  popup.document.close();
-  setNotice("#orderNotice", "info", "支付宝支付窗口已打开。支付完成后回到本页检查状态。");
-  renderOrder(order, state.user || {});
+  try {
+    const html = await request(`/accsrv/clouduserorder/alipay/${encodeURIComponent(order.tradeNo)}?by=6`);
+    state.paymentTradeNo = extractPaymentTradeNo(html);
+    savePendingPayment({
+      provider: "alipay",
+      orderTradeNo: order.tradeNo,
+      paymentTradeNo: state.paymentTradeNo
+    });
+    submitPaymentHtml(html, paymentWindow);
+    setNotice("#orderNotice", "info", "支付宝支付窗口已打开。支付完成后回到本页检查状态。");
+    renderOrder(order, state.user || {});
+  } catch (error) {
+    clearPendingPayment();
+    paymentWindow.popup?.close();
+    throw error;
+  }
 }
 
 async function startWechatPayment(order) {
