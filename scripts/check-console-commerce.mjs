@@ -19,6 +19,7 @@ import {
   loadPendingPayment,
   loadPendingRecharge,
   normalizePaymentAction,
+  normalizePaymentPayload,
   normalizePaymentUri,
   savePendingPayment,
   savePendingRecharge
@@ -95,6 +96,11 @@ assert.throws(() => normalizePaymentUri("javascript:alert(1)"), /无效/);
 assert.equal(normalizePaymentAction("https://openapi.alipay.com/gateway.do"), "https://openapi.alipay.com/gateway.do");
 assert.throws(() => normalizePaymentAction(""), /无效/);
 assert.throws(() => normalizePaymentAction("javascript:alert(1)"), /无效/);
+assert.equal(
+  normalizePaymentPayload({ data: { paymentHtml: '<form action="https://openapi.alipay.com/gateway.do"></form>' } }),
+  '<form action="https://openapi.alipay.com/gateway.do"></form>'
+);
+assert.equal(normalizePaymentPayload({ result: { payUrl: "https://openapi.alipay.com/gateway.do" } }), "https://openapi.alipay.com/gateway.do");
 
 const paymentStorage = new Map();
 const storage = {

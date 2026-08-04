@@ -6,7 +6,7 @@ import {
   renderQrCode,
   savePendingRecharge,
   submitPaymentHtml
-} from "./payment.js?v=20260804-01";
+} from "./payment.js?v=20260804-02";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 20000;
@@ -847,14 +847,13 @@ async function submitRecharge(event) {
     }
     savePendingRecharge({ provider: "alipay", amount });
     try {
-      const html = await request(`/accsrv/0xalipay/${amount}`);
-      const paymentHtml = typeof html === "string" ? html : String(html?.html || "");
+      const paymentResponse = await request(`/accsrv/0xalipay/${amount}`);
       savePendingRecharge({
         provider: "alipay",
-        paymentTradeNo: extractPaymentTradeNo(paymentHtml),
+        paymentTradeNo: extractPaymentTradeNo(paymentResponse),
         amount
       });
-      submitPaymentHtml(paymentHtml, paymentWindow);
+      submitPaymentHtml(paymentResponse, paymentWindow);
       document.querySelector("#accountRechargeDialog")?.close();
       showToast("支付宝支付页面已打开");
     } catch (error) {

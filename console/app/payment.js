@@ -17,6 +17,36 @@ function normalizePaymentAction(value, base = globalThis.window?.location?.href 
   return url.href;
 }
 
+function normalizePaymentPayload(payload, seen = new Set()) {
+  if (typeof payload === "string") return payload.trim();
+  if (!payload || typeof payload !== "object" || seen.has(payload)) return "";
+  seen.add(payload);
+
+  const preferredKeys = [
+    "html",
+    "paymentHtml",
+    "form",
+    "url",
+    "payUrl",
+    "paymentUrl",
+    "data",
+    "body",
+    "content",
+    "result"
+  ];
+  for (const key of preferredKeys) {
+    if (!(key in payload)) continue;
+    const value = normalizePaymentPayload(payload[key], seen);
+    if (value) return value;
+  }
+
+  for (const value of Object.values(payload)) {
+    const normalized = normalizePaymentPayload(value, seen);
+    if (/^(?:https?:\/\/|<!doctype|<html|<form|<script|<meta)/i.test(normalized)) return normalized;
+  }
+  return "";
+}
+
 function openPaymentWindow() {
   const browserWindow = globalThis.window;
   if (!browserWindow) return null;
@@ -38,6 +68,36 @@ function appendPaymentField(form, name, value) {
   form.append(input);
 }
 
+function extractPaymentNavigation(parsed) {
+  const refresh = parsed.querySelector('meta[http-equiv="refresh" i]')?.getAttribute("content") || "";
+  const refreshMatch = refresh.match(/(?:^|;)\s*url\s*=\s*["']?([^"']+)/i);
+  if (refreshMatch?.[1]) return refreshMatch[1].trim();
+
+  const scripts = Array.from(parsed.scripts || []).map((script) => script.textContent || "").join("\n");
+  const patterns = [
+    /(?:window\.)?location(?:\.href)?\s*=\s*["']([^"']+)["']/i,
+    /(?:window\.)?location\.(?:assign|replace)\(\s*["']([^"']+)["']/i,
+    /window\.open\(\s*["']([^"']+)["']/i
+  ];
+  for (const pattern of patterns) {
+    const match = scripts.match(pattern);
+    if (match?.[1]) return match[1].trim();
+  }
+
+  return parsed.querySelector('a[href^="https://"], a[href^="http://"]')?.getAttribute("href") || "";
+}
+
+function navigatePaymentHtml(paymentHtml, paymentWindow) {
+  const BlobType = globalThis.Blob;
+  const UrlApi = globalThis.URL;
+  if (!BlobType || typeof UrlApi?.createObjectURL !== "function") {
+    throw new Error("当前浏览器无法打开支付宝支付页面，请升级浏览器后重试");
+  }
+  const blobUrl = UrlApi.createObjectURL(new BlobType([paymentHtml], { type: "text/html;charset=utf-8" }));
+  paymentWindow.popup.location.replace(blobUrl);
+  globalThis.window.setTimeout(() => UrlApi.revokeObjectURL(blobUrl), 2 * 60 * 1000);
+}
+
 function submitPaymentHtml(html, paymentWindow) {
   const browserWindow = globalThis.window;
   const document = globalThis.document;
@@ -46,7 +106,8 @@ function submitPaymentHtml(html, paymentWindow) {
     throw new Error("支付宝支付窗口已关闭，请重新发起充值");
   }
 
-  const paymentHtml = String(html || "").trim();
+  const paymentHtml = normalizePaymentPayload(html);
+  if (!paymentHtml) throw new Error("支付宝未返回可用的支付页面，请稍后重试");
   if (/^https?:\/\/\S+$/i.test(paymentHtml)) {
     paymentWindow.popup.location.replace(normalizePaymentAction(paymentHtml));
     paymentWindow.popup.focus();
@@ -55,7 +116,16 @@ function submitPaymentHtml(html, paymentWindow) {
 
   const parsed = new Parser().parseFromString(paymentHtml, "text/html");
   const sourceForm = parsed.querySelector("form");
-  if (!sourceForm) throw new Error("支付宝返回的支付页面格式无效");
+  if (!sourceForm) {
+    const navigation = extractPaymentNavigation(parsed);
+    if (navigation) {
+      paymentWindow.popup.location.replace(normalizePaymentAction(navigation));
+    } else {
+      navigatePaymentHtml(paymentHtml, paymentWindow);
+    }
+    paymentWindow.popup.focus();
+    return;
+  }
 
   const form = document.createElement("form");
   form.hidden = true;
@@ -101,7 +171,7 @@ function normalizePaymentUri(value) {
 }
 
 function extractPaymentTradeNo(html) {
-  const text = String(html || "");
+  const text = normalizePaymentPayload(html);
   const patterns = [
     /alipayreturn=([^"'&<>\s]+)/i,
     /out_trade_no["']?\s*[:=]\s*["']([^"']+)/i,
@@ -231,6 +301,7 @@ export {
   loadPendingPayment,
   loadPendingRecharge,
   normalizePaymentAction,
+  normalizePaymentPayload,
   normalizePaymentUri,
   openPaymentWindow,
   renderQrCode,

@@ -6,7 +6,7 @@ import {
   renderQrCode,
   savePendingPayment,
   submitPaymentHtml
-} from "./payment.js?v=20260804-01";
+} from "./payment.js?v=20260804-02";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
