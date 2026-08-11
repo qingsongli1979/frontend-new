@@ -17,6 +17,8 @@ const rootDir = path.resolve(scriptDir, "..");
 const assetVersion = "20260731-01";
 const pricingAssetVersion = "20260731-01";
 const refinementAssetVersion = "20260731-01";
+const googleTagId = "GT-WF3B5LNX";
+const googleAdsId = "AW-11399174770";
 
 const chineseProducts = [
   ["tunnel", "scraping-rotating-proxy.html"],
@@ -563,6 +565,27 @@ function seoBlock({ title, description, canonicalPath, alternatePath, locale, pa
 
 function upsertSeo(html, block) {
   const pattern = /<!-- SEO_META_START -->[\s\S]*?<!-- SEO_META_END -->/;
+  if (pattern.test(html)) return html.replace(pattern, block);
+  return html.replace("</head>", `${block}\n</head>`);
+}
+
+function googleTagBlock() {
+  return `<!-- GOOGLE_TAG_START -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${googleTagId}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', '${googleTagId}');
+    gtag('config', '${googleAdsId}');
+  </script>
+  <!-- GOOGLE_TAG_END -->`;
+}
+
+function upsertGoogleTag(html) {
+  const block = googleTagBlock();
+  const pattern = /<!-- GOOGLE_TAG_START -->[\s\S]*?<!-- GOOGLE_TAG_END -->/;
   if (pattern.test(html)) return html.replace(pattern, block);
   return html.replace("</head>", `${block}\n</head>`);
 }
@@ -1252,6 +1275,39 @@ async function patchChineseStaticPage(file, { name, alternateFile, isHome = fals
   await writeFile(filePath, html, "utf8");
 }
 
+function publicRoutePairs() {
+  return [
+    ["/", "/en/"],
+    ["/high-bandwidth-proxy.html", "/en/high-bandwidth-proxy.html"],
+    ...chineseProducts.map(([, file]) => [`/${file}`, `/en/${file}`]),
+    ...solutionFiles.map((file) => [`/${file}`, `/en/${file}`]),
+    ...enterpriseFiles.map((file) => [`/${file}`, `/en/${file}`]),
+    ...networkFiles.map((file) => [`/${file}`, `/en/${file}`]),
+    ...pricingFiles.map((file) => [`/${file}`, `/en/${file}`])
+  ];
+}
+
+function fileFromPublicRoute(route) {
+  if (route === "/") return "index.html";
+  if (route.endsWith("/")) return path.join(...route.slice(1, -1).split("/"), "index.html");
+  return path.join(...route.slice(1).split("/"));
+}
+
+async function applyGoogleTagToPublicPages() {
+  const routes = new Set([
+    ...publicRoutePairs().flat(),
+    statusZh.route,
+    contactZh.route,
+    ...developerRoutes
+  ]);
+
+  for (const route of routes) {
+    const filePath = path.join(rootDir, fileFromPublicRoute(route));
+    const html = await readFile(filePath, "utf8");
+    await writeFile(filePath, upsertGoogleTag(html), "utf8");
+  }
+}
+
 function sitemapEntry(zhPath, enPath) {
   const zhLastmod = lastModifiedForRoute(zhPath);
   const enLastmod = lastModifiedForRoute(enPath);
@@ -1292,15 +1348,7 @@ async function renderDeveloperPages() {
 }
 
 async function writeDiscoveryFiles() {
-  const routePairs = [
-    ["/", "/en/"],
-    ["/high-bandwidth-proxy.html", "/en/high-bandwidth-proxy.html"],
-    ...chineseProducts.map(([, file]) => [`/${file}`, `/en/${file}`]),
-    ...solutionFiles.map((file) => [`/${file}`, `/en/${file}`]),
-    ...enterpriseFiles.map((file) => [`/${file}`, `/en/${file}`]),
-    ...networkFiles.map((file) => [`/${file}`, `/en/${file}`]),
-    ...pricingFiles.map((file) => [`/${file}`, `/en/${file}`])
-  ];
+  const routePairs = publicRoutePairs();
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${routePairs.map(([zhPath, enPath]) => sitemapEntry(zhPath, enPath)).join("\n")}
@@ -1343,6 +1391,7 @@ async function build() {
   await renderStatusPages();
   await renderContactPage();
   await renderDeveloperPages();
+  await applyGoogleTagToPublicPages();
   await writeDiscoveryFiles();
 }
 

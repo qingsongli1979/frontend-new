@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>客户管理 | 123Proxy 代理商工作台</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app/console.css?v=20260729-02">
+  <link rel="stylesheet" href="assets/agency.css?v=20260729-01">
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="assets/agency.js?v=20260729-01"></script>
+</head>
+<body class="agency-console" data-agency-page="manager">
+  <div class="agency-shell">
+    <aside class="agency-sidebar" aria-label="代理商工作台导航">
+      <div class="agency-brand-row">
+        <a href="https://www.123proxy.cn/" class="brand-link" aria-label="返回 123Proxy 官网">
+          <svg class="brand-mark" viewBox="0 0 44 44" role="img" aria-label="123Proxy">
+            <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116ef"></rect>
+            <rect x="0" y="24" width="20" height="20" rx="4" fill="#2f80ed"></rect>
+            <rect x="24" y="24" width="20" height="20" rx="4" fill="#4cc9ed"></rect>
+            <text x="22" y="15.2" fill="#fff" font-family="Montserrat,Arial,sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+            <text x="10" y="39.2" fill="#fff" font-family="Montserrat,Arial,sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+            <text x="34" y="39.2" fill="#fff" font-family="Montserrat,Arial,sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+          </svg>
+          <img class="agency-brand-word" src="assets/123proxy-proxy-original.svg" alt="Proxy">
+        </a>
+        <span>AGENCY</span>
+      </div>
+      <nav class="agency-nav">
+        <small>工作台</small>
+        <a class="is-active" href="#customers" aria-current="page">
+          <i data-lucide="users-round" aria-hidden="true"></i>
+          <span>客户管理</span>
+        </a>
+      </nav>
+      <div class="agency-sidebar-context">
+        <span>当前代理商</span>
+        <strong id="agencySidebarName">正在读取</strong>
+        <small id="agencySidebarAccount">代理商账户</small>
+      </div>
+      <div class="agency-sidebar-footer">
+        <a href="https://www.123proxy.cn/developers/" target="_blank" rel="noreferrer"><i data-lucide="book-open-text" aria-hidden="true"></i><span>开发文档</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+        <a href="https://www.123proxy.cn/contact.html#solutions" target="_blank" rel="noreferrer"><i data-lucide="headphones" aria-hidden="true"></i><span>企业支持</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+      </div>
+    </aside>
+
+    <div class="agency-workspace">
+      <header class="agency-topbar">
+        <div>
+          <button class="agency-mobile-menu" id="agencyMobileMenu" type="button" aria-label="打开导航"><i data-lucide="menu" aria-hidden="true"></i></button>
+          <span>代理商工作台</span><i data-lucide="chevron-right" aria-hidden="true"></i><strong>客户管理</strong>
+        </div>
+        <div>
+          <span class="agency-network-state"><i></i>代理网络运行正常</span>
+          <button class="agency-user-button" id="agencyUserButton" type="button" aria-expanded="false" aria-controls="agencyUserMenu">
+            <span id="agencyAvatar">A</span>
+            <span><strong id="agencyDisplayName">代理商账户</strong><small>已授权</small></span>
+            <i data-lucide="chevron-down" aria-hidden="true"></i>
+          </button>
+          <div class="agency-user-menu" id="agencyUserMenu" hidden>
+            <div><strong id="agencyMenuName">代理商账户</strong><small>Agency partner</small></div>
+            <a href="https://www.123proxy.cn/contact.html#solutions" target="_blank" rel="noreferrer"><i data-lucide="headphones" aria-hidden="true"></i>联系企业服务</a>
+            <button id="agencyLogout" type="button"><i data-lucide="log-out" aria-hidden="true"></i>退出登录</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="agency-main">
+        <section class="agency-page-heading">
+          <div>
+            <span>AGENCY CUSTOMER MANAGEMENT</span>
+            <h1>客户管理</h1>
+            <p>查询代理客户，核对充值、消费与月度账单明细。</p>
+          </div>
+          <button class="button button-secondary" id="agencyReload" type="button"><i data-lucide="refresh-cw" aria-hidden="true"></i>刷新数据</button>
+        </section>
+
+        <div class="agency-notice" id="agencyNotice" role="status" hidden></div>
+
+        <section class="agency-metrics" aria-label="客户业务概览">
+          <div><small>客户数量</small><strong id="agencyCustomerCount">--</strong><span>当前查询结果</span></div>
+          <div><small>累计充值</small><strong><em>¥</em><span id="agencyRechargeTotal">--</span></strong><span>客户充值合计</span></div>
+          <div><small>累计消费</small><strong><em>¥</em><span id="agencyConsumeTotal">--</span></strong><span>客户消费合计</span></div>
+          <div><small>代理商账户</small><strong id="agencyMetricName">--</strong><span>当前登录身份</span></div>
+        </section>
+
+        <section class="agency-customer-panel">
+          <header>
+            <div><h2>代理客户</h2><p>支持按客户账号或注册手机号精确查询。</p></div>
+            <form class="agency-search" id="agencySearchForm">
+              <label>
+                <span>查询字段</span>
+                <select id="agencySearchMode">
+                  <option value="username">客户账号</option>
+                  <option value="phone">注册手机号</option>
+                </select>
+              </label>
+              <label class="is-wide">
+                <span>查询内容</span>
+                <input id="agencySearchText" type="search" autocomplete="off" placeholder="输入客户账号">
+              </label>
+              <button class="button button-primary" type="submit"><i data-lucide="search" aria-hidden="true"></i>查询</button>
+              <button class="button button-secondary" id="agencyResetSearch" type="button">重置</button>
+            </form>
+          </header>
+          <div class="agency-table-scroll">
+            <div class="agency-customer-table" role="table" aria-label="代理客户列表">
+              <div class="agency-customer-row is-head" role="row">
+                <span>客户账号</span><span>累计充值</span><span>累计消费</span><span>注册时间</span><span>注册手机号</span><span>操作</span>
+              </div>
+              <div id="agencyCustomerRows" aria-live="polite"></div>
+            </div>
+          </div>
+          <footer class="agency-table-footer">
+            <span id="agencyTableSummary">正在读取客户数据</span>
+            <div>
+              <button id="agencyPrevPage" type="button"><i data-lucide="chevron-left" aria-hidden="true"></i>上一页</button>
+              <span id="agencyPageLabel">第 1 页</span>
+              <button id="agencyNextPage" type="button">下一页<i data-lucide="chevron-right" aria-hidden="true"></i></button>
+            </div>
+          </footer>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog class="agency-dialog" id="agencyIdentityDialog">
+    <div class="agency-dialog-card">
+      <header><div><span>CUSTOMER PROFILE</span><h2>客户资料</h2></div><button type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button></header>
+      <div class="agency-dialog-body">
+        <p class="agency-dialog-intro" id="agencyIdentityIntro">正在读取客户资料。</p>
+        <dl class="agency-identity-list" id="agencyIdentityList"></dl>
+      </div>
+      <footer><button class="button button-secondary" type="button" data-close-dialog>关闭</button></footer>
+    </div>
+  </dialog>
+
+  <dialog class="agency-dialog is-wide" id="agencyBillDialog">
+    <div class="agency-dialog-card">
+      <header><div><span>CUSTOMER BILL DETAIL</span><h2>客户月度明细</h2></div><button type="button" data-close-dialog aria-label="关闭"><i data-lucide="x" aria-hidden="true"></i></button></header>
+      <div class="agency-dialog-body">
+        <p class="agency-dialog-intro" id="agencyBillIntro">正在读取客户账单。</p>
+        <div class="agency-detail-scroll">
+          <div class="agency-detail-table">
+            <div class="agency-detail-row is-head"><span>账期</span><span>使用状态</span><span>客户消费</span><span>支付状态</span><span>代理收益</span></div>
+            <div id="agencyBillRows"></div>
+          </div>
+        </div>
+      </div>
+      <footer><button class="button button-secondary" type="button" data-close-dialog>关闭</button></footer>
+    </div>
+  </dialog>
+
+  <div class="toast" id="agencyToast" role="status" aria-live="polite"></div>
+</body>
+</html>

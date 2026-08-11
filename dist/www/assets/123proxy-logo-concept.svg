@@ -1,0 +1,20 @@
+<svg width="174" height="64" viewBox="0 0 174 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">123Proxy logo</title>
+  <desc id="desc">The three-color 123 tile mark paired with the Proxy lettering from the supplied original artwork.</desc>
+  <style>
+    @font-face {
+      font-family: "Montserrat";
+      src: url("./montserrat-latin-variable.woff2") format("woff2");
+      font-weight: 100 900;
+    }
+  </style>
+  <g transform="translate(2 3) scale(1.27)">
+    <rect x="12" y="0" width="20" height="20" rx="4" fill="#1116EF"/>
+    <rect x="0" y="24" width="20" height="20" rx="4" fill="#2F80ED"/>
+    <rect x="24" y="24" width="20" height="20" rx="4" fill="#4CC9ED"/>
+    <text x="22" y="15.2" fill="#FFFFFF" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">1</text>
+    <text x="10" y="39.2" fill="#FFFFFF" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">2</text>
+    <text x="34" y="39.2" fill="#FFFFFF" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
+  </g>
+  <image href="./123proxy-proxy-original.svg" x="74" y="15.5" width="92" height="34.75"/>
+</svg>

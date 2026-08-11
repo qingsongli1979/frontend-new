@@ -50,6 +50,9 @@ const developerRoutes = [
   "/developers/examples/php-curl-proxy/"
 ];
 
+const googleTagId = "GT-WF3B5LNX";
+const googleAdsId = "AW-11399174770";
+
 const developerGuideFacts = new Map([
   ["/developers/products/scraping-rotating-proxy/", productSeoFacts.tunnel],
   ["/developers/products/residential-rotating-proxy/", productSeoFacts.residential],
@@ -226,6 +229,17 @@ for (const route of developerRoutes) {
     }
     expect(graph.some((item) => item["@type"] === "FAQPage"), `${file}: engineering guide missing FAQPage`);
   }
+}
+
+for (const route of [...routePairs.flat(), "/status/", "/contact.html", ...developerRoutes]) {
+  const file = fileFromRoute(route);
+  const html = await readFile(path.join(rootDir, file), "utf8");
+  expect(
+    count(html, new RegExp(`googletagmanager\\.com/gtag/js\\?id=${googleTagId}`, "g")) === 1,
+    `${file}: expected one Google tag loader`
+  );
+  expect(count(html, new RegExp(`gtag\\('config', '${googleTagId}'\\)`, "g")) === 1, `${file}: missing Google tag config`);
+  expect(count(html, new RegExp(`gtag\\('config', '${googleAdsId}'\\)`, "g")) === 1, `${file}: missing Google Ads config`);
 }
 
 const statusFile = fileFromRoute("/status/");
