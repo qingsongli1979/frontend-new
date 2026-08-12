@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { copyFile, readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
@@ -17,8 +17,30 @@ const rootDir = path.resolve(scriptDir, "..");
 const assetVersion = "20260731-01";
 const pricingAssetVersion = "20260731-01";
 const refinementAssetVersion = "20260731-01";
+const conversionAssetVersion = "20260813-01";
 const googleTagId = "GT-WF3B5LNX";
 const googleAdsId = "AW-11399174770";
+
+function googleAdsConversionLabel(environmentName) {
+  const value = String(process.env[environmentName] || "").trim();
+  if (value && !/^[A-Za-z0-9_-]+$/.test(value)) {
+    throw new Error(`${environmentName} contains an invalid Google Ads conversion label.`);
+  }
+  return value;
+}
+
+const googleAdsConversionConfig = {
+  adsId: googleAdsId,
+  labels: {
+    registration: googleAdsConversionLabel("GOOGLE_ADS_REGISTRATION_LABEL"),
+    trial: googleAdsConversionLabel("GOOGLE_ADS_TRIAL_LABEL"),
+    consultation: googleAdsConversionLabel("GOOGLE_ADS_CONSULTATION_LABEL"),
+    // Reuse the 123Proxy "buy button" action found in the original React site,
+    // but fire it only after the backend confirms a paid order.
+    purchase: googleAdsConversionLabel("GOOGLE_ADS_PURCHASE_LABEL") || "SuudCJ3Tyv4YEPK0xrsq",
+    recharge: googleAdsConversionLabel("GOOGLE_ADS_RECHARGE_LABEL")
+  }
+};
 
 const chineseProducts = [
   ["tunnel", "scraping-rotating-proxy.html"],
@@ -579,7 +601,9 @@ function googleTagBlock() {
     gtag('js', new Date());
     gtag('config', '${googleTagId}');
     gtag('config', '${googleAdsId}');
+    window.ProxyGoogleAdsConfig = ${JSON.stringify(googleAdsConversionConfig)};
   </script>
+  <script defer src="/assets/google-ads.js?v=${conversionAssetVersion}"></script>
   <!-- GOOGLE_TAG_END -->`;
 }
 
@@ -1308,6 +1332,30 @@ async function applyGoogleTagToPublicPages() {
   }
 }
 
+async function applyGoogleTagToConsolePages() {
+  const consolePages = [
+    "login.html",
+    "register.html",
+    "forgot-password.html",
+    "agency-login.html",
+    "agency-manager.html",
+    path.join("app", "index.html")
+  ];
+
+  for (const file of consolePages) {
+    const filePath = path.join(rootDir, "console", file);
+    const html = await readFile(filePath, "utf8");
+    await writeFile(filePath, upsertGoogleTag(html), "utf8");
+  }
+}
+
+async function syncGoogleAdsConversionAsset() {
+  await copyFile(
+    path.join(rootDir, "assets", "google-ads.js"),
+    path.join(rootDir, "console", "assets", "google-ads.js")
+  );
+}
+
 function sitemapEntry(zhPath, enPath) {
   const zhLastmod = lastModifiedForRoute(zhPath);
   const enLastmod = lastModifiedForRoute(enPath);
@@ -1391,7 +1439,9 @@ async function build() {
   await renderStatusPages();
   await renderContactPage();
   await renderDeveloperPages();
+  await syncGoogleAdsConversionAsset();
   await applyGoogleTagToPublicPages();
+  await applyGoogleTagToConsolePages();
   await writeDiscoveryFiles();
 }
 

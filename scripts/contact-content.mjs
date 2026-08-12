@@ -75,7 +75,7 @@ export function renderContactMain({ icon }) {
           </div>
           <aside class="contact-qr-panel">
             <div class="contact-channel-mark">${icon("message-circle-more")}<span>微信</span><em>专家直联</em></div>
-            <a class="contact-qr-image" href="assets/contact-solutions-wechat.png" target="_blank" rel="noreferrer" aria-label="查看技术与企业方案微信二维码原图">
+            <a class="contact-qr-image" href="assets/contact-solutions-wechat.png" target="_blank" rel="noreferrer" aria-label="查看技术与企业方案微信二维码原图" data-google-ads-conversion="consultation" data-google-ads-channel="solutions_wechat">
               <img src="assets/contact-solutions-wechat.png" alt="123Proxy 技术与企业方案微信二维码" width="182" height="157">
             </a>
             <h3>添加技术与企业方案微信</h3>
@@ -104,7 +104,7 @@ export function renderContactMain({ icon }) {
           </div>
           <aside class="contact-qr-panel">
             <div class="contact-channel-mark">${icon("badge-check")}<span>企业微信</span><em>客服专员</em></div>
-            <a class="contact-qr-image" href="assets/contact-service-wecom.png" target="_blank" rel="noreferrer" aria-label="查看 123Proxy 客服企业微信二维码原图">
+            <a class="contact-qr-image" href="assets/contact-service-wecom.png" target="_blank" rel="noreferrer" aria-label="查看 123Proxy 客服企业微信二维码原图" data-google-ads-conversion="trial" data-google-ads-requires-intent="trial" data-google-ads-channel="trial_wecom">
               <img src="assets/contact-service-wecom.png" alt="123Proxy 客服企业微信二维码" width="205" height="184">
             </a>
             <h3>添加客服企业微信</h3>
@@ -124,7 +124,7 @@ export function renderContactMain({ icon }) {
           <div class="contact-email-action">
             <span>PUBLIC EMAIL</span>
             <strong>sales@123proxy.cn</strong>
-            <a class="btn btn-on-dark" href="mailto:sales@123proxy.cn">${icon("mail")}发送邮件</a>
+            <a class="btn btn-on-dark" href="mailto:sales@123proxy.cn" data-google-ads-conversion="consultation" data-google-ads-channel="sales_email">${icon("mail")}发送邮件</a>
           </div>
         </div>
       </section>

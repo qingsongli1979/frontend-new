@@ -218,6 +218,7 @@ function savePendingPayment(record, storage) {
     provider: String(record.provider || ""),
     orderTradeNo: String(record.orderTradeNo),
     paymentTradeNo: String(record.paymentTradeNo || ""),
+    amount: Number(record.amount) || 0,
     createdAt: Number(record.createdAt) || Date.now()
   };
   target.setItem(PENDING_PAYMENT_KEY, JSON.stringify(normalized));

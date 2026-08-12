@@ -904,6 +904,12 @@ function startPaymentPolling(tradeNo) {
       const payload = await request(`/accsrv/0xwxcheckorderstatus/${encodeURIComponent(tradeNo)}`);
       if (payload?.paid) {
         stopPaymentPolling();
+        window.ProxyGoogleAds?.recharge({
+          transaction_id: String(tradeNo),
+          value: Number(document.querySelector("#rechargePaymentAmount")?.textContent?.replace(/[^0-9.]/g, "")) || 0,
+          currency: "CNY",
+          payment_method: "wechat"
+        });
         if (state.user) state.user.balance = payload.balance ?? state.user.balance;
         document.querySelector("#accountRechargeDialog")?.close();
         showToast("充值成功");
@@ -982,6 +988,12 @@ async function handleRechargeReturn(params = new URLSearchParams()) {
     const user = await request("/accsrv/information").catch(() => null);
     const balance = number(result.balance ?? user?.balance ?? state.user?.balance);
     state.user = user || { ...(state.user || {}), balance };
+    window.ProxyGoogleAds?.recharge({
+      transaction_id: paymentTradeNo,
+      value: number(pending?.amount),
+      currency: "CNY",
+      payment_method: pending?.provider || "alipay"
+    });
     clearPendingRecharge();
     window.ConsoleOverview?.reload?.();
     notifyRechargeComplete(balance);

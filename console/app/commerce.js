@@ -419,7 +419,7 @@ function renderPurchase() {
     <section class="commerce-product-intro">
       <span><i data-lucide="${product.icon}" aria-hidden="true"></i></span>
       <div><small>STANDARD PROXY PRODUCT</small><h2>${escapeHtml(product.name)}</h2><p>${escapeHtml(product.note)}</p></div>
-      ${product.trial ? `<a class="commerce-trial-link" href="https://www.123proxy.cn/contact.html#service" target="_blank" rel="noreferrer"><i data-lucide="flask-conical" aria-hidden="true"></i><span><strong>免费测试</strong><small>${escapeHtml(product.trial)}</small></span></a>` : `<em>不提供免费测试</em>`}
+      ${product.trial ? `<a class="commerce-trial-link" href="https://www.123proxy.cn/contact.html?intent=trial#service" target="_blank" rel="noreferrer"><i data-lucide="flask-conical" aria-hidden="true"></i><span><strong>免费测试</strong><small>${escapeHtml(product.trial)}</small></span></a>` : `<em>不提供免费测试</em>`}
     </section>
     ${renderTypeTabs(product)}
     <div class="commerce-layout">
@@ -688,6 +688,13 @@ async function payOrder(order, method) {
         method: "PUT",
         body: ""
       });
+      window.ProxyGoogleAds?.purchase({
+        transaction_id: String(order.tradeNo),
+        value: number(order.rate),
+        currency: "CNY",
+        payment_method: method,
+        product_name: productNameForOrder(order)
+      });
       showToast("支付成功，套餐正在生效");
       invalidateConsoleData();
       window.location.hash = "#packages";
@@ -709,7 +716,8 @@ async function startAlipayPayment(order) {
   if (!paymentWindow) throw new CommerceRequestError("浏览器阻止了支付窗口，请允许弹窗后重试");
   savePendingPayment({
     provider: "alipay",
-    orderTradeNo: order.tradeNo
+    orderTradeNo: order.tradeNo,
+    amount: number(order.rate)
   });
   try {
     const html = await request(`/accsrv/clouduserorder/alipay/${encodeURIComponent(order.tradeNo)}?by=6`);
@@ -717,7 +725,8 @@ async function startAlipayPayment(order) {
     savePendingPayment({
       provider: "alipay",
       orderTradeNo: order.tradeNo,
-      paymentTradeNo: state.paymentTradeNo
+      paymentTradeNo: state.paymentTradeNo,
+      amount: number(order.rate)
     });
     submitPaymentHtml(html, paymentWindow);
     setNotice("#orderNotice", "info", "支付宝支付窗口已打开。支付完成后回到本页检查状态。");
@@ -736,7 +745,8 @@ async function startWechatPayment(order) {
   savePendingPayment({
     provider: "wechat",
     orderTradeNo: order.tradeNo,
-    paymentTradeNo: state.paymentTradeNo
+    paymentTradeNo: state.paymentTradeNo,
+    amount: number(order.rate)
   });
   await openWechatDialog(payload.url, order);
   startPaymentPolling(order, "wechat");
@@ -790,6 +800,13 @@ async function pollPayment(order, provider) {
   await request(`/ip/clouduserorder/imply?tradeNo=${encodeURIComponent(order.tradeNo)}&tradeNo_pay=${encodeURIComponent(state.paymentTradeNo)}`, {
     method: "PUT",
     body: ""
+  });
+  window.ProxyGoogleAds?.purchase({
+    transaction_id: String(order.tradeNo),
+    value: number(order.rate),
+    currency: "CNY",
+    payment_method: provider,
+    product_name: productNameForOrder(order)
   });
   return true;
 }
@@ -865,6 +882,13 @@ async function handlePaymentReturn(params = new URLSearchParams()) {
       renderPaymentReturnState("pending", "支付结果确认中", "支付平台尚未返回最终状态，请稍后在订单管理中刷新。");
       return;
     }
+    window.ProxyGoogleAds?.purchase({
+      transaction_id: String(order.tradeNo || pending.orderTradeNo),
+      value: number(order.rate || pending.amount),
+      currency: "CNY",
+      payment_method: pending.provider || "alipay",
+      product_name: productNameForOrder(order)
+    });
     clearPendingPayment();
     invalidateConsoleData();
     notifyPaymentComplete(pending.orderTradeNo);

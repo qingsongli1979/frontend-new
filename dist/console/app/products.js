@@ -1,7 +1,7 @@
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 12000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
-const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html#service";
+const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html?intent=trial#service";
 
 const PRODUCT_CATALOG = {
   tunnel: {

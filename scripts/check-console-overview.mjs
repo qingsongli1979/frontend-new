@@ -188,7 +188,7 @@ assert.match(consoleHtml, /<small>可用套餐<\/small>/);
 assert.match(consoleHtml, /<small>待提取固定 IP<\/small>/);
 assert.match(
   consoleHtml,
-  /id="overviewTrialButton"[\s\S]*?href="https:\/\/www\.123proxy\.cn\/contact\.html#service"/
+  /id="overviewTrialButton"[\s\S]*?href="https:\/\/www\.123proxy\.cn\/contact\.html\?intent=trial#service"/
 );
 
 console.log("Console overview audit passed: API normalization, package mapping and account masking");

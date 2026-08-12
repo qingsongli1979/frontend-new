@@ -166,7 +166,7 @@ assert.equal(commerceScript.includes("trialRequestDialog"), false);
 assert.equal(commerceScript.includes("handlePaymentReturn"), true);
 assert.match(commerceScript, /submitPaymentHtml\(html, paymentWindow\)/);
 assert.doesNotMatch(commerceScript, /popup\.document\.write\(String\(html\)\)/);
-assert.equal(productsScript.includes('const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html#service"'), true);
+assert.equal(productsScript.includes('const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html?intent=trial#service"'), true);
 assert.match(productsScript, /"申请测试",\s*TRIAL_CONTACT_URL/);
 assert.equal(commerceScript.includes("isTrialOffer"), false);
 assert.match(

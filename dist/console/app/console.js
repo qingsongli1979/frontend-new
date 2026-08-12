@@ -17,7 +17,7 @@ const productCatalog = {
     statusClass: "",
     resource: null,
     plans: [
-      ["免费测试 1GB", "验证真实目标站点、成功率与接入代码", "申请测试", true, "https://www.123proxy.cn/contact.html#service"],
+      ["免费测试 1GB", "验证真实目标站点、成功率与接入代码", "申请测试", true, "https://www.123proxy.cn/contact.html?intent=trial#service"],
       ["按流量套餐", "按实际代理传输流量扣减", "选择套餐", false],
       ["按并发线程套餐", "不限流量，按同时在途请求数计费", "选择套餐", false]
     ],
@@ -42,7 +42,7 @@ const productCatalog = {
     statusClass: "",
     resource: null,
     plans: [
-      ["免费测试 1GB", "验证地区、SESSION 与目标站点成功率", "申请测试", true, "https://www.123proxy.cn/contact.html#service"],
+      ["免费测试 1GB", "验证地区、SESSION 与目标站点成功率", "申请测试", true, "https://www.123proxy.cn/contact.html?intent=trial#service"],
       ["标准流量套餐", "从实时套餐中选择所需流量", "购买流量", false],
       ["补充流量包", "不改变当前套餐有效期", "补充流量", false]
     ],
@@ -67,7 +67,7 @@ const productCatalog = {
     statusClass: "",
     resource: null,
     plans: [
-      ["免费测试端口", "在真实任务中验证出口轮转与连接稳定性", "申请测试", true, "https://www.123proxy.cn/contact.html#service"],
+      ["免费测试端口", "在真实任务中验证出口轮转与连接稳定性", "申请测试", true, "https://www.123proxy.cn/contact.html?intent=trial#service"],
       ["标准端口套餐", "选择端口数量、套餐等级与购买时长", "购买端口", false],
       ["端口续费", "延长已有端口的套餐有效期", "立即续费", false]
     ],

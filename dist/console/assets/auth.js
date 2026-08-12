@@ -336,6 +336,13 @@
         });
         form.hidden = true;
         success.classList.add("is-visible");
+        window.ProxyGoogleAds?.registration({
+          method: "phone",
+          source: payload.source || undefined,
+          agency_id: payload.agencyID || undefined,
+          dedupe_key: payload.phone,
+          dedupe_scope: "local"
+        });
       } catch (error) {
         setMessage(form, "error", error.message);
       } finally {
