@@ -779,9 +779,13 @@ expect(consoleAuthJs.includes("123Proxy console authentication"), "console/asset
 expect(consoleAuthJs.includes('request("/accsrv/information"'), "console/assets/auth.js: login page must validate an existing session");
 expect(consoleAuthJs.includes("location.replace(consoleDestination())"), "console/assets/auth.js: valid sessions must enter the console without leaving login in history");
 expect(consoleAuthJs.includes("localStorage.removeItem(TOKEN_KEY)"), "console/assets/auth.js: expired sessions must be cleared");
+expect(consoleAuthJs.includes('query.get("uuid")'), "console/assets/auth.js: legacy agency registration links must preserve uuid attribution");
+expect(consoleAuthJs.includes('query.get("source")'), "console/assets/auth.js: legacy registration links must preserve source attribution");
+expect(consoleAuthJs.includes('query.get("referer")'), "console/assets/auth.js: legacy registration links must preserve referer attribution");
 const consoleLoginPage = await readFile(path.join(rootDir, "console", "login.html"), "utf8");
-expect(consoleLoginPage.includes("assets/auth.js?v=20260729-03"), "console/login.html: authentication asset cache version is stale");
+expect(consoleLoginPage.includes("assets/auth.js?v=20260812-01"), "console/login.html: authentication asset cache version is stale");
 expect(consoleAgencyCss.includes("123Proxy agency partner console"), "console/assets/agency.css: missing agency asset");
 expect(consoleAgencyJs.includes("123Proxy agency partner console"), "console/assets/agency.js: missing agency asset");
+expect(consoleAgencyJs.includes("new window.QRCode"), "console/assets/agency.js: referral link QR generation is missing");
 
 console.log(`Static audit passed: ${routePairs.length * 2} public routes, 4 console auth routes, 1 agency manager, 1 public agreement, 1 legacy redirect, 1 noindex comparison page, metadata, JSON-LD, sitemap.xml, robots.txt`);

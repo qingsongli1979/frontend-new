@@ -3,6 +3,7 @@ const TOKEN_KEY = "token_key";
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 const DEFAULT_FETCH_SIZE = 1000;
 const PAGE_SIZE = 12;
+const AGENCY_REGISTRATION_BASE = "https://console.123proxy.cn/apiv1/yonghu/register";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -138,13 +139,22 @@ export function normalizeIdentityPayload(payload) {
   };
 }
 
-function normalizeAgency(payload) {
+export function normalizeAgencyPayload(payload) {
   const item = unwrapPayload(payload) || {};
   return {
     name: String(firstDefined(item, ["name", "username", "agencyName"], "代理商账户")),
     companyName: String(firstDefined(item, ["companyName", "company"], "")),
-    email: String(firstDefined(item, ["email"], ""))
+    email: String(firstDefined(item, ["email"], "")),
+    agencyID: String(firstDefined(item, ["agencyID", "agencyId", "uuid", "uri"], "")).trim()
   };
+}
+
+export function agencyRegistrationUrl(agencyID, base = AGENCY_REGISTRATION_BASE) {
+  const normalizedID = String(agencyID ?? "").trim();
+  if (!normalizedID) return "";
+  const url = new URL(base);
+  url.searchParams.set("uuid", normalizedID);
+  return url.toString();
 }
 
 function isLocalPreview() {
@@ -364,6 +374,77 @@ function renderAgencyIdentity() {
   if (account) account.textContent = agency.companyName ? agency.name : (agency.email || "代理商账户");
   const avatar = document.getElementById("agencyAvatar");
   if (avatar) avatar.textContent = display.slice(0, 1).toUpperCase() || "A";
+  renderAgencyRegistration();
+}
+
+function renderAgencyRegistration() {
+  const input = document.getElementById("agencyRegistrationUrl");
+  const copyButton = document.getElementById("agencyCopyRegistrationUrl");
+  const openLink = document.getElementById("agencyOpenRegistrationUrl");
+  const hint = document.getElementById("agencyRegistrationHint");
+  const qrContainer = document.getElementById("agencyRegistrationQr");
+  const downloadButton = document.getElementById("agencyDownloadRegistrationQr");
+  if (!(input && copyButton && openLink && hint && qrContainer && downloadButton)) return;
+
+  const url = agencyRegistrationUrl(managerState.agency?.agencyID);
+  input.value = url;
+  input.placeholder = url ? "" : "未获取到代理商专属 ID";
+  copyButton.disabled = !url;
+  openLink.href = url || "#";
+  openLink.setAttribute("aria-disabled", String(!url));
+  openLink.tabIndex = url ? 0 : -1;
+  hint.textContent = url
+    ? "客户通过此链接注册后，将自动归属到当前代理商账户。"
+    : "正在读取代理商专属链接；若持续不可用，请联系企业服务核对代理商权限。";
+
+  qrContainer.replaceChildren();
+  downloadButton.disabled = true;
+  if (!url) {
+    qrContainer.innerHTML = '<span><i data-lucide="qr-code" aria-hidden="true"></i>等待专属链接</span>';
+  } else if (typeof window.QRCode !== "function") {
+    qrContainer.innerHTML = '<span><i data-lucide="triangle-alert" aria-hidden="true"></i>二维码加载失败</span>';
+  } else {
+    new window.QRCode(qrContainer, {
+      text: url,
+      width: 136,
+      height: 136,
+      colorDark: "#102033",
+      colorLight: "#ffffff",
+      correctLevel: window.QRCode.CorrectLevel?.M
+    });
+    downloadButton.disabled = false;
+  }
+  refreshIcons();
+}
+
+async function copyAgencyRegistrationUrl() {
+  const input = document.getElementById("agencyRegistrationUrl");
+  if (!input?.value) return;
+  try {
+    await navigator.clipboard.writeText(input.value);
+  } catch {
+    input.focus();
+    input.select();
+    document.execCommand("copy");
+    input.setSelectionRange(0, 0);
+  }
+  toast("专属注册链接已复制");
+}
+
+function downloadAgencyRegistrationQr() {
+  const qrContainer = document.getElementById("agencyRegistrationQr");
+  const canvas = qrContainer?.querySelector("canvas");
+  const image = qrContainer?.querySelector("img");
+  const dataUrl = canvas?.toDataURL("image/png") || image?.src || "";
+  if (!dataUrl.startsWith("data:image/")) {
+    toast("二维码尚未生成，请稍后重试");
+    return;
+  }
+  const anchor = document.createElement("a");
+  anchor.href = dataUrl;
+  anchor.download = `123proxy-agency-${managerState.agency?.agencyID || "registration"}.png`;
+  anchor.click();
+  toast("二维码图片已下载");
 }
 
 function renderMetrics() {
@@ -415,11 +496,11 @@ function renderCustomerRows() {
 
 async function loadAgency() {
   try {
-    managerState.agency = normalizeAgency(await request("/accsrv/0xagency/current"));
+    managerState.agency = normalizeAgencyPayload(await request("/accsrv/0xagency/current"));
     renderAgencyIdentity();
   } catch (error) {
     if (![401, 403].includes(error.status)) {
-      managerState.agency = { name: "代理商账户", companyName: "", email: "" };
+      managerState.agency = { name: "代理商账户", companyName: "", email: "", agencyID: "" };
       renderAgencyIdentity();
     }
   }
@@ -555,6 +636,11 @@ function initManagerEvents() {
   });
   document.getElementById("agencyMobileMenu").addEventListener("click", () => {
     document.body.classList.toggle("is-menu-open");
+  });
+  document.getElementById("agencyCopyRegistrationUrl").addEventListener("click", copyAgencyRegistrationUrl);
+  document.getElementById("agencyDownloadRegistrationQr").addEventListener("click", downloadAgencyRegistrationQr);
+  document.getElementById("agencyOpenRegistrationUrl").addEventListener("click", (event) => {
+    if (event.currentTarget.getAttribute("aria-disabled") === "true") event.preventDefault();
   });
   document.getElementById("agencyLogout").addEventListener("click", async () => {
     const token = accessToken();

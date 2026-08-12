@@ -324,9 +324,9 @@
         phone: phone.value.trim(),
         password: password.value,
         otp: "111111",
-        source: query.get("ht") || "",
-        referer: query.get("hp") || "",
-        agencyID: query.get("h") || ""
+        source: query.get("source") || query.get("ht") || "",
+        referer: query.get("referer") || query.get("hp") || "",
+        agencyID: query.get("uuid") || query.get("agencyID") || query.get("h") || ""
       };
       try {
         await request("/accsrv/", {

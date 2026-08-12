@@ -3,10 +3,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  agencyRegistrationUrl,
   agencyCustomerPath,
   normalizeBillDetailPayload,
   normalizeCustomerPayload,
-  normalizeIdentityPayload
+  normalizeIdentityPayload,
+  normalizeAgencyPayload
 } from "../console/assets/agency.js";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -66,6 +68,20 @@ const identity = normalizeIdentityPayload({
 assert.equal(identity.username, "u13800138000");
 assert.equal(identity.jobTitle, "爬虫工程师");
 
+const agency = normalizeAgencyPayload({
+  data: {
+    name: "agency-demo",
+    companyName: "数据合作伙伴",
+    agencyID: "f5b9e19f-16e2-45d7-9e00-f51095a256d81714636091305"
+  }
+});
+assert.equal(agency.agencyID, "f5b9e19f-16e2-45d7-9e00-f51095a256d81714636091305");
+assert.equal(
+  agencyRegistrationUrl(agency.agencyID),
+  "https://console.123proxy.cn/apiv1/yonghu/register?uuid=f5b9e19f-16e2-45d7-9e00-f51095a256d81714636091305"
+);
+assert.equal(agencyRegistrationUrl(""), "");
+
 const loginHtml = await readFile(path.join(rootDir, "console", "agency-login.html"), "utf8");
 const managerHtml = await readFile(path.join(rootDir, "console", "agency-manager.html"), "utf8");
 const nginx = await readFile(path.join(rootDir, "deploy", "nginx", "site.conf.template"), "utf8");
@@ -74,10 +90,18 @@ assert.equal(loginHtml.includes('data-agency-page="login"'), true);
 assert.equal(loginHtml.includes('id="agencyLoginForm"'), true);
 assert.equal(managerHtml.includes('data-agency-page="manager"'), true);
 assert.equal(managerHtml.includes('id="agencyCustomerRows"'), true);
+assert.equal(managerHtml.includes('id="agencyRegistrationUrl"'), true);
+assert.equal(managerHtml.includes('id="agencyCopyRegistrationUrl"'), true);
+assert.equal(managerHtml.includes('id="agencyOpenRegistrationUrl"'), true);
+assert.equal(managerHtml.includes('id="agencyRegistrationQr"'), true);
+assert.equal(managerHtml.includes('id="agencyDownloadRegistrationQr"'), true);
+assert.equal(managerHtml.includes('app/vendor/qrcode.min.js?v=1.0.0'), true);
+assert.equal(managerHtml.includes("cdn.jsdelivr.net/npm/qrcode"), false);
 assert.equal(managerHtml.includes('id="agencyIdentityDialog"'), true);
 assert.equal(managerHtml.includes('id="agencyBillDialog"'), true);
 assert.equal(nginx.includes("location = /apiv1/managements/login-page"), true);
 assert.equal(nginx.includes("agencyconsole/agency-manager"), true);
 assert.equal(nginx.includes("try_files /agency-manager.html =404"), true);
+assert.equal(nginx.includes("return 302 /register.html$is_args$args"), true);
 
-console.log("Console agency audit passed: login, customer search, profile and monthly bill detail");
+console.log("Console agency audit passed: referral link and QR code, login, customer search, profile and monthly bill detail");
