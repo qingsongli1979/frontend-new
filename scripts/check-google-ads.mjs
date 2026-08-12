@@ -21,7 +21,14 @@ for (const [name, html] of [["register", registerPage], ["console app", consoleP
   assert.match(html, /AW-11399174770/, `${name}: Google Ads destination is missing`);
   assert.match(html, /\/assets\/google-ads\.js/, `${name}: conversion tracker is missing`);
 }
-assert.match(consolePage, /"purchase":"SuudCJ3Tyv4YEPK0xrsq"/, "existing 123Proxy purchase conversion label is missing");
+for (const [type, label] of [
+  ["registration", "jcW6CPnl2OAcEPK0xrsq"],
+  ["trial", "hua4CP7U1uAcEPK0xrsq"],
+  ["consultation", "oIxHCIT4yOAcEPK0xrsq"],
+  ["purchase", "SuudCJ3Tyv4YEPK0xrsq"]
+]) {
+  assert.match(consolePage, new RegExp(`"${type}":"${label}"`), `${type}: Google Ads conversion label is missing`);
+}
 
 assert.match(contactPage, /data-google-ads-conversion="consultation"/, "contact: consultation channel is not tracked");
 assert.match(contactPage, /data-google-ads-conversion="trial"/, "contact: trial channel is not tracked");

@@ -32,9 +32,9 @@ function googleAdsConversionLabel(environmentName) {
 const googleAdsConversionConfig = {
   adsId: googleAdsId,
   labels: {
-    registration: googleAdsConversionLabel("GOOGLE_ADS_REGISTRATION_LABEL"),
-    trial: googleAdsConversionLabel("GOOGLE_ADS_TRIAL_LABEL"),
-    consultation: googleAdsConversionLabel("GOOGLE_ADS_CONSULTATION_LABEL"),
+    registration: googleAdsConversionLabel("GOOGLE_ADS_REGISTRATION_LABEL") || "jcW6CPnl2OAcEPK0xrsq",
+    trial: googleAdsConversionLabel("GOOGLE_ADS_TRIAL_LABEL") || "hua4CP7U1uAcEPK0xrsq",
+    consultation: googleAdsConversionLabel("GOOGLE_ADS_CONSULTATION_LABEL") || "oIxHCIT4yOAcEPK0xrsq",
     // Reuse the 123Proxy "buy button" action found in the original React site,
     // but fire it only after the backend confirms a paid order.
     purchase: googleAdsConversionLabel("GOOGLE_ADS_PURCHASE_LABEL") || "SuudCJ3Tyv4YEPK0xrsq",
