@@ -2939,3 +2939,40 @@ body.site-refined[data-solution] .cta-band {
     width: 74px;
   }
 }
+
+/* Keep wide mega menus reachable during slightly diagonal pointer movement. */
+.nav-item.is-hover-open .mega-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+.nav-item.is-hover-open .nav-trigger::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nav-item.is-hover-open .nav-trigger > svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-item::before {
+    position: absolute;
+    top: calc(100% - 2px);
+    right: -18px;
+    left: -18px;
+    z-index: 59;
+    height: 14px;
+    content: "";
+    pointer-events: none;
+  }
+
+  .nav-item:hover::before,
+  .nav-item:focus-within::before,
+  .nav-item.is-open::before,
+  .nav-item.is-hover-open::before {
+    pointer-events: auto;
+  }
+}

@@ -13,13 +13,30 @@ if (menuToggle && mobileMenu) {
   });
 }
 
-document.querySelectorAll(".nav-item").forEach((item) => {
+const navItems = [...document.querySelectorAll(".nav-item")];
+const megaMenuCloseTimers = new WeakMap();
+const hasPreciseHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+navItems.forEach((item) => {
   const trigger = item.querySelector(".nav-trigger");
   if (!trigger) return;
 
+  if (hasPreciseHover) {
+    item.addEventListener("pointerenter", () => {
+      window.clearTimeout(megaMenuCloseTimers.get(item));
+      item.classList.add("is-hover-open");
+    });
+
+    item.addEventListener("pointerleave", () => {
+      window.clearTimeout(megaMenuCloseTimers.get(item));
+      const timer = window.setTimeout(() => item.classList.remove("is-hover-open"), 240);
+      megaMenuCloseTimers.set(item, timer);
+    });
+  }
+
   trigger.addEventListener("click", () => {
     const wasOpen = item.classList.contains("is-open");
-    document.querySelectorAll(".nav-item.is-open").forEach((openItem) => {
+    navItems.forEach((openItem) => {
       openItem.classList.remove("is-open");
       openItem.querySelector(".nav-trigger")?.setAttribute("aria-expanded", "false");
     });
@@ -30,8 +47,8 @@ document.querySelectorAll(".nav-item").forEach((item) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  document.querySelectorAll(".nav-item.is-open").forEach((item) => {
-    item.classList.remove("is-open");
+  navItems.forEach((item) => {
+    item.classList.remove("is-open", "is-hover-open");
     item.querySelector(".nav-trigger")?.setAttribute("aria-expanded", "false");
   });
   mobileMenu?.classList.remove("is-open");

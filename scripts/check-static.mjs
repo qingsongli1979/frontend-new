@@ -572,7 +572,7 @@ for (const [zhRoute, enRoute] of routePairs) {
   const file = fileFromRoute(zhRoute);
   const html = await readFile(path.join(rootDir, file), "utf8");
   expect(
-    html.includes("assets/visual-refinement.css?v=20260813-03"),
+    html.includes("assets/visual-refinement.css?v=20260813-05"),
     `${file}: stale visual refinement asset version`
   );
   expect(html.includes("site-refined"), `${file}: missing refined production class`);
@@ -580,7 +580,7 @@ for (const [zhRoute, enRoute] of routePairs) {
   const englishFile = fileFromRoute(enRoute);
   const englishHtml = await readFile(path.join(rootDir, englishFile), "utf8");
   expect(
-    englishHtml.includes("assets/product-detail.css?v=20260813-03"),
+    englishHtml.includes("assets/product-detail.css?v=20260813-05"),
     `${englishFile}: stale public layout asset version`
   );
 }
@@ -594,9 +594,9 @@ expect(codeSolutionPage.includes("公开代码同步任务"), "ai-github-proxy.h
 
 const pricingPage = await readFile(path.join(rootDir, "pricing.html"), "utf8");
 expect(pricingPage.includes('class="pricing-refined site-refined"'), "pricing.html: refined pricing class missing");
-expect(pricingPage.includes('assets/pricing.js?v=20260813-03'), "pricing.html: pricing asset cache version is stale");
+expect(pricingPage.includes('assets/pricing.js?v=20260813-05'), "pricing.html: pricing asset cache version is stale");
 const englishPricingPage = await readFile(path.join(rootDir, "en", "pricing.html"), "utf8");
-expect(englishPricingPage.includes('../assets/pricing.js?v=20260813-03'), "en/pricing.html: pricing asset cache version is stale");
+expect(englishPricingPage.includes('../assets/pricing.js?v=20260813-05'), "en/pricing.html: pricing asset cache version is stale");
 for (const description of refinedProductDescriptions) {
   expect(homepage.includes(description), `index.html: missing canonical product menu copy: ${description}`);
   expect(pricingPage.includes(description), `pricing.html: product menu copy differs from homepage: ${description}`);
@@ -789,6 +789,8 @@ expect(consoleAgencyJs.includes("new window.QRCode"), "console/assets/agency.js:
 
 const productDetailCss = await readFile(path.join(rootDir, "assets", "product-detail.css"), "utf8");
 const visualRefinementCss = await readFile(path.join(rootDir, "assets", "visual-refinement.css"), "utf8");
+const productStaticJs = await readFile(path.join(rootDir, "assets", "product-static.js"), "utf8");
+const productDetailJs = await readFile(path.join(rootDir, "assets", "product-detail.js"), "utf8");
 for (const selector of [".eyebrow", ".section-kicker", ".docs-eyebrow", ".status-eyebrow"]) {
   expect(productDetailCss.includes(selector), `product-detail.css: missing simplified label selector ${selector}`);
 }
@@ -805,6 +807,13 @@ for (const css of [productDetailCss, visualRefinementCss]) {
   expect(css.includes("width: 84px"), "public desktop header wordmark is not reduced to 84px");
   expect(css.includes("width: 32px"), "public mobile header logo mark is not reduced to 32px");
   expect(css.includes("width: 74px"), "public mobile header wordmark is not reduced to 74px");
+  expect(css.includes(".nav-item.is-hover-open .mega-menu"), "public mega menu lacks hover-intent open state");
+  expect(css.includes(".nav-item.is-hover-open::before"), "public mega menu lacks a pointer transition bridge");
+}
+for (const script of [productStaticJs, productDetailJs, homepage, highBandwidthPage]) {
+  expect(script.includes('addEventListener("pointerenter"'), "public mega menu lacks pointer entry handling");
+  expect(script.includes('addEventListener("pointerleave"'), "public mega menu lacks delayed pointer exit handling");
+  expect(script.includes('classList.remove("is-hover-open"), 240'), "public mega menu close delay is missing");
 }
 
 console.log(`Static audit passed: ${routePairs.length * 2} public routes, 4 console auth routes, 1 agency manager, 1 public agreement, 1 legacy redirect, 1 noindex comparison page, metadata, JSON-LD, sitemap.xml, robots.txt`);

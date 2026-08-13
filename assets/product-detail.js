@@ -1896,8 +1896,21 @@ function initInteractions() {
   });
 
   const navItems = document.querySelectorAll(".nav-item");
+  const megaMenuCloseTimers = new WeakMap();
+  const hasPreciseHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   navItems.forEach((item) => {
     const trigger = item.querySelector(".nav-trigger");
+    if (hasPreciseHover) {
+      item.addEventListener("pointerenter", () => {
+        window.clearTimeout(megaMenuCloseTimers.get(item));
+        item.classList.add("is-hover-open");
+      });
+      item.addEventListener("pointerleave", () => {
+        window.clearTimeout(megaMenuCloseTimers.get(item));
+        const timer = window.setTimeout(() => item.classList.remove("is-hover-open"), 240);
+        megaMenuCloseTimers.set(item, timer);
+      });
+    }
     trigger.addEventListener("click", () => {
       const willOpen = !item.classList.contains("is-open");
       navItems.forEach((other) => {
@@ -1912,7 +1925,7 @@ function initInteractions() {
   document.addEventListener("click", (event) => {
     if (!event.target.closest(".nav-item")) {
       navItems.forEach((item) => {
-        item.classList.remove("is-open");
+        item.classList.remove("is-open", "is-hover-open");
         item.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
       });
     }
@@ -1921,7 +1934,7 @@ function initInteractions() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       navItems.forEach((item) => {
-        item.classList.remove("is-open");
+        item.classList.remove("is-open", "is-hover-open");
         item.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
       });
     }

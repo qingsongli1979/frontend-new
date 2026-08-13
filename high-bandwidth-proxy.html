@@ -2192,7 +2192,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="assets/visual-refinement.css?v=20260813-03">
+  <link rel="stylesheet" href="assets/visual-refinement.css?v=20260813-05">
 <!-- SEO_META_START -->
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://www.123proxy.cn/high-bandwidth-proxy.html">
@@ -2961,8 +2961,21 @@ print(response.status_code)</code></pre>
     });
 
     const navItems = document.querySelectorAll(".nav-item");
+    const megaMenuCloseTimers = new WeakMap();
+    const hasPreciseHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     navItems.forEach((item) => {
       const trigger = item.querySelector(".nav-trigger");
+      if (hasPreciseHover) {
+        item.addEventListener("pointerenter", () => {
+          window.clearTimeout(megaMenuCloseTimers.get(item));
+          item.classList.add("is-hover-open");
+        });
+        item.addEventListener("pointerleave", () => {
+          window.clearTimeout(megaMenuCloseTimers.get(item));
+          const timer = window.setTimeout(() => item.classList.remove("is-hover-open"), 240);
+          megaMenuCloseTimers.set(item, timer);
+        });
+      }
       trigger.addEventListener("click", () => {
         const willOpen = !item.classList.contains("is-open");
         navItems.forEach((otherItem) => {
@@ -2977,7 +2990,7 @@ print(response.status_code)</code></pre>
     document.addEventListener("click", (event) => {
       if (!event.target.closest(".nav-item")) {
         navItems.forEach((item) => {
-          item.classList.remove("is-open");
+          item.classList.remove("is-open", "is-hover-open");
           item.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
         });
       }
@@ -2986,7 +2999,7 @@ print(response.status_code)</code></pre>
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         navItems.forEach((item) => {
-          item.classList.remove("is-open");
+          item.classList.remove("is-open", "is-hover-open");
           item.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
         });
       }

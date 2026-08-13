@@ -3859,6 +3859,43 @@ body[data-product="residential"] .hero h1 {
   }
 }
 
+/* Give desktop pointers a forgiving path from a nav trigger into its wide panel. */
+.nav-item.is-hover-open .mega-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+.nav-item.is-hover-open .nav-trigger::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nav-item.is-hover-open .nav-trigger > svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-item::before {
+    position: absolute;
+    top: calc(100% - 2px);
+    right: -18px;
+    left: -18px;
+    z-index: 59;
+    height: 14px;
+    content: "";
+    pointer-events: none;
+  }
+
+  .nav-item:hover::before,
+  .nav-item:focus-within::before,
+  .nav-item.is-open::before,
+  .nav-item.is-hover-open::before {
+    pointer-events: auto;
+  }
+}
+
 /* Focused standard-product pages: port plans, fixed datacenter, and static ISP. */
 body[data-product="unlimitedResidential"] .hero h1,
 body[data-product="staticDatacenter"] .hero h1,

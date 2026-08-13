@@ -14,9 +14,9 @@ import { renderStatusDocument, statusZh } from "./status-content.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(scriptDir, "..");
-const assetVersion = "20260813-03";
-const pricingAssetVersion = "20260813-03";
-const refinementAssetVersion = "20260813-03";
+const assetVersion = "20260813-05";
+const pricingAssetVersion = "20260813-05";
+const refinementAssetVersion = "20260813-05";
 const conversionAssetVersion = "20260813-01";
 const googleTagId = "GT-WF3B5LNX";
 const googleAnalyticsId = "G-HKXV4GGFVT";
