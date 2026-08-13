@@ -590,7 +590,7 @@ for (const file of [
 ]) {
   const html = await readFile(path.join(rootDir, file), "utf8");
   expect(
-    html.includes("assets/visual-refinement.css?v=20260731-01"),
+    html.includes("assets/visual-refinement.css?v=20260813-03"),
     `${file}: stale visual refinement asset version`
   );
 }
@@ -604,9 +604,9 @@ expect(codeSolutionPage.includes("公开代码同步任务"), "ai-github-proxy.h
 
 const pricingPage = await readFile(path.join(rootDir, "pricing.html"), "utf8");
 expect(pricingPage.includes('class="pricing-refined site-refined"'), "pricing.html: refined pricing class missing");
-expect(pricingPage.includes('assets/pricing.js?v=20260731-01'), "pricing.html: pricing asset cache version is stale");
+expect(pricingPage.includes('assets/pricing.js?v=20260813-03'), "pricing.html: pricing asset cache version is stale");
 const englishPricingPage = await readFile(path.join(rootDir, "en", "pricing.html"), "utf8");
-expect(englishPricingPage.includes('../assets/pricing.js?v=20260731-01'), "en/pricing.html: pricing asset cache version is stale");
+expect(englishPricingPage.includes('../assets/pricing.js?v=20260813-03'), "en/pricing.html: pricing asset cache version is stale");
 for (const description of refinedProductDescriptions) {
   expect(homepage.includes(description), `index.html: missing canonical product menu copy: ${description}`);
   expect(pricingPage.includes(description), `pricing.html: product menu copy differs from homepage: ${description}`);
@@ -789,5 +789,25 @@ expect(consoleLoginPage.includes("assets/auth.js?v=20260812-01"), "console/login
 expect(consoleAgencyCss.includes("123Proxy agency partner console"), "console/assets/agency.css: missing agency asset");
 expect(consoleAgencyJs.includes("123Proxy agency partner console"), "console/assets/agency.js: missing agency asset");
 expect(consoleAgencyJs.includes("new window.QRCode"), "console/assets/agency.js: referral link QR generation is missing");
+
+const productDetailCss = await readFile(path.join(rootDir, "assets", "product-detail.css"), "utf8");
+const visualRefinementCss = await readFile(path.join(rootDir, "assets", "visual-refinement.css"), "utf8");
+for (const selector of [".eyebrow", ".section-kicker", ".docs-eyebrow", ".status-eyebrow"]) {
+  expect(productDetailCss.includes(selector), `product-detail.css: missing simplified label selector ${selector}`);
+}
+for (const selector of [".hero-visual-label", ".client-wall-label", ".contact-section-label"]) {
+  expect(visualRefinementCss.includes(selector), `visual-refinement.css: missing simplified label selector ${selector}`);
+}
+expect(
+  productDetailCss.includes("display: none !important") && visualRefinementCss.includes("display: none !important"),
+  "public decorative labels are not hidden"
+);
+for (const css of [productDetailCss, visualRefinementCss]) {
+  expect(css.includes(".header .brand-mark"), "public header logo mark is not scoped independently from the footer");
+  expect(css.includes("width: 36px"), "public desktop header logo mark is not reduced to 36px");
+  expect(css.includes("width: 84px"), "public desktop header wordmark is not reduced to 84px");
+  expect(css.includes("width: 32px"), "public mobile header logo mark is not reduced to 32px");
+  expect(css.includes("width: 74px"), "public mobile header wordmark is not reduced to 74px");
+}
 
 console.log(`Static audit passed: ${routePairs.length * 2} public routes, 4 console auth routes, 1 agency manager, 1 public agreement, 1 legacy redirect, 1 noindex comparison page, metadata, JSON-LD, sitemap.xml, robots.txt`);

@@ -2873,3 +2873,69 @@ body.site-refined[data-solution] .cta-band {
   gap: 14px;
   padding: 24px !important;
 }
+
+/* Simplify public-page hierarchy by removing repeated decorative micro-labels. */
+:is(.home-refined, .pricing-refined, .site-refined) :is(
+  .eyebrow,
+  .section-kicker,
+  .hero-eyebrow,
+  .visual-topline,
+  .hero-visual-label,
+  .client-wall-label,
+  .enterprise-eyebrow,
+  .network-eyebrow,
+  .network-kicker,
+  .pricing-eyebrow,
+  .contact-eyebrow,
+  .contact-section-label,
+  .status-eyebrow
+) {
+  display: none !important;
+}
+
+/* Reduce the visual weight of header branding without changing footer logos. */
+:is(.home-refined, .pricing-refined, .site-refined) .header .brand {
+  min-width: 130px;
+  gap: 9px;
+}
+
+:is(.home-refined, .pricing-refined, .site-refined) .header .brand-mark {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+}
+
+:is(.home-refined, .pricing-refined, .site-refined) .header .brand-wordmark {
+  height: 32px;
+}
+
+:is(.home-refined, .pricing-refined, .site-refined) .header :is(
+  .brand-wordmark img,
+  .wordmark-proxy-original
+) {
+  width: 84px;
+}
+
+@media (max-width: 560px) {
+  :is(.home-refined, .pricing-refined, .site-refined) .header .brand {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  :is(.home-refined, .pricing-refined, .site-refined) .header .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  :is(.home-refined, .pricing-refined, .site-refined) .header .brand-wordmark {
+    height: 29px;
+  }
+
+  :is(.home-refined, .pricing-refined, .site-refined) .header :is(
+    .brand-wordmark img,
+    .wordmark-proxy-original
+  ) {
+    width: 74px;
+  }
+}

@@ -6,6 +6,25 @@
   font-display: swap;
 }
 
+/* Decorative taxonomy labels repeated the same hierarchy on every page.
+   Keep the meaningful headings and card status text, but remove this extra UI layer. */
+:is(
+  .eyebrow,
+  .section-kicker,
+  .hero-eyebrow,
+  .visual-topline,
+  .enterprise-eyebrow,
+  .network-eyebrow,
+  .network-kicker,
+  .pricing-eyebrow,
+  .contact-eyebrow,
+  .contact-section-label,
+  .docs-eyebrow,
+  .status-eyebrow
+) {
+  display: none !important;
+}
+
 @font-face {
   font-family: "Montserrat";
   src: url("./montserrat-latin-variable.woff2") format("woff2");
@@ -4553,4 +4572,48 @@ body.locale-en .capability-item {
   justify-items: start;
   gap: 14px;
   padding: 24px !important;
+}
+
+/* Keep header branding quieter than the primary navigation and CTA.
+   Footer branding intentionally retains its original dimensions. */
+.header .brand {
+  min-width: 130px;
+  gap: 9px;
+}
+
+.header .brand-mark {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+}
+
+.header .brand-wordmark {
+  height: 32px;
+}
+
+.header .brand-wordmark img,
+.header .wordmark-proxy-original {
+  width: 84px;
+}
+
+@media (max-width: 560px) {
+  .header .brand {
+    min-width: 0;
+    gap: 7px;
+  }
+
+  .header .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .header .brand-wordmark {
+    height: 29px;
+  }
+
+  .header .brand-wordmark img,
+  .header .wordmark-proxy-original {
+    width: 74px;
+  }
 }
