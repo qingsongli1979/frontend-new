@@ -19,6 +19,7 @@ const pricingAssetVersion = "20260731-01";
 const refinementAssetVersion = "20260731-01";
 const conversionAssetVersion = "20260813-01";
 const googleTagId = "GT-WF3B5LNX";
+const googleAnalyticsId = "G-HKXV4GGFVT";
 const googleAdsId = "AW-11399174770";
 
 function googleAdsConversionLabel(environmentName) {
@@ -600,6 +601,7 @@ function googleTagBlock() {
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', '${googleTagId}');
+    gtag('config', '${googleAnalyticsId}');
     gtag('config', '${googleAdsId}');
     window.ProxyGoogleAdsConfig = ${JSON.stringify(googleAdsConversionConfig)};
   </script>

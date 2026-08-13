@@ -51,6 +51,7 @@ const developerRoutes = [
 ];
 
 const googleTagId = "GT-WF3B5LNX";
+const googleAnalyticsId = "G-HKXV4GGFVT";
 const googleAdsId = "AW-11399174770";
 
 const developerGuideFacts = new Map([
@@ -239,6 +240,7 @@ for (const route of [...routePairs.flat(), "/status/", "/contact.html", ...devel
     `${file}: expected one Google tag loader`
   );
   expect(count(html, new RegExp(`gtag\\('config', '${googleTagId}'\\)`, "g")) === 1, `${file}: missing Google tag config`);
+  expect(count(html, new RegExp(`gtag\\('config', '${googleAnalyticsId}'\\)`, "g")) === 1, `${file}: missing Google Analytics config`);
   expect(count(html, new RegExp(`gtag\\('config', '${googleAdsId}'\\)`, "g")) === 1, `${file}: missing Google Ads config`);
 }
 

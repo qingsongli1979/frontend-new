@@ -18,6 +18,7 @@ const [trackerSource, registerPage, consolePage, contactPage, authSource, commer
 ]);
 
 for (const [name, html] of [["register", registerPage], ["console app", consolePage]]) {
+  assert.match(html, /G-HKXV4GGFVT/, `${name}: Google Analytics destination is missing`);
   assert.match(html, /AW-11399174770/, `${name}: Google Ads destination is missing`);
   assert.match(html, /\/assets\/google-ads\.js/, `${name}: conversion tracker is missing`);
 }
