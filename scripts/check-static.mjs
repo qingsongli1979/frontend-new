@@ -568,30 +568,20 @@ const refinedProductDescriptions = [
   "固定住宅出口，兼顾身份与稳定性"
 ];
 
-for (const [zhRoute] of routePairs) {
+for (const [zhRoute, enRoute] of routePairs) {
   const file = fileFromRoute(zhRoute);
-  const html = await readFile(path.join(rootDir, file), "utf8");
-  expect(html.includes("assets/visual-refinement.css"), `${file}: missing refined visual layer`);
-  expect(html.includes("site-refined"), `${file}: missing refined production class`);
-}
-
-for (const file of [
-  "scraping-rotating-proxy.html",
-  "residential-proxy.html",
-  "unlimited-residential-proxy.html",
-  "static-datacenter-proxy.html",
-  "static-residential-proxy.html",
-  "ai-data.html",
-  "ai-video-proxy.html",
-  "ai-image-proxy.html",
-  "ai-github-proxy.html",
-  "ai-text-proxy.html",
-  "ai-youtube-api.html"
-]) {
   const html = await readFile(path.join(rootDir, file), "utf8");
   expect(
     html.includes("assets/visual-refinement.css?v=20260813-03"),
     `${file}: stale visual refinement asset version`
+  );
+  expect(html.includes("site-refined"), `${file}: missing refined production class`);
+
+  const englishFile = fileFromRoute(enRoute);
+  const englishHtml = await readFile(path.join(rootDir, englishFile), "utf8");
+  expect(
+    englishHtml.includes("assets/product-detail.css?v=20260813-03"),
+    `${englishFile}: stale public layout asset version`
   );
 }
 
@@ -702,6 +692,7 @@ for (const [file, pageMarker, formId] of authRoutes) {
   expect(html.includes(`id="${formId}"`), `${file}: missing functional form`);
   expect(html.includes("<h1"), `${file}: missing context H1`);
   expect(html.includes('href="https://www.123proxy.cn/agreement.html"'), `${file}: agreement must use the public website URL`);
+  expect(html.includes('assets/auth.css?v=20260813-04'), `${file}: authentication stylesheet cache version is stale`);
 }
 
 const documentationLinkFiles = [
@@ -766,8 +757,12 @@ expect(agreementPage.includes('<link rel="canonical" href="https://www.123proxy.
 expect(agreementPage.includes("<h1>123Proxy 用户服务条款</h1>"), "agreement.html: missing agreement H1");
 expect(agreementPage.includes('id="other"'), "agreement.html: incomplete agreement sections");
 expect(agreementPage.includes('href="assets/favicon.svg"'), "agreement.html: missing favicon");
-expect(agreementPage.includes('href="assets/agreement.css'), "agreement.html: must use the website legal stylesheet");
+expect(agreementPage.includes('href="assets/agreement.css?v=20260813-04"'), "agreement.html: legal stylesheet cache version is stale");
 expect(agreementPage.includes('href="https://console.123proxy.cn/register.html"'), "agreement.html: registration link must use the console origin");
+
+const agreementCss = await readFile(path.join(rootDir, "assets", "agreement.css"), "utf8");
+expect(/\.auth-brand-mark\s*\{[^}]*width:\s*36px/.test(agreementCss), "agreement.css: desktop brand mark is not 36px");
+expect(/\.auth-brand-word\s*\{[^}]*width:\s*84px/.test(agreementCss), "agreement.css: desktop wordmark is not 84px");
 
 const legacyAgreement = await readFile(path.join(rootDir, "console", "aggrement.html"), "utf8");
 expect(legacyAgreement.includes('url=https://www.123proxy.cn/agreement.html'), "console/aggrement.html: legacy redirect must target the public agreement");
@@ -784,6 +779,8 @@ expect(consoleAuthJs.includes("localStorage.removeItem(TOKEN_KEY)"), "console/as
 expect(consoleAuthJs.includes('query.get("uuid")'), "console/assets/auth.js: legacy agency registration links must preserve uuid attribution");
 expect(consoleAuthJs.includes('query.get("source")'), "console/assets/auth.js: legacy registration links must preserve source attribution");
 expect(consoleAuthJs.includes('query.get("referer")'), "console/assets/auth.js: legacy registration links must preserve referer attribution");
+expect(/\.auth-brand-mark\s*\{[^}]*width:\s*36px/.test(consoleAuthCss), "console/assets/auth.css: desktop brand mark is not 36px");
+expect(/\.auth-brand-word\s*\{[^}]*width:\s*84px/.test(consoleAuthCss), "console/assets/auth.css: desktop wordmark is not 84px");
 const consoleLoginPage = await readFile(path.join(rootDir, "console", "login.html"), "utf8");
 expect(consoleLoginPage.includes("assets/auth.js?v=20260812-01"), "console/login.html: authentication asset cache version is stale");
 expect(consoleAgencyCss.includes("123Proxy agency partner console"), "console/assets/agency.css: missing agency asset");

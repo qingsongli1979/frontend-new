@@ -1298,6 +1298,7 @@ async function patchChineseStaticPage(file, { name, alternateFile, isHome = fals
     isHome
   }));
   html = upsertFavicon(html, "assets/favicon.svg");
+  html = applyChineseRefinement(html);
   await writeFile(filePath, html, "utf8");
 }
 

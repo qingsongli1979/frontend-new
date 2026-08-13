@@ -105,20 +105,20 @@ img {
 }
 
 .auth-brand {
-  min-width: 146px;
+  min-width: 130px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .auth-brand-mark {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
 }
 
 .auth-brand-word {
-  width: 92px;
+  width: 84px;
   height: auto;
 }
 
@@ -1175,13 +1175,18 @@ img {
   }
 
   .auth-brand-mark {
-    width: 35px;
-    height: 35px;
-    flex-basis: 35px;
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
   }
 
   .auth-brand-word {
-    width: 82px;
+    width: 74px;
+  }
+
+  .auth-brand {
+    min-width: 0;
+    gap: 7px;
   }
 
   .auth-header-action {

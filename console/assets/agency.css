@@ -159,12 +159,13 @@
 .agency-brand-row .brand-link {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 }
 
 .agency-brand-row .brand-mark {
-  width: 35px;
-  height: 35px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
 }
 
 .agency-brand-word {

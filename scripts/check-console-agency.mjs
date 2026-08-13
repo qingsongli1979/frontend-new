@@ -84,11 +84,18 @@ assert.equal(agencyRegistrationUrl(""), "");
 
 const loginHtml = await readFile(path.join(rootDir, "console", "agency-login.html"), "utf8");
 const managerHtml = await readFile(path.join(rootDir, "console", "agency-manager.html"), "utf8");
+const agencyCss = await readFile(path.join(rootDir, "console", "assets", "agency.css"), "utf8");
 const nginx = await readFile(path.join(rootDir, "deploy", "nginx", "site.conf.template"), "utf8");
 
 assert.equal(loginHtml.includes('data-agency-page="login"'), true);
 assert.equal(loginHtml.includes('id="agencyLoginForm"'), true);
+assert.equal(loginHtml.includes('assets/auth.css?v=20260813-04'), true);
+assert.equal(loginHtml.includes('assets/agency.css?v=20260813-04'), true);
 assert.equal(managerHtml.includes('data-agency-page="manager"'), true);
+assert.equal(managerHtml.includes('app/console.css?v=20260813-04'), true);
+assert.equal(managerHtml.includes('assets/agency.css?v=20260813-04'), true);
+assert.match(agencyCss, /\.agency-brand-row \.brand-mark\s*\{[^}]*width:\s*34px;[^}]*flex:\s*0 0 34px;/);
+assert.match(agencyCss, /\.agency-brand-word\s*\{[^}]*width:\s*78px;/);
 assert.equal(managerHtml.includes('id="agencyCustomerRows"'), true);
 assert.equal(managerHtml.includes('id="agencyRegistrationUrl"'), true);
 assert.equal(managerHtml.includes('id="agencyCopyRegistrationUrl"'), true);
