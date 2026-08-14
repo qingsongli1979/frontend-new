@@ -156,6 +156,7 @@ assert.match(
   /Number\(item\.discount\) > 0\.1 && Number\(item\.discount\) < 1/
 );
 const commerceScript = await readFile(path.join(rootDir, "console", "app", "commerce.js"), "utf8");
+const consoleScript = await readFile(path.join(rootDir, "console", "app", "console.js"), "utf8");
 const productsScript = await readFile(path.join(rootDir, "console", "app", "products.js"), "utf8");
 assert.equal(consoleHtml.includes("mailto:sales@123proxy.cn"), false);
 assert.equal(consoleHtml.includes("https://www.123proxy.cn/contact.html#solutions"), true);
@@ -164,6 +165,12 @@ assert.equal(commerceScript.includes("https://www.123proxy.cn/contact.html#servi
 assert.equal(commerceScript.includes("data-open-trial"), false);
 assert.equal(commerceScript.includes("trialRequestDialog"), false);
 assert.equal(commerceScript.includes("handlePaymentReturn"), true);
+assert.match(commerceScript, /paymentReturnKey:\s*""/);
+assert.match(commerceScript, /state\.paymentReturnKey === returnKey && state\.paymentReturnPromise/);
+assert.match(commerceScript, /FULFILLING:\s*\["套餐开通中",\s*"is-waiting"\]/);
+assert.match(consoleScript, /function routeModuleOnce\(moduleKey, handler\)/);
+assert.match(consoleScript, /routeModuleOnce\("commerce:payment-return"/);
+assert.match(consoleScript, /if \(hash !== lastRoutedHash\)/);
 assert.match(commerceScript, /submitPaymentHtml\(html, paymentWindow\)/);
 assert.doesNotMatch(commerceScript, /popup\.document\.write\(String\(html\)\)/);
 assert.equal(productsScript.includes('const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html?intent=trial#service"'), true);

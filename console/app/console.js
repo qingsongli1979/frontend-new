@@ -396,59 +396,89 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+let lastRoutedHash = "";
+let lastRoutedModule = "";
+
+function routeModuleOnce(moduleKey, handler) {
+  if (typeof handler !== "function" || lastRoutedModule === moduleKey) return false;
+  lastRoutedModule = moduleKey;
+  handler();
+  return true;
+}
+
 function routeCurrentHash() {
   setUserMenuOpen(false);
   const hash = window.location.hash || "#overview";
+  if (hash !== lastRoutedHash) {
+    lastRoutedHash = hash;
+    lastRoutedModule = "";
+  }
   const [route] = hash.slice(1).split("?");
   const params = new URLSearchParams(hash.includes("?") ? hash.split("?").slice(1).join("?") : "");
 
   if (route === "purchase") {
     markActiveNav(null);
     showPanel("purchase", "购买套餐");
-    window.ConsoleCommerce?.openPurchase(params.get("product") || "tunnel");
+    routeModuleOnce("commerce:purchase", window.ConsoleCommerce?.openPurchase
+      ? () => window.ConsoleCommerce.openPurchase(params.get("product") || "tunnel")
+      : null);
     return;
   }
   if (route === "order") {
     markActiveNav(document.querySelector('[data-view="orders"]'));
     showPanel("order", "确认订单");
-    window.ConsoleCommerce?.openOrder(params.get("tradeNo") || "");
+    routeModuleOnce("commerce:order", window.ConsoleCommerce?.openOrder
+      ? () => window.ConsoleCommerce.openOrder(params.get("tradeNo") || "")
+      : null);
     return;
   }
   if (route === "payment-return") {
     markActiveNav(document.querySelector('[data-view="orders"]'));
     showPanel("order", "支付结果");
-    window.ConsoleCommerce?.handlePaymentReturn(params);
+    routeModuleOnce("commerce:payment-return", window.ConsoleCommerce?.handlePaymentReturn
+      ? () => window.ConsoleCommerce.handlePaymentReturn(params)
+      : null);
     return;
   }
   if (route === "recharge-return") {
     markActiveNav(document.querySelector('[data-view="billing"]'));
     showPanel("billing", "充值结果");
-    window.ConsoleAccount?.handleRechargeReturn(params);
+    routeModuleOnce("account:recharge-return", window.ConsoleAccount?.handleRechargeReturn
+      ? () => window.ConsoleAccount.handleRechargeReturn(params)
+      : null);
     return;
   }
   if (route === "extract") {
     const productKey = params.get("product") || "tunnel";
     markActiveNav(document.querySelector(`[data-product="${productKey}"]`));
     showPanel("extract", "使用套餐");
-    window.ConsoleExtractor?.open(productKey, params.get("order") || "");
+    routeModuleOnce("extractor:extract", window.ConsoleExtractor?.open
+      ? () => window.ConsoleExtractor.open(productKey, params.get("order") || "")
+      : null);
     return;
   }
   if (route === "usage") {
     markActiveNav(document.querySelector('[data-view="usage"]'));
     showPanel("usage", "用量明细");
-    window.ConsoleAccount?.openUsage();
+    routeModuleOnce("account:usage", window.ConsoleAccount?.openUsage
+      ? () => window.ConsoleAccount.openUsage()
+      : null);
     return;
   }
   if (route === "billing") {
     markActiveNav(document.querySelector('[data-view="billing"]'));
     showPanel("billing", "账单与发票");
-    window.ConsoleAccount?.openBilling(params.get("tab") || "");
+    routeModuleOnce("account:billing", window.ConsoleAccount?.openBilling
+      ? () => window.ConsoleAccount.openBilling(params.get("tab") || "")
+      : null);
     return;
   }
   if (route === "settings") {
     markActiveNav(document.querySelector('[data-view="settings"]'));
     showPanel("settings", "账户设置");
-    window.ConsoleAccount?.openSettings(params.get("tab") || "");
+    routeModuleOnce("account:settings", window.ConsoleAccount?.openSettings
+      ? () => window.ConsoleAccount.openSettings(params.get("tab") || "")
+      : null);
     return;
   }
 
@@ -474,8 +504,16 @@ function routeCurrentHash() {
       settings: "账户设置"
     };
     showPanel(view === "overview" ? "overview" : view, labels[view] || "概览");
-    if (["packages", "users"].includes(view)) window.ConsoleResources?.open(view);
-    if (view === "orders") window.ConsoleCommerce?.openOrders();
+    if (["packages", "users"].includes(view)) {
+      routeModuleOnce(`resources:${view}`, window.ConsoleResources?.open
+        ? () => window.ConsoleResources.open(view)
+        : null);
+    }
+    if (view === "orders") {
+      routeModuleOnce("commerce:orders", window.ConsoleCommerce?.openOrders
+        ? () => window.ConsoleCommerce.openOrders()
+        : null);
+    }
     return;
   }
 

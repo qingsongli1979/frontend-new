@@ -80,6 +80,8 @@ const state = {
   loaded: false,
   paymentOrder: "",
   paymentTradeNo: "",
+  paymentReturnKey: "",
+  paymentReturnPromise: null,
   paymentTimer: null,
   orders: [],
   orderStatusFilter: "",
@@ -583,6 +585,7 @@ function orderStatus(status) {
   return {
     UNPAID: ["待支付", "is-waiting"],
     PAYING: ["支付中", "is-waiting"],
+    FULFILLING: ["套餐开通中", "is-waiting"],
     PAID: ["已支付", "is-active"],
     EXPIRED: ["已失效", "is-expired"],
     FAILURE: ["支付失败", "is-expired"]
@@ -620,6 +623,16 @@ function renderOrder(order, user) {
   const workspace = document.querySelector("#orderWorkspace");
   const status = orderStatus(order.status);
   const payable = ["UNPAID", "PAYING"].includes(order.status);
+  const fulfilling = order.status === "FULFILLING";
+  const paid = order.status === "PAID";
+  const completionIcon = paid ? "circle-check-big" : fulfilling ? "loader-circle" : "circle-alert";
+  const completionMessage = paid
+    ? "套餐已经生效，可前往所有套餐开始使用。"
+    : fulfilling
+      ? "支付已经确认，套餐正在开通，请稍后刷新订单状态。"
+      : "该订单当前无法支付。";
+  const completionHref = paid || fulfilling ? "#packages" : purchaseRoute("tunnel");
+  const completionLabel = paid ? "查看我的套餐" : fulfilling ? "查看开通进度" : "重新购买";
   const balance = number(user?.balance);
   const total = number(order.rate);
   const wechatAvailable = total <= 3000;
@@ -655,8 +668,8 @@ function renderOrder(order, user) {
           <button class="button button-primary payment-submit" id="confirmOrderPayment" type="button">确认支付 ¥${formatMoney(total)}</button>
           <button class="payment-check" id="checkOrderPayment" type="button">已完成在线支付，检查状态</button>
         ` : `
-          <div class="payment-complete"><i data-lucide="${order.status === "PAID" ? "circle-check-big" : "circle-alert"}" aria-hidden="true"></i><strong>${status[0]}</strong><p>${order.status === "PAID" ? "套餐已经生效，可前往所有套餐开始使用。" : "该订单当前无法支付。"}</p></div>
-          <a class="button button-primary payment-submit" href="${order.status === "PAID" ? "#packages" : purchaseRoute("tunnel")}">${order.status === "PAID" ? "查看我的套餐" : "重新购买"}</a>
+          <div class="payment-complete"><i data-lucide="${completionIcon}" aria-hidden="true"></i><strong>${status[0]}</strong><p>${completionMessage}</p></div>
+          <a class="button button-primary payment-submit" href="${completionHref}">${completionLabel}</a>
         `}
       </aside>
     </div>`;
@@ -859,7 +872,28 @@ function notifyPaymentComplete(orderTradeNo) {
   }
 }
 
-async function handlePaymentReturn(params = new URLSearchParams()) {
+function handlePaymentReturn(params = new URLSearchParams()) {
+  const paymentTradeNo = String(params.get("tradeNo") || "");
+  const returnKey = paymentTradeNo || "missing-payment-trade-no";
+  if (state.paymentReturnKey === returnKey && state.paymentReturnPromise) {
+    return state.paymentReturnPromise;
+  }
+
+  const task = processPaymentReturn(params);
+  state.paymentReturnKey = returnKey;
+  state.paymentReturnPromise = task;
+  task.then(
+    () => {
+      if (state.paymentReturnPromise === task) state.paymentReturnPromise = null;
+    },
+    () => {
+      if (state.paymentReturnPromise === task) state.paymentReturnPromise = null;
+    }
+  );
+  return task;
+}
+
+async function processPaymentReturn(params = new URLSearchParams()) {
   const paymentTradeNo = String(params.get("tradeNo") || "");
   const pending = loadPendingPayment(paymentTradeNo);
   if (!paymentTradeNo) {
@@ -943,7 +977,7 @@ function filteredOrders() {
 }
 
 function orderMetricsMarkup(orders) {
-  const unpaid = orders.filter((order) => ["UNPAID", "PAYING"].includes(order.status)).length;
+  const unpaid = orders.filter((order) => ["UNPAID", "PAYING", "FULFILLING"].includes(order.status)).length;
   const paid = orders.filter((order) => order.status === "PAID").length;
   const paidAmount = orders
     .filter((order) => order.status === "PAID")
@@ -974,6 +1008,7 @@ function renderOrders() {
           <option value="PAID" ${state.orderStatusFilter === "PAID" ? "selected" : ""}>已支付</option>
           <option value="UNPAID" ${state.orderStatusFilter === "UNPAID" ? "selected" : ""}>待支付</option>
           <option value="PAYING" ${state.orderStatusFilter === "PAYING" ? "selected" : ""}>支付中</option>
+          <option value="FULFILLING" ${state.orderStatusFilter === "FULFILLING" ? "selected" : ""}>套餐开通中</option>
           <option value="EXPIRED" ${state.orderStatusFilter === "EXPIRED" ? "selected" : ""}>已失效</option>
           <option value="FAILURE" ${state.orderStatusFilter === "FAILURE" ? "selected" : ""}>支付失败</option>
         </select></label>
