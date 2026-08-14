@@ -11,6 +11,7 @@ import {
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+const PROXY_ORDER_CHARGE_TYPES = new Set([13, 14, 15, 16, 17, 18, 70, 71]);
 
 const PERIODS = {
   d: { label: "1 天", ratio: 1.5 / 30, months: 1 / 30 },
@@ -102,6 +103,20 @@ class CommerceRequestError extends Error {
 function number(value) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function orderTimestamp(value) {
+  const numeric = Number(value);
+  if (String(value ?? "").trim() !== "" && Number.isFinite(numeric)) return numeric;
+  const parsed = Date.parse(String(value ?? ""));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function isProxyOrder(order) {
+  const chargeType = number(order?.chargeType);
+  if (!PROXY_ORDER_CHARGE_TYPES.has(chargeType)) return false;
+  if (chargeType !== 18) return true;
+  return ["IP", "C3IP", "IPC"].includes(String(order?.service || "").toUpperCase());
 }
 
 function escapeHtml(value) {
@@ -548,10 +563,11 @@ function productNameForOrder(order) {
   const details = order?.details || {};
   switch (number(order?.chargeType)) {
     case 13: return "不限量动态住宅";
-    case 14: return "隧道代理 · 按并发线程";
+    case 14: return "短效动态代理 · 按量套餐";
     case 15: return "长效静态代理";
     case 16: return "隧道代理 · 按流量";
     case 17: return "隧道代理 · 补充流量包";
+    case 18: return "隧道代理 · 按并发线程";
     case 70: return number(details.trafficInGB) > 0 ? "隧道住宅代理" : "不限量动态住宅";
     case 71: return "长效静态住宅";
     default: return "代理套餐";
@@ -562,7 +578,8 @@ function orderSpecification(order) {
   const details = order?.details || {};
   switch (number(order?.chargeType)) {
     case 13: return `${number(details.amount)} 个端口，不限流量与并发`;
-    case 14: return `${number(details.amount)} 并发线程，不限累计流量`;
+    case 14: return `${number(details.amount)} 个短效代理 IP`;
+    case 18: return `${number(details.amount)} 并发线程，不限累计流量`;
     case 15:
     case 71: return `${number(details.amount)} 个独享 IP`;
     case 16:
@@ -947,8 +964,8 @@ async function openOrders() {
     const payload = await request("/accsrv/clouduserorder/querybyuser");
     const list = Array.isArray(payload) ? payload : Array.isArray(payload?.content) ? payload.content : [];
     state.orders = list
-      .filter((item) => [13, 14, 15, 16, 17, 70, 71].includes(number(item?.chargeType)))
-      .sort((left, right) => number(right.orderTimeStamp) - number(left.orderTimeStamp));
+      .filter(isProxyOrder)
+      .sort((left, right) => orderTimestamp(right.orderTimeStamp) - orderTimestamp(left.orderTimeStamp));
     renderOrders();
   } catch (error) {
     workspace.innerHTML = `<div class="management-state is-error"><strong>${escapeHtml(error.message || "订单加载失败")}</strong></div>`;
@@ -958,7 +975,7 @@ async function openOrders() {
 
 function orderProductKey(order) {
   const type = number(order?.chargeType);
-  if ([14, 16, 17].includes(type)) return "tunnel";
+  if ([14, 16, 17, 18].includes(type)) return "tunnel";
   if (type === 70 && number(order?.details?.trafficInGB) > 0) return "residential";
   if ([13].includes(type) || (type === 70 && number(order?.details?.trafficInGB) <= 0)) return "unlimited";
   if (type === 15) return "staticDatacenter";
@@ -1183,8 +1200,11 @@ export {
   PERIODS,
   calculatePrice,
   extractPaymentTradeNo,
+  isProxyOrder,
   offerIsVisible,
   offerLabel,
+  orderProductKey,
   orderSpecification,
+  orderTimestamp,
   productNameForOrder
 };

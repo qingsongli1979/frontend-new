@@ -6,9 +6,12 @@ import {
   PRODUCTS,
   calculatePrice,
   extractPaymentTradeNo,
+  isProxyOrder,
   offerIsVisible,
   offerLabel,
+  orderProductKey,
   orderSpecification,
+  orderTimestamp,
   productNameForOrder
 } from "../console/app/commerce.js";
 import {
@@ -69,11 +72,21 @@ assert.equal(offerLabel({ chargeType: "trafficIp", trafficInGB: 100 }), "100GB �
 assert.equal(offerLabel({ chargeType: "durationIp", amount: 5 }), "5 个端口");
 assert.equal(offerLabel({ chargeType: "fixedIp", amount: 10 }), "10 个 IP");
 
-assert.equal(productNameForOrder({ chargeType: 14 }), "隧道代理 · 按并发线程");
+assert.equal(productNameForOrder({ chargeType: 14 }), "短效动态代理 · 按量套餐");
 assert.equal(
   orderSpecification({ chargeType: 14, details: { amount: 50 } }),
+  "50 个短效代理 IP"
+);
+assert.equal(productNameForOrder({ chargeType: 18 }), "隧道代理 · 按并发线程");
+assert.equal(
+  orderSpecification({ chargeType: 18, details: { amount: 50 } }),
   "50 并发线程，不限累计流量"
 );
+assert.equal(isProxyOrder({ chargeType: 18, service: "IP" }), true);
+assert.equal(isProxyOrder({ chargeType: 18, service: "CVM" }), false);
+assert.equal(isProxyOrder({ chargeType: 12, service: "IP" }), false);
+assert.equal(orderProductKey({ chargeType: 18 }), "tunnel");
+assert.ok(orderTimestamp("2026-08-14T20:00:00Z") > orderTimestamp("2026-08-13T20:00:00Z"));
 assert.equal(
   productNameForOrder({ chargeType: 70, details: { trafficInGB: 20 } }),
   "隧道住宅代理"
@@ -168,6 +181,10 @@ assert.equal(commerceScript.includes("handlePaymentReturn"), true);
 assert.match(commerceScript, /paymentReturnKey:\s*""/);
 assert.match(commerceScript, /state\.paymentReturnKey === returnKey && state\.paymentReturnPromise/);
 assert.match(commerceScript, /FULFILLING:\s*\["套餐开通中",\s*"is-waiting"\]/);
+assert.match(commerceScript, /PROXY_ORDER_CHARGE_TYPES = new Set\(\[13, 14, 15, 16, 17, 18, 70, 71\]\)/);
+assert.match(commerceScript, /case 18:\s*return "隧道代理 · 按并发线程"/);
+assert.match(commerceScript, /chargeType !== 18/);
+assert.match(commerceScript, /orderTimestamp\(right\.orderTimeStamp\) - orderTimestamp\(left\.orderTimeStamp\)/);
 assert.match(consoleScript, /function routeModuleOnce\(moduleKey, handler\)/);
 assert.match(consoleScript, /routeModuleOnce\("commerce:payment-return"/);
 assert.match(consoleScript, /if \(hash !== lastRoutedHash\)/);
