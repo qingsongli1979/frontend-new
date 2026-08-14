@@ -650,7 +650,7 @@ function renderDynamic(meta) {
         </footer>
       </form>
       <section class="panel extraction-output-panel">
-        <header class="panel-head"><div><h2>代理接入信息</h2><p>生成后可直接复制到采集程序</p></div></header>
+        <header class="panel-head"><div><h2>代理接入信息</h2><p>生成后可直接复制到爬虫程序</p></div></header>
         <div id="extractOutput">${outputPlaceholder(meta)}</div>
       </section>
     </div>`;
@@ -808,7 +808,7 @@ function updateSessionGuide() {
       : "白名单认证由套餐 TTL 保持出口，无需修改代理用户名";
     help.textContent = state.productKey === "residential"
       ? "白名单模式无需在程序中发送认证用户名，系统仍会按国家和 SESSION 设置保存套餐路由。"
-      : "固定时长会保存到当前套餐；使用已加入白名单的采集服务器访问代理入口。";
+      : "固定时长会保存到当前套餐；使用已加入白名单的爬虫服务器访问代理入口。";
     preview.textContent = `白名单 SESSION · ${document.querySelector("#extractSessionMinutes")?.value || 15} 分钟${geoSuffix ? ` · ${residentialRegionName(region)}` : ""}`;
     return;
   }
@@ -2067,7 +2067,7 @@ async function renderStatic(meta) {
       </section>
     </div>
     <section class="panel assigned-proxy-panel">
-      <header class="panel-head"><div><h2>已分配固定 IP</h2><p>这里的代理地址和账密才可直接用于采集程序</p></div><button class="panel-text-action" id="assignedReload" type="button">刷新<i data-lucide="refresh-cw"></i></button></header>
+      <header class="panel-head"><div><h2>已分配固定 IP</h2><p>这里的代理地址和账密才可直接用于爬虫程序</p></div><button class="panel-text-action" id="assignedReload" type="button">刷新<i data-lucide="refresh-cw"></i></button></header>
       <div id="assignedProxyRows"><div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载已分配固定 IP</strong></div></div>
       <div class="assigned-code-panel" id="assignedCodePanel" hidden></div>
     </section>`;

@@ -44,7 +44,7 @@ export function renderContactMain({ icon }) {
           <a href="#solutions">
             <span class="contact-route-index">01</span>
             <span class="contact-route-icon">${icon("waypoints")}</span>
-            <span><strong>需要技术判断或企业方案</strong><small>代理选型、采集架构、定制代理池与大客户技术支持</small></span>
+            <span><strong>需要技术判断或企业方案</strong><small>代理选型、爬虫架构、定制代理池与大客户技术支持</small></span>
             ${icon("arrow-right")}
           </a>
           <a href="#service">
@@ -64,7 +64,7 @@ export function renderContactMain({ icon }) {
             <p class="contact-channel-lead">适合需要技术判断、资源规划或项目协同的咨询，由技术专家与企业项目团队承接。</p>
             <div class="contact-topic-grid">
               <div>${icon("network")}<span><strong>代理产品选型</strong><small>地区、并发、带宽、SESSION 与计费方式</small></span></div>
-              <div>${icon("gauge")}<span><strong>高带宽与 AI 数据任务</strong><small>大规模视频、图片、代码和文本采集</small></span></div>
+              <div>${icon("gauge")}<span><strong>高带宽与 AI 数据任务</strong><small>大规模视频、图片、代码和文本爬取</small></span></div>
               <div>${icon("git-branch")}<span><strong>定制代理池与企业项目</strong><small>目标站点、资源池、PoC 与交付边界</small></span></div>
               <div>${icon("life-buoy")}<span><strong>大客户技术支持</strong><small>已签约企业项目的技术问题与服务升级</small></span></div>
             </div>

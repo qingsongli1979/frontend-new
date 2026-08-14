@@ -74,7 +74,7 @@ const data = normalizeResourceData(
         chargeType: "fixedIp",
         total: 2,
         remainAmount: 1,
-        referID: "AI 采集任务",
+        referID: "AI 爬虫任务",
         bindUser: "data_team",
         enabledNotify: true,
         criteriaInGB: 0,
@@ -157,7 +157,7 @@ assert.equal(residential.productName, "隧道住宅代理");
 assert.equal(unlimited.productName, "不限量动态住宅");
 assert.equal(staticOrder.status, "attention");
 assert.equal(staticOrder.statusLabel, "待提取");
-assert.equal(staticOrder.remark, "AI 采集任务");
+assert.equal(staticOrder.remark, "AI 爬虫任务");
 assert.equal(staticOrder.bindUser, "data_team");
 assert.equal(staticOrder.enabledNotify, true);
 assert.equal(expired.status, "expired");

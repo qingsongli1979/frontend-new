@@ -139,7 +139,7 @@ async function checkPage(route, locale, zhRoute, enRoute) {
   const organization = graph.find((item) => item["@type"] === "Organization");
   expect(organization?.description?.includes("爬虫工程师"), `${file}: Organization schema missing brand description`);
   expect(Array.isArray(organization?.contactPoint) && organization.contactPoint.length >= 2, `${file}: Organization schema missing contact routing`);
-  expect(organization?.knowsAbout?.includes("AI 数据采集"), `${file}: Organization schema missing GEO topics`);
+    expect(organization?.knowsAbout?.includes("AI 爬虫代理"), `${file}: Organization schema missing GEO topics`);
   const productFact = structuredProductRoutes.get(route);
   if (productFact) {
     const service = graph.find((item) => item["@type"] === "Service");

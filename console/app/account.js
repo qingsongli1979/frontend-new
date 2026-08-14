@@ -1087,7 +1087,7 @@ function apiTokenMarkup(user) {
       </div>
       <div class="account-context-band is-inline">
         <span><i data-lucide="triangle-alert"></i></span>
-        <div><strong>重新生成会使旧 Token 失效</strong><p>更新前请确认采集程序已经准备切换凭据。</p></div>
+        <div><strong>重新生成会使旧 Token 失效</strong><p>更新前请确认爬虫程序已经准备切换凭据。</p></div>
       </div>
       <footer><button class="button button-primary" id="generateApiToken" type="button"><i data-lucide="refresh-cw"></i>${token ? "重新生成 Token" : "生成 Token"}</button></footer>
     </section>`;

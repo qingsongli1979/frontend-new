@@ -95,15 +95,15 @@ export const developerGuidePages = {
     guideKey: "selection",
     output: "developers/guides/proxy-product-selection/index.html",
     route: "/developers/guides/proxy-product-selection/",
-    title: "爬虫与AI数据采集代理产品选型 | 123Proxy 开发者中心",
+    title: "网页爬虫与 AI 爬虫代理产品选型 | 123Proxy 开发者中心",
     description: "按出口身份、地区粒度、轮转方式、流量、并发和固定IP需求，对比123Proxy隧道代理、住宅代理、不限量动态住宅与静态代理。",
     heading: "代理产品选型边界",
     productKeys: ["highBandwidth", "tunnel", "residential", "unlimitedResidential", "staticDatacenter", "staticResidential"],
     consoleProduct: "tunnel",
     faq: [
       {
-        question: "普通网页采集应该先从哪个产品开始？",
-        answer: "没有国家精确定位或固定出口要求时，可先用隧道代理爬虫混合池验证。它默认全球随机，少量数据中心出口通常能提高公开网页采集速度，并支持流量或并发线程套餐。",
+        question: "普通网页爬取应该先从哪个产品开始？",
+        answer: "没有国家精确定位或固定出口要求时，可先用隧道代理的爬虫混合池验证。它默认全球随机，少量数据中心出口通常能提高公开网页的爬取速度，并支持流量或并发线程套餐。",
         href: "/developers/products/scraping-rotating-proxy/",
         linkLabel: "查看隧道代理接入手册"
       },
@@ -151,7 +151,7 @@ export const developerGuideSearch = [
     title: "代理产品选型边界",
     section: "工程指南",
     href: "/developers/guides/proxy-product-selection/",
-    keywords: "代理选型 爬虫 AI数据采集 隧道住宅 不限量 静态 高带宽"
+    keywords: "代理选型 网页爬虫 AI爬虫 隧道住宅 不限量 静态 高带宽"
   }
 ];
 
@@ -324,7 +324,7 @@ function concurrencyGuide(page, helpers) {
       <div class="docs-compare-table">
         <div class="docs-compare-head"><span>任务</span><span>推荐起点</span><span>主要容量维度</span></div>
         <div><strong>持续HTTP爬虫</strong><span><a href="/developers/products/scraping-rotating-proxy/">隧道代理</a></span><span>并发线程或传输流量</span></div>
-        <div><strong>国家定向住宅采集</strong><span><a href="/developers/products/residential-rotating-proxy/">隧道住宅代理</a></span><span>传输流量</span></div>
+        <div><strong>国家定向住宅爬取</strong><span><a href="/developers/products/residential-rotating-proxy/">隧道住宅代理</a></span><span>传输流量</span></div>
         <div><strong>持续浏览器自动化</strong><span><a href="/developers/products/unlimited-residential-proxy/">不限量动态住宅</a></span><span>端口、带宽与页面资源请求</span></div>
         <div><strong>大对象批量下载</strong><span><a href="/high-bandwidth-proxy.html">高带宽代理IP</a></span><span>单项目带宽、流量与目标站点</span></div>
       </div>
@@ -357,7 +357,7 @@ function sessionGuide(page, helpers) {
       page,
       icon,
       [["地区设置", "提取时决定"], ["SESSION", "产品能力不同"], ["轮转", "请求 / 周期 / 固定"], ["网关", "按产品固定"]],
-      "地区、SESSION与轮转不是一组通用参数。它们由具体代理产品决定，购买套餐时不锁定地区，采集程序也不应该自行猜测网关或拼接未定义的用户名格式。",
+      "地区、SESSION与轮转不是一组通用参数。它们由具体代理产品决定，购买套餐时不锁定地区，爬虫程序也不应该自行猜测网关或拼接未定义的用户名格式。",
       "https://console.123proxy.cn/app/#extract?product=residential",
       "打开隧道住宅提取",
       "/pricing.html?product=residential",

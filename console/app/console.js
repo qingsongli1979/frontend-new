@@ -7,7 +7,7 @@ const productCatalog = {
     eyebrow: "SCRAPING ROTATING PROXY",
     name: "隧道代理",
     icon: "shuffle",
-    description: "固定隧道入口连接全球随机出口，按采集任务选择爬虫混合池或纯住宅池。",
+    description: "固定隧道入口连接全球随机出口，按爬虫任务选择爬虫混合池或纯住宅池。",
     facts: [
       ["出口范围", "默认全球随机"],
       ["计费方式", "流量 / 并发线程"],
@@ -32,7 +32,7 @@ const productCatalog = {
     eyebrow: "RESIDENTIAL ROTATING PROXY",
     name: "隧道住宅代理",
     icon: "globe-2",
-    description: "面向地区定向采集的住宅代理池，支持国家或地区定位与 SESSION。",
+    description: "面向地区定向爬取的住宅代理池，支持国家或地区定位与 SESSION。",
     facts: [
       ["住宅 IP 池", "8000 万+"],
       ["覆盖范围", "190+ 国家/地区"],
@@ -82,7 +82,7 @@ const productCatalog = {
     eyebrow: "STATIC DATACENTER PROXY",
     name: "长效静态代理",
     icon: "server",
-    description: "独享固定数据中心 IP，适合需要长期稳定出口和固定身份的采集任务。",
+    description: "独享固定数据中心 IP，适合需要长期稳定出口和固定身份的爬虫任务。",
     facts: [
       ["计费单位", "独享 IP"],
       ["出口类型", "数据中心"],
@@ -130,7 +130,7 @@ const productCatalog = {
     eyebrow: "HIGH-BANDWIDTH PROXY",
     name: "高带宽代理 IP",
     icon: "gauge",
-    description: "面向 AI 数据下载、视频、图片与代码采集任务的不限流量定制代理池。",
+    description: "面向 AI 数据下载、视频、图片与代码爬虫任务的不限流量定制代理池。",
     facts: [
       ["单项目带宽", "10Gbps+"],
       ["计费方式", "项目制"],
@@ -145,8 +145,8 @@ const productCatalog = {
     ],
     capabilities: [
       ["gauge", "10Gbps+ 单项目带宽", "根据任务规模提供可扩展的项目级带宽"],
-      ["infinity", "不限流量", "面向大文件与持续采集任务，不按累计流量限制"],
-      ["network", "定制代理池", "根据目标站点与采集策略定制代理资源"],
+      ["infinity", "不限流量", "面向大文件与持续爬虫任务，不按累计流量限制"],
+      ["network", "定制代理池", "根据目标站点与爬虫策略定制代理资源"],
       ["headphones", "企业技术支持", "提供接入评估、容量规划与 7x24 技术支持"]
     ]
   }

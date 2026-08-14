@@ -5,7 +5,7 @@ const highBandwidthUrl = "high-bandwidth-proxy.html";
 const commonHighBandwidthFactsZh = [
   ["核心产品", "高带宽代理 IP", "不限流量、项目级带宽与定制代理池"],
   ["项目带宽", "10Gbps+ 聚合能力", "支持多节点并行下载"],
-  ["接入方式", "HTTP(S) / SOCKS", "兼容现有采集程序与下载工具"]
+  ["接入方式", "HTTP(S) / SOCKS", "兼容现有爬虫程序与下载工具"]
 ];
 
 const commonHighBandwidthPointsZh = [
@@ -23,13 +23,13 @@ export const solutionsZh = {
     file: "ai-data.html",
     zhFile: "ai-data.html",
     name: "AI 数据方案",
-    title: "AI 数据采集方案 - 高带宽代理基础设施 | 123Proxy",
-    description: "123Proxy AI 数据方案面向视频、图片、代码、文本与文档采集，核心推荐不限流量、10Gbps+ 单项目带宽和定制代理池的高带宽代理 IP。",
+    title: "AI 爬虫代理方案 - 高带宽代理基础设施 | 123Proxy",
+    description: "123Proxy AI 数据方案面向视频、图片、代码、文本与文档爬取，核心推荐不限流量、10Gbps+ 单项目带宽和定制代理池的高带宽代理 IP。",
     eyebrow: "AI DATA SCRAPING INFRASTRUCTURE",
-    titleLines: ["AI 数据采集的", "不限流量高带宽代理"],
-    lead: "为视频、图片、代码、文本与文档采集提供不限流量、10Gbps+ 单项目带宽和定制代理池。",
+    titleLines: ["AI 爬虫程序的", "不限流量高带宽代理"],
+    lead: "为视频、图片、代码、文本与文档爬取提供不限流量、10Gbps+ 单项目带宽和定制代理池。",
     primaryLabel: "获取高带宽方案",
-    secondaryLabel: "查看采集场景",
+    secondaryLabel: "查看爬虫场景",
     secondaryUrl: "#workloads",
     points: ["requests / Scrapy / Playwright", "yt-dlp / img2dataset", "不限流量", "10Gbps+ 单项目带宽"],
     visual: {
@@ -41,7 +41,7 @@ export const solutionsZh = {
         ["file-code-2", "公开代码", "CODE LLM"],
         ["files", "文本与文档", "WEB CORPUS"]
       ],
-      route: [["database", "公开数据源", "SOURCE"], ["network", "123Proxy", "PROXY"], ["cpu", "采集集群", "WORKERS"]],
+      route: [["database", "公开数据源", "SOURCE"], ["network", "123Proxy", "PROXY"], ["cpu", "爬虫集群", "WORKERS"]],
       metrics: [["项目带宽", "10Gbps+"], ["计费方式", "不限流量"], ["代理资源", "按目标定制"]]
     },
     strip: [["10Gbps+", "单项目带宽能力"], ["不限流量", "长期任务成本可控"], ["定制代理池", "按目标站点配置"], ["7x24", "企业技术支持"]],
@@ -53,29 +53,29 @@ export const solutionsZh = {
       ["file-code-2", "公开代码数据", "仓库对象、归档与历史版本同时消耗连接和带宽。"],
       ["files", "文本与文档", "网页、PDF 与公开文档需要兼顾吞吐、地区和内容完整性。"]
     ],
-    workloadsTitle: ["五类 AI 数据采集任务"],
+    workloadsTitle: ["五类 AI 爬虫任务"],
     workloadsText: "选择数据类型，查看推荐代理、接入工具、下载链路和生产指标。",
     workloads: [
       ["01", "视频与多模态数据", "视频、音频、字幕和元数据的持续下载。", "进入视频方案", "ai-video-proxy.html"],
       ["02", "大规模图片数据", "面向训练集的高并发图片获取与补采。", "进入图片方案", "ai-image-proxy.html"],
       ["03", "公开代码数据", "代码仓库、归档和公开对象的长期同步。", "进入代码方案", "ai-github-proxy.html"],
-      ["04", "全网文本与文档", "网页文本、PDF、论坛和公开文档采集。", "进入文本方案", "ai-text-proxy.html"],
-      ["05", "YouTube 采集 API", "通过 API 获取公开视频元数据、字幕与评论任务结果。", "进入 API 页面", "ai-youtube-api.html"]
+      ["04", "全网文本与文档", "网页文本、PDF、论坛和公开文档爬取。", "进入文本方案", "ai-text-proxy.html"],
+      ["05", "YouTube 爬虫 API", "通过 API 获取公开视频元数据、字幕与评论任务结果。", "进入 API 页面", "ai-youtube-api.html"]
     ],
     workflow: {
-      title: "公开数据源、代理网络、采集集群与客户存储",
-      text: "采集程序通过标准代理接入，由任务队列管理下载、重试、校验和写入。",
+      title: "公开数据源、代理网络、爬虫集群与客户存储",
+      text: "爬虫程序通过标准代理接入，由任务队列管理下载、重试、校验和写入。",
       steps: [
         ["01", "定义数据边界", "明确公开数据源、数据类型、使用权限与目标规模。"],
         ["02", "建立代表性样本", "选择真实 URL，测量响应大小、成功率和重试。"],
         ["03", "设计代理与并发", "按目标站点配置代理池、带宽和工作节点。"],
         ["04", "按有效产出扩容", "监控写入存储的数据量，而不是只看请求峰值。"]
       ],
-      flow: [["database", "公开数据", "SOURCE"], ["network", "代理网络", "ROUTE"], ["cpu", "采集集群", "WORKERS"], ["hard-drive", "客户存储", "OUTPUT"]],
+      flow: [["database", "公开数据", "SOURCE"], ["network", "代理网络", "ROUTE"], ["cpu", "爬虫集群", "WORKERS"], ["hard-drive", "客户存储", "OUTPUT"]],
       stats: [["单项目容量", "10Gbps+"], ["成本模型", "不限流量"], ["交付边界", "代理基础设施"]]
     },
     recommendation: {
-      title: "AI 数据采集主链路：高带宽代理 IP",
+      title: "AI 爬虫主链路：高带宽代理 IP",
       text: "大规模下载使用不限流量高带宽代理；需要国家或地区身份的页面发现任务补充隧道住宅代理。",
       points: commonHighBandwidthPointsZh,
       facts: [
@@ -96,7 +96,7 @@ export const solutionsZh = {
     evaluationNote: commonEvaluationNoteZh,
     developer: {
       title: "requests、Scrapy、Playwright 与下载器直接接入",
-      text: "将项目代理网关配置到现有采集程序，继续使用原有任务队列、解析和存储流程。",
+      text: "将项目代理网关配置到现有爬虫程序，继续使用原有任务队列、解析和存储流程。",
       label: "Python / streaming download",
       code: `import requests
 
@@ -116,23 +116,23 @@ with requests.get(
       points: ["标准 HTTP(S) / SOCKS 接入", "显式设置超时、重试与断点策略", "按任务记录有效数据吞吐"]
     },
     faqs: [
-      ["高带宽代理适合哪些 AI 数据任务？", "适合视频、音频、图片、代码归档、网页和公开文档等大规模下载任务，尤其适用于长期运行和传输量大的采集集群。"],
+      ["高带宽代理适合哪些 AI 数据任务？", "适合视频、音频、图片、代码归档、网页和公开文档等大规模下载任务，尤其适用于长期运行和传输量大的爬虫集群。"],
       ["为什么所有场景都优先推荐高带宽代理？", "视频、图片、代码归档和文档进入规模化下载后，带宽与按 GB 成本通常先成为瓶颈。高带宽代理用不限流量、项目级带宽与定制代理池解决这一层问题。"],
       ["10Gbps+ 是否代表单个请求可以达到该速度？", "不是。10Gbps+ 指单项目的聚合容量能力。单个请求速度受目标站点、对象大小、连接、地区、并发和客户端性能共同影响。"],
-      ["是否提供数据采集与交付服务？", "可以按企业项目提供公开数据采集、解析、质量检查与交付。标准高带宽代理产品主要提供代理网络、代理池与项目带宽。"],
+      ["是否提供数据爬取与交付服务？", "可以按企业项目提供公开数据爬取、解析、质量检查与交付。标准高带宽代理产品主要提供代理网络、代理池与项目带宽。"],
       ["什么时候需要住宅代理？", "当目标内容与国家或地区、住宅网络身份或本地化页面相关时，可补充隧道住宅代理。纯大规模下载仍应先评估高带宽代理。"],
       ["如何开始容量测试？", "准备代表性 URL、数据类型、平均对象大小、预计规模、完成周期、并发方式和现有工具，即可评估代理池与带宽。"],
-      ["是否支持浏览器采集？", "支持标准代理协议，可用于 Playwright 等浏览器工具。浏览器会并行加载页面资源，应单独观察工作节点 CPU、内存、页面完成时间和带宽利用率。"],
-      ["合规边界如何处理？", "仅应采集依法可访问且具有合理使用依据的公开数据，并遵守目标服务条款、知识产权、隐私和适用法律。"]
+      ["是否支持浏览器爬虫？", "支持标准代理协议，可用于 Playwright 等浏览器工具。浏览器会并行加载页面资源，应单独观察工作节点 CPU、内存、页面完成时间和带宽利用率。"],
+      ["合规边界如何处理？", "仅应爬取依法可访问且具有合理使用依据的公开数据，并遵守目标服务条款、知识产权、隐私和适用法律。"]
     ],
-    cta: ["获取 AI 数据采集代理方案", "提交数据类型、来源、预计规模和完成周期，配置代理池与项目带宽。"]
+    cta: ["获取 AI 爬虫代理方案", "提交数据类型、来源、预计规模和完成周期，配置代理池与项目带宽。"]
   },
   video: {
     key: "video",
     file: "ai-video-proxy.html",
     zhFile: "ai-video-proxy.html",
     name: "视频与多模态数据方案",
-    title: "视频与多模态数据采集代理方案 | 123Proxy",
+    title: "视频与多模态数据爬取代理方案 | 123Proxy",
     description: "123Proxy 视频与多模态数据方案以不限流量高带宽代理 IP 支撑视频、音频、字幕和元数据下载，提供 10Gbps+ 单项目带宽与定制代理池。",
     eyebrow: "VIDEO & MULTIMODAL DATA SCRAPING",
     titleLines: ["公开视频、音频与字幕", "批量下载代理"],
@@ -235,8 +235,8 @@ with requests.get(
     file: "ai-image-proxy.html",
     zhFile: "ai-image-proxy.html",
     name: "大规模图片数据方案",
-    title: "大规模图片数据采集代理方案 | 123Proxy",
-    description: "123Proxy 图片数据方案以不限流量高带宽代理支撑训练图片、图文对和公开视觉数据采集，提供 10Gbps+ 单项目能力与定制代理池。",
+    title: "大规模图片爬虫代理方案 | 123Proxy",
+    description: "123Proxy 图片数据方案以不限流量高带宽代理支撑训练图片、图文对和公开视觉数据爬取，提供 10Gbps+ 单项目能力与定制代理池。",
     eyebrow: "LARGE-SCALE IMAGE DATA SCRAPING",
     titleLines: ["大规模图片数据", "高并发下载与补采"],
     lead: "面向 img2dataset、gallery-dl、aria2、aiohttp 与内部下载服务，以不限流量和项目级带宽支撑高并发下载与失败补采。",
@@ -259,7 +259,7 @@ with requests.get(
     },
     strip: [["高并发", "面向海量图片对象"], ["不限流量", "补采成本更可控"], ["定制代理池", "按图片来源配置"], ["可校验", "尺寸 / 格式 / 哈希"]],
     overviewTitle: ["海量小对象与失败补采"],
-    overviewText: "海量小对象容易出现超时、空文件、格式异常和重复内容。采集系统应把下载与质量校验连接起来。",
+    overviewText: "海量小对象容易出现超时、空文件、格式异常和重复内容。爬虫系统应把下载与质量校验连接起来。",
     capabilities: [
       ["layers-3", "大规模任务队列", "按来源和批次拆分 URL 清单，稳定扩展工作节点。"],
       ["gauge", "高并发吞吐", "针对小对象连接开销配置代理池与聚合带宽。"],
@@ -271,7 +271,7 @@ with requests.get(
     workloads: [
       ["01", "训练图片语料", "从公开来源批量获取图片对象并完成格式校验。", "重点：对象成功率"],
       ["02", "图文对数据", "同步文本描述和图片文件，保持稳定对象标识。", "重点：图文关联"],
-      ["03", "视觉评估集", "按主题、来源或时间持续增量采集和去重。", "重点：增量与去重"]
+      ["03", "视觉评估集", "按主题、来源或时间持续增量爬取和去重。", "重点：增量与去重"]
     ],
     workflow: {
       title: "URL 清单、下载集群与对象校验",
@@ -325,7 +325,7 @@ img2dataset \\
       ["支持哪些图片下载工具？", "img2dataset、gallery-dl、aria2、requests 与 aiohttp 等支持 HTTP(S) 代理的工具均可接入。并发、超时和重试参数应使用代表性来源测试。"],
       ["图片来源很多时如何配置代理池？", "建议按站点或来源拆分队列，分别测量响应和失败模式，再配置定制代理池与带宽。"],
       ["什么时候需要住宅代理？", "当图片列表或页面发现依赖国家、地区或住宅网络身份时可补充住宅代理；对象下载主链路通常仍优先高带宽代理。"],
-      ["合规上需要注意什么？", "仅采集依法可访问并具有合理使用依据的公开图片，遵守知识产权、隐私、目标服务条款和适用法律。"]
+      ["合规上需要注意什么？", "仅抓取依法可访问并具有合理使用依据的公开图片，遵守知识产权、隐私、目标服务条款和适用法律。"]
     ],
     cta: ["获取图片数据下载代理方案", "提交图片来源、对象数量、平均大小、下载工具和完成周期。"]
   },
@@ -334,8 +334,8 @@ img2dataset \\
     file: "ai-github-proxy.html",
     zhFile: "ai-github-proxy.html",
     name: "公开代码数据方案",
-    title: "公开代码与仓库数据采集代理方案 | 123Proxy",
-    description: "123Proxy 公开代码数据方案以不限流量高带宽代理支撑公开仓库、归档、历史对象和 Code LLM 数据采集，提供 10Gbps+ 单项目能力。",
+    title: "公开代码与仓库数据爬取代理方案 | 123Proxy",
+    description: "123Proxy 公开代码数据方案以不限流量高带宽代理支撑公开仓库、归档、历史对象和 Code LLM 数据爬取，提供 10Gbps+ 单项目能力。",
     eyebrow: "PUBLIC CODE DATA SCRAPING",
     titleLines: ["公开代码仓库与归档", "持续同步代理"],
     lead: "面向 git clone、源码归档、GitHub REST / GraphQL API 与增量同步，以不限流量和项目级带宽支撑长期代码数据任务。",
@@ -415,7 +415,7 @@ img2dataset \\
     faqs: [
       ["git clone 出现 RPC failed、curl 56、EOF 或 SSL 错误怎么办？", "先记录仓库大小和失败阶段，使用 --filter=blob:none、浅克隆或归档下载降低单任务体积，并在仓库粒度设置超时与重试。持续失败时应分别检查目标服务、Git 客户端与代理链路。"],
       ["公开代码方案是否只支持 GitHub？", "不是。页面面向依法可访问的公开代码托管、仓库归档和 HTTP 对象。具体目标应通过代表性仓库验证协议、限速和对象完整性。"],
-      ["可以采集私有仓库吗？", "本方案不提供绕过访问控制的能力。私有仓库必须由客户拥有合法授权并自行提供合规凭据。"],
+      ["可以抓取私有仓库吗？", "本方案不提供绕过访问控制的能力。私有仓库必须由客户拥有合法授权并自行提供合规凭据。"],
       ["为什么代码任务需要不限流量？", "长期同步仓库、归档、历史对象和大文件会产生持续传输，失败重试也会增加总量。不限流量更便于控制预算。"],
       ["代理可以解决 GitHub API Token 限额吗？", "不能。代理可以为网络请求提供不同出口，但账号或 Token 的 API 配额仍由代码托管平台控制。开发者应读取响应头、控制并发并按平台规则处理限额。"],
       ["Git clone 和归档下载如何选择？", "只需要当前源码时归档通常更轻；需要提交历史、分支和对象关系时使用 Git。应按数据目标拆分任务。"],
@@ -431,19 +431,19 @@ img2dataset \\
     file: "ai-text-proxy.html",
     zhFile: "ai-text-proxy.html",
     name: "全网文本与文档方案",
-    title: "公开文本与文档数据采集代理方案 | 123Proxy",
-    description: "123Proxy 文本与文档方案面向公开网页、新闻、论坛、博客和 PDF 采集，以高带宽代理为主，并按地区需求补充住宅代理。",
+    title: "公开文本与文档数据爬取代理方案 | 123Proxy",
+    description: "123Proxy 文本与文档方案面向公开网页、新闻、论坛、博客和 PDF 爬取，以高带宽代理为主，并按地区需求补充住宅代理。",
     eyebrow: "WEB TEXT & DOCUMENT SCRAPING",
-    titleLines: ["公开网页与文档", "持续采集代理"],
-    lead: "面向 Scrapy、requests、Playwright、Selenium 与内部爬虫，以高带宽代理承载规模化采集，并按地区需求补充住宅代理。",
-    primaryLabel: "获取文本采集方案",
+    titleLines: ["公开网页与文档", "持续爬取代理"],
+    lead: "面向 Scrapy、requests、Playwright、Selenium 与内部爬虫，以高带宽代理承载规模化爬取，并按地区需求补充住宅代理。",
+    primaryLabel: "获取文本爬取方案",
     secondaryLabel: "查看接入示例",
     secondaryUrl: "#developers",
     secondaryUrl: "#recommendation",
     points: ["Scrapy / requests", "Playwright / Selenium", "高带宽主链路", "住宅地区补充"],
     visual: {
-      label: "文本与文档采集任务",
-      status: "采集就绪",
+      label: "文本与文档爬虫任务",
+      status: "爬取就绪",
       sources: [
         ["newspaper", "新闻与博客", "ARTICLE"],
         ["messages-square", "论坛与社区", "DISCUSSION"],
@@ -457,7 +457,7 @@ img2dataset \\
     overviewTitle: ["HTML、浏览器页面与 PDF 文档"],
     overviewText: "网页数量、文档体积、页面渲染和地区差异决定代理选择，不能只用单一请求成功率评价。",
     capabilities: [
-      ["list-filter", "URL 发现与调度", "按站点、栏目和更新时间管理采集边界。"],
+      ["list-filter", "URL 发现与调度", "按站点、栏目和更新时间管理爬虫边界。"],
       ["file-text", "HTML 与文档下载", "区分轻量网页、PDF 和其他公开文档的传输方式。"],
       ["map-pinned", "地区与本地内容", "需要本地化结果时使用可指定国家或地区的住宅代理。"],
       ["braces", "解析与去重", "抽取正文、字段和文档关系，过滤重复与低质量内容。"]
@@ -486,7 +486,7 @@ img2dataset \\
       text: "网页和文档主链路使用高带宽代理；本地化搜索、新闻和地区内容使用隧道住宅代理。",
       points: ["高带宽代理不限流量", "10Gbps+ 单项目能力", "住宅代理覆盖 190+ 国家和地区", "住宅代理支持地区与 SESSION"],
       facts: [
-        ["大规模下载", "高带宽代理 IP", "网页、PDF 与公开文档的主采集链路"],
+        ["大规模下载", "高带宽代理 IP", "网页、PDF 与公开文档的主爬取链路"],
         ["地区定向", "隧道住宅代理", "鉴权指定国家或地区与 SESSION"],
         ["成本口径", "项目制 + 按流量", "按任务拆分高带宽与住宅用量"],
         ["接入方式", "HTTP(S) / SOCKS", "兼容 Scrapy、requests 与浏览器工具"]
@@ -529,15 +529,15 @@ request = scrapy.Request(
       ["如何控制抓取节奏？", "按站点配置并发、延迟、超时和重试，遵守 robots、服务条款和合理访问边界，不应以代理绕过访问控制。"],
       ["应如何保存数据来源？", "建议为每个文档保留原始 URL、站点、抓取时间、内容版本、地区策略和处理状态，便于审计与数据治理。"]
     ],
-    cta: ["获取公开文本与文档采集方案", "提交来源类型、地区要求、文档规模、采集框架和完成周期。"]
+    cta: ["获取公开文本与文档爬取方案", "提交来源类型、地区要求、文档规模、爬虫框架和完成周期。"]
   },
   youtubeApi: {
     key: "youtubeApi",
     file: "ai-youtube-api.html",
     zhFile: "ai-youtube-api.html",
-    name: "YouTube 采集 API",
-    title: "YouTube 采集 API - 视频元数据、字幕与评论接口 | 123Proxy",
-    description: "123Proxy YouTube 采集 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。",
+    name: "YouTube 爬虫 API",
+    title: "YouTube 爬虫 API - 视频元数据、字幕与评论接口 | 123Proxy",
+    description: "123Proxy YouTube 爬虫 API 面向开发者提供公开视频元数据、字幕、评论、异步任务与对象存储交付接口，无需自行维护代理池。",
     eyebrow: "YOUTUBE DATA API",
     titleLines: ["通过 API 获取 YouTube", "元数据、字幕与评论"],
     lead: "提交视频 ID 或公开 URL，获取元数据、字幕与评论；长任务通过异步状态和 Webhook 交付，需要媒体文件时可按项目配置对象存储。",
@@ -551,7 +551,7 @@ request = scrapy.Request(
     nav: [["#overview", "接口能力"], ["#workloads", "适用任务"], ["#architecture", "任务流程"], ["#recommendation", "API 产品"], ["#evaluation", "运行指标"], ["#developers", "接入代码"], ["#faq", "常见问题"]],
     section: ["01 / 接口能力", "02 / 适用任务", "03 / 任务流程", "04 / API 产品", "05 / 运行指标", "06 / 接入代码", "07 / FAQ"],
     architectureLabel: "API job architecture",
-    faqTitle: "YouTube 采集 API 常见问题",
+    faqTitle: "YouTube 爬虫 API 常见问题",
     faqText: "字段、异步任务、Webhook、对象存储、配额与错误处理。",
     visual: {
       label: "YouTube 数据任务",
@@ -579,7 +579,7 @@ request = scrapy.Request(
     workloads: [
       ["01", "视频知识库与 RAG", "获取公开元数据、字幕和来源字段，形成可追踪的视频文档。", "重点：字段与来源"],
       ["02", "多模态数据任务", "把视频、音频、字幕与元数据交付到同一对象关系中。", "重点：对象关联"],
-      ["03", "评论与社区研究", "按视频任务采集公开评论和回复，保留层级与时间字段。", "重点：结构完整性"]
+      ["03", "评论与社区研究", "按视频任务抓取公开评论和回复，保留层级与时间字段。", "重点：结构完整性"]
     ],
     workflow: {
       title: "任务提交、异步处理与结果交付",
@@ -590,13 +590,13 @@ request = scrapy.Request(
         ["03", "轮询或接收 Webhook", "保存 job_id，依据状态处理运行、完成与失败。"],
         ["04", "校验 JSON 与存储对象", "核对字段、对象关系、错误信息和媒体交付结果。"]
       ],
-      flow: [["braces", "API 客户端", "REQUEST"], ["list-checks", "任务队列", "JOB"], ["server-cog", "采集服务", "WORKERS"], ["send", "Webhook / 存储", "DELIVERY"]],
+      flow: [["braces", "API 客户端", "REQUEST"], ["list-checks", "任务队列", "JOB"], ["server-cog", "爬虫服务", "WORKERS"], ["send", "Webhook / 存储", "DELIVERY"]],
       stats: [["接口", "REST / JSON"], ["执行模式", "同步 / 异步"], ["结果交付", "Webhook / Storage"]]
     },
     recommendation: {
-      title: "YouTube 采集 API",
+      title: "YouTube 爬虫 API",
       text: "通过统一接口提交任务、查询状态并接收结果，无需单独维护 YouTube 代理池和下载集群。",
-      productName: "YouTube 采集 API",
+      productName: "YouTube 爬虫 API",
       productUrl: "contact.html#service",
       productLabel: "申请 API Key",
       productIcon: "key-round",
@@ -655,7 +655,7 @@ print(job["job_id"], job["status"])`,
       ["遇到限流或临时失败应该怎么处理？", "按返回状态和错误码执行指数退避，限制客户端并发并记录重试次数。正式配额、速率限制和错误码以 API 文档为准。"],
       ["使用范围和合规边界是什么？", "仅处理依法可访问且具有合理使用依据的公开内容，并遵守平台条款、知识产权、隐私和适用法律；API 不用于绕过登录、验证码或访问控制。"]
     ],
-    cta: ["申请 YouTube 采集 API 测试", "提交视频样本、字段清单、日任务量、Webhook 或对象存储需求。"]
+    cta: ["申请 YouTube 爬虫 API 测试", "提交视频样本、字段清单、日任务量、Webhook 或对象存储需求。"]
   }
 };
 
@@ -1006,8 +1006,8 @@ const labelsByLocale = {
     category: "AI 数据方案",
     primaryHref: highBandwidthUrl,
     secondaryHref: "contact.html#solutions",
-    nav: [["#overview", "数据类型"], ["#workloads", "采集任务"], ["#architecture", "运行链路"], ["#recommendation", "推荐代理"], ["#evaluation", "运行指标"], ["#developers", "接入代码"], ["#faq", "常见问题"]],
-    section: ["01 / 数据类型", "02 / 采集任务", "03 / 运行链路", "04 / 推荐代理", "05 / 运行指标", "06 / 接入代码", "07 / FAQ"],
+    nav: [["#overview", "数据类型"], ["#workloads", "爬虫任务"], ["#architecture", "运行链路"], ["#recommendation", "推荐代理"], ["#evaluation", "运行指标"], ["#developers", "接入代码"], ["#faq", "常见问题"]],
+    section: ["01 / 数据类型", "02 / 爬虫任务", "03 / 运行链路", "04 / 推荐代理", "05 / 运行指标", "06 / 接入代码", "07 / FAQ"],
     architectureLabel: "Data scraping architecture",
     recommendationLabel: "RECOMMENDED PRODUCT",
     viewProduct: "查看高带宽代理 IP",

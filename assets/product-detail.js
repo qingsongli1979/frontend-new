@@ -27,7 +27,7 @@ const productPages = {
     pricingUrl: "pricing.html?product=tunnel",
     name: "隧道代理",
     eyebrow: "Scraping rotating proxy",
-    title: "双代理池，兼顾采集速度与住宅属性",
+    title: "双代理池，兼顾爬虫速度与住宅属性",
     titleLines: ["双代理池，", "兼顾速度与住宅属性"],
     lead: "固定隧道接入两类轮换代理池，默认全球随机出口；提取代理时也可选择粗粒度地区。混合池约 95% 住宅 IP + 5% 数据中心 IP，纯住宅池支持 SESSION。",
     points: ["爬虫混合池通常更快", "100% 纯住宅池", "纯住宅池支持 SESSION", "流量 / 线程两种方案"],
@@ -45,19 +45,19 @@ const productPages = {
     overview: {
       kicker: "01 / Product capability",
       title: "爬虫混合池与纯住宅池",
-      text: "混合池约含 5% 数据中心 IP，公开网页采集通常更快；纯住宅池仅含住宅 IP，并支持 SESSION。"
+      text: "混合池约含 5% 数据中心 IP，公开网页爬取通常更快；纯住宅池仅含住宅 IP，并支持 SESSION。"
     },
     capabilities: [
-      ["route", "爬虫混合池", "约 95% 住宅 IP + 5% 数据中心 IP，公开网页采集通常更快。"],
+      ["route", "爬虫混合池", "约 95% 住宅 IP + 5% 数据中心 IP，公开网页爬取通常更快。"],
       ["wifi", "纯住宅 IP 池", "仅包含住宅 IP，适合更看重住宅网络属性的任务。"],
       ["timer", "纯住宅池支持 SESSION", "通过 SESSION 保持同一出口，适合分页与多步骤请求。"],
       ["database", "流量方案", "按实际流量使用，适合波动任务或按项目核算。"],
-      ["infinity", "线程方案不限流量", "线程套餐不累计传输 GB，适合持续高频采集。"],
+      ["infinity", "线程方案不限流量", "线程套餐不累计传输 GB，适合持续高频爬取。"],
       ["shuffle", "默认全球随机", "无需地区要求时直接使用全球随机；提取代理时也可选欧美、北美、欧洲、亚洲、美国或日韩。"]
     ],
     workloads: [
-      ["01", "公开网页持续抓取", "混合池适合列表页、详情页和搜索结果等大量短请求，采集通常更快。", "推荐：混合池 + 并发线程"],
-      ["02", "分页与多步骤采集", "纯住宅池支持 SESSION，适合不依赖地区定向的分页和多步骤任务。", "推荐：纯住宅池"],
+      ["01", "公开网页持续抓取", "混合池适合列表页、详情页和搜索结果等大量短请求，爬取通常更快。", "推荐：混合池 + 并发线程"],
+      ["02", "分页与多步骤爬取", "纯住宅池支持 SESSION，适合不依赖地区定向的分页和多步骤任务。", "推荐：纯住宅池"],
       ["03", "请求量波动明显的项目", "任务量或响应体波动较大时，可按实际传输流量核算。", "推荐：按流量"]
     ],
     workflow: {
@@ -69,12 +69,12 @@ const productPages = {
         ["03", "设置纯住宅 SESSION", "纯住宅池可用 SESSION 保持出口；混合池自动轮换。"],
         ["04", "按请求模型监控", "代码按在途请求计线程；浏览器还会加载图片、CSS 和 JS。"]
       ],
-      flow: [["code-2", "采集应用", "REQUEST"], ["waypoints", "隧道网关", "AUTH"], ["git-branch", "双池调度", "SELECT"], ["globe-2", "目标站点", "RESPONSE"]],
+      flow: [["code-2", "爬虫程序", "REQUEST"], ["waypoints", "隧道网关", "AUTH"], ["git-branch", "双池调度", "SELECT"], ["globe-2", "目标站点", "RESPONSE"]],
       stats: [["代理池", "混合 / 纯住宅"], ["出口地区", "提取时选择"], ["容量模型", "流量 / 线程"]]
     },
     specs: [
       ["代理池", "爬虫混合池 / 纯住宅 IP 池"],
-      ["爬虫混合池", "约 95% 住宅 IP + 约 5% 数据中心 IP；采集速度通常比隧道住宅代理更快"],
+      ["爬虫混合池", "约 95% 住宅 IP + 约 5% 数据中心 IP；爬虫速度通常比隧道住宅代理更快"],
       ["纯住宅 IP 池", "池内仅包含住宅 IP，支持 SESSION 保持出口"],
       ["出口地区", "默认全球随机；提取代理时可选欧美、北美、欧洲、亚洲、美国或日韩"],
       ["计费方式", "按流量；或按并发线程使用，并发线程方案不限流量"],
@@ -89,17 +89,17 @@ const productPages = {
       text: "按流量套餐核算实际传输量；并发线程套餐限制同时在途请求数，方案内不限流量。",
       note: "并发线程代表同一时刻正在执行的请求数量。代码直接请求一个 URL 通常占用一个线程；浏览器打开一个页面还会并行请求图片、CSS、JS 等资源，通常需要约 10–20 个并发线程。",
       items: [
-        ["Traffic", "按流量使用", "适合请求量波动、响应体较小或需要按项目核算流量的任务。", "按实际传输流量", ["动态出口自动轮换", "适配突发采集任务", "可从较小规模开始"], "查看流量方案"],
+        ["Traffic", "按流量使用", "适合请求量波动、响应体较小或需要按项目核算流量的任务。", "按实际传输流量", ["动态出口自动轮换", "适配突发爬虫任务", "可从较小规模开始"], "查看流量方案"],
         ["Concurrency", "按并发线程使用", "适合长时间、高频短请求与稳定任务队列，方案内不限流量。", "按并发线程 / 不限流量", ["固定并发容量", "传输流量不累计计费", "支持持续扩展线程数"], "获取线程方案"]
       ]
     },
     faqs: [
       ["按流量和按并发线程有什么区别，应该怎么选？", "按流量方案根据实际传输的数据量计费，更适合任务规模尚不稳定、响应体较小或需要按项目核算 GB 的场景。并发线程方案根据同时在途的请求数配置容量，方案内不累计传输流量，更适合代码持续、高频请求。建议用真实目标站点测试平均响应时间、响应体大小和峰值并发后再决定。"],
-      ["爬虫混合池和纯住宅 IP 池有什么区别？", "爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页采集中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。"],
+      ["爬虫混合池和纯住宅 IP 池有什么区别？", "爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页爬取中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。"],
       ["按并发线程使用为什么可以不限流量？", "线程方案以同一时刻正在执行的请求数量作为容量口径，不按传输 GB 累计计费，因此方案内不限流量。不限流量不等于无限速度，目标站点响应时间、线程数量、重试策略和网络状况仍会影响实际吞吐。"],
       ["一个并发线程如何计算？它与 QPS 有什么区别？", "一个仍在等待响应的 HTTP 请求占用一个并发线程。QPS 是每秒完成的请求数，近似受“线程数 ÷ 平均响应时间”影响。例如响应越快，相同线程数可以完成的 QPS 越高；超时和重试会降低有效吞吐。"],
       ["浏览器打开一个页面只占用一个线程吗？", "不是。浏览器会并行加载 HTML、图片、CSS、JavaScript、字体和接口请求，打开一个页面通常需要约 10–20 个并发线程。线程方案更适合 requests、Scrapy 等程序直接走 HTTP 协议；浏览器自动化应按真实页面资源量评估。"],
-      ["隧道代理与隧道住宅代理的核心区别是什么？", "隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，采集通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。"],
+      ["隧道代理与隧道住宅代理的核心区别是什么？", "隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，爬取通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。"],
       ["隧道代理默认如何分配地区？", "默认从全球资源中随机分配出口。提取代理时也可选择欧美、北美、欧洲、亚洲、美国或日韩，不提供城市级定向；需要更细的国家或地区定位时，应选择隧道住宅代理。"],
       ["哪些代理池支持 SESSION？", "SESSION 仅在隧道代理的纯住宅池提供，可在设定时间内尽量保持同一住宅出口，适合分页、多步骤请求或短期连续会话。SESSION 到期、出口不可用或策略触发后，系统会重新分配代理 IP。"],
       ["是否需要在本地维护代理 IP 列表？", "不需要。应用连接固定隧道网关，由云端完成代理池选择、出口分配、健康检查与切换；程序只需配置鉴权、超时、重试，以及纯住宅池所需的可选 SESSION。"]
@@ -141,7 +141,7 @@ const productPages = {
     ],
     workloads: [
       ["01", "跨地区公开数据研究", "从指定地区访问公开页面，比较搜索结果、趋势和本地化内容。", "路由策略：国家 / 地区"],
-      ["02", "电商价格与商品采集", "采集当地商品、价格和评价，并用 SESSION 保持连续翻页。", "路由策略：地区 + SESSION"],
+      ["02", "电商价格与商品爬取", "抓取当地商品、价格和评价，并用 SESSION 保持连续翻页。", "路由策略：地区 + SESSION"],
       ["03", "AI 数据地区多样性", "按不同地区组织任务，扩展训练或评估数据的地域来源。", "路由策略：多地区任务队列"]
     ],
     workflow: {
@@ -153,7 +153,7 @@ const productPages = {
         ["03", "连接住宅网关", "程序通过固定隧道请求，网关匹配当地住宅出口。"],
         ["04", "监控流量与结果", "观察成功率、响应大小和数据完整度，管理套餐流量。"]
       ],
-      flow: [["code-2", "采集任务", "REGION"], ["waypoints", "住宅网关", "SESSION"], ["wifi", "ISP 出口", "GEO"], ["globe-2", "本地内容", "RESPONSE"]],
+      flow: [["code-2", "爬虫任务", "REGION"], ["waypoints", "住宅网关", "SESSION"], ["wifi", "ISP 出口", "GEO"], ["globe-2", "本地内容", "RESPONSE"]],
       stats: [["代理池", "8000万+"], ["覆盖范围", "190+ 地区"], ["购买方式", "仅按流量"]]
     },
     specs: [
@@ -173,7 +173,7 @@ const productPages = {
       text: "国家、地区和 SESSION 控制出口路由，所有代理传输计入流量套餐。",
       note: "正式扩容前，建议使用代表性目标 URL 运行小规模测试，记录成功请求的平均流量与失败重试产生的额外消耗。",
       items: [
-        ["Traffic only", "按流量购买", "根据住宅代理实际传输的数据量使用套餐，适合需要国家或地区定位的弹性采集任务。", "实际传输流量", ["8000万+ 住宅 IP 池", "190+ 国家和地区", "支持指定 SESSION"], "申请流量测试"]
+        ["Traffic only", "按流量购买", "根据住宅代理实际传输的数据量使用套餐，适合需要国家或地区定位的弹性爬虫任务。", "实际传输流量", ["8000万+ 住宅 IP 池", "190+ 国家和地区", "支持指定 SESSION"], "申请流量测试"]
       ]
     },
     faqs: [
@@ -223,7 +223,7 @@ const productPages = {
     ],
     workloads: [
       ["01", "浏览器自动化节点", "为持续在线的浏览器工作节点分配独立端口和住宅出口。", "容量：按节点 / 端口"],
-      ["02", "长期地区数据监测", "定期采集本地公开页面，不必为持续产生的流量单独核算 GB。", "容量：固定带宽"],
+      ["02", "长期地区数据监测", "定期爬取本地公开页面，不必为持续产生的流量单独核算 GB。", "容量：固定带宽"],
       ["03", "大响应体公开数据", "图片、页面资源等响应体较大时，不限流量模式使预算更可预测。", "容量：按吞吐评估"]
     ],
     workflow: {
@@ -254,7 +254,7 @@ const productPages = {
       text: "每个端口不限流量与并发，提供 5–100Mbps 规格；地区和轮转周期由套餐统一设置。",
       note: "每个端口不限并发，但不限并发不等于无限吞吐；目标站点响应、端口带宽与任务重试仍会影响完成速度。地区和轮转周期按套餐统一设置。",
       items: [
-        ["Standard", "标准持续任务", "适合少量长期在线节点、周期性采集与地区公开数据监测。", "5–20Mbps / 端口", ["每端口不限流量与并发", "3–30 分钟固定轮转", "套餐级地区设置"], "获取端口方案"],
+        ["Standard", "标准持续任务", "适合少量长期在线节点、周期性爬取与地区公开数据监测。", "5–20Mbps / 端口", ["每端口不限流量与并发", "3–30 分钟固定轮转", "套餐级地区设置"], "获取端口方案"],
         ["Scale", "多节点生产任务", "面向多个浏览器工作节点或更高吞吐的长期数据服务。", "20–100Mbps / 多端口", ["任务级端口隔离", "所有端口共享套餐地区", "按吞吐扩展容量"], "评估生产容量"]
       ]
     },
@@ -351,7 +351,7 @@ const productPages = {
       ["可以选择国家或地区吗？", "可以。购买套餐时无需选择地区，提取代理时从页面列出的 69 个支持国家和地区中选择。"],
       ["是否提供免费测试？", "不提供。长效静态代理需要直接购买付费套餐，再在提取代理时选择支持地区。"],
       ["如何避免续费后任务中断？", "建议开启续费提醒并为生产端点建立资产清单。多项目场景可预留备用端点并定期做连通性检查。"],
-      ["适合大规模动态网页采集吗？", "如果任务需要频繁更换出口或大规模 IP 池，动态隧道代理通常更合适。长效静态代理的核心价值是固定、独享和稳定，而不是高频轮换。"]
+      ["适合大规模动态网页爬取吗？", "如果任务需要频繁更换出口或大规模 IP 池，动态隧道代理通常更合适。长效静态代理的核心价值是固定、独享和稳定，而不是高频轮换。"]
     ],
     cta: ["选择独享固定代理 IP", "按 IP 数量和周期购买，提取代理时选择支持地区。", "查询静态资源"]
   },
@@ -427,7 +427,7 @@ const productPages = {
       ]
     },
     faqs: [
-      ["静态住宅 IP 与动态住宅 IP 有什么区别？", "静态住宅 IP 在使用周期内保持不变，适合长会话和地区一致性；动态住宅代理会自动轮换，更适合大范围页面发现和弹性采集。"],
+      ["静态住宅 IP 与动态住宅 IP 有什么区别？", "静态住宅 IP 在使用周期内保持不变，适合长会话和地区一致性；动态住宅代理会自动轮换，更适合大范围页面发现和弹性爬取。"],
       ["能否指定具体 ISP？", "是否可指定取决于目标国家和当前库存。可先提交地区与 ISP 偏好，由方案人员确认可用资源。"],
       ["静态住宅为什么比数据中心代理更适合某些任务？", "它同时提供固定出口和住宅 ISP 网络属性，适合对网络类型、地区身份与会话连续性更敏感的公开数据源。"],
       ["长效静态住宅 IP 是独享的吗？", "是。固定住宅端点按 IP 独享分配，在使用周期内保持稳定，减少共享出口对长期会话的影响。"],
@@ -567,17 +567,17 @@ function headerMarkup() {
               <div class="mega-layout">
                 <div class="mega-intro">
                   <span class="mega-label">AI data workloads</span>
-                  <strong>AI 数据采集代理</strong>
-                  <p>面向视频、图片、代码和文本数据的持续下载与采集。</p>
+            <strong>AI 爬虫代理</strong>
+                  <p>面向视频、图片、代码和文本数据的持续下载与爬取。</p>
                   <a href="ai-data.html">查看 AI 数据方案${icon("arrow-right")}</a>
                 </div>
                 <div class="mega-links">
                   <a class="mega-link is-featured" href="high-bandwidth-proxy.html"><span class="mega-link-icon">${icon("gauge")}</span><span><strong>高带宽代理 IP</strong><small>AI 数据任务的核心代理产品</small></span></a>
                   <a class="mega-link" href="ai-video-proxy.html"><span class="mega-link-icon">${icon("video")}</span><span><strong>视频与多模态数据</strong><small>视频、音频、字幕与元数据下载</small></span></a>
                   <a class="mega-link" href="ai-image-proxy.html"><span class="mega-link-icon">${icon("images")}</span><span><strong>大规模图片数据</strong><small>高并发图片数据集构建</small></span></a>
-                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon">${icon("file-code-2")}</span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据采集</small></span></a>
+                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon">${icon("file-code-2")}</span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据爬取</small></span></a>
                   <a class="mega-link" href="ai-text-proxy.html"><span class="mega-link-icon">${icon("files")}</span><span><strong>全网文本与文档</strong><small>新闻、论坛、博客与公开文档</small></span></a>
-                  <a class="mega-link" href="ai-youtube-api.html"><span class="mega-link-icon">${icon("braces")}</span><span><strong>YouTube 采集 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
+                  <a class="mega-link" href="ai-youtube-api.html"><span class="mega-link-icon">${icon("braces")}</span><span><strong>YouTube 爬虫 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
                 </div>
               </div>
             </div>
@@ -589,7 +589,7 @@ function headerMarkup() {
               <div class="mega-layout">
                 <div class="mega-intro">
                   <span class="mega-label">Developers</span>
-                  <strong>从首次请求到生产采集</strong>
+                  <strong>从首次请求到生产级爬虫</strong>
                   <p>产品手册、工程指南与 9 个可运行代码案例。</p>
                   <a href="/developers/">开发者中心${icon("arrow-right")}</a>
                 </div>
@@ -609,12 +609,12 @@ function headerMarkup() {
                 <div class="mega-intro">
                   <span class="mega-label">Enterprise</span>
                   <strong>企业代理与数据服务</strong>
-                  <p>定制代理池、高带宽项目和公开数据采集交付。</p>
+                  <p>定制代理池、高带宽项目和公开爬虫项目交付。</p>
                   <a href="enterprise.html">企业服务总览${icon("arrow-right")}</a>
                 </div>
                 <div class="mega-links">
                   <a class="mega-link is-featured" href="custom-proxy-pool.html"><span class="mega-link-icon">${icon("network")}</span><span><strong>定制代理池</strong><small>按目标、任务与带宽配置资源</small></span></a>
-                  <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon">${icon("database-zap")}</span><span><strong>数据采集服务</strong><small>公开数据项目实施与交付</small></span></a>
+            <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon">${icon("database-zap")}</span><span><strong>爬虫服务</strong><small>公开数据项目实施与交付</small></span></a>
                 </div>
               </div>
             </div>
@@ -666,7 +666,7 @@ function headerMarkup() {
           <div class="mobile-submenu">
             <a href="enterprise.html">企业服务总览</a>
             <a href="custom-proxy-pool.html">定制代理池</a>
-            <a href="data-scraping-service.html">数据采集服务</a>
+            <a href="data-scraping-service.html">爬虫服务</a>
           </div>
         </details>
         <details>
@@ -695,7 +695,7 @@ function heroVisualMarkup(v) {
               <div class="tunnel-path-node">
                 ${icon("code-2")}
                 <span>REQUEST</span>
-                <strong>采集程序</strong>
+                <strong>爬虫程序</strong>
               </div>
               <span class="tunnel-path-arrow">${icon("arrow-right")}</span>
               <div class="tunnel-path-node is-gateway">
@@ -790,7 +790,7 @@ function heroVisualMarkup(v) {
             </div>
             <div class="focus-section-label"><span>套餐内可用端口</span><small>不限流量与并发</small></div>
             <div class="port-status-stack">
-              <div class="port-status-row"><span class="port-status-index">P-01</span><strong>采集节点 A</strong><small>20 Mbps</small><em>运行中</em></div>
+              <div class="port-status-row"><span class="port-status-index">P-01</span><strong>爬虫节点 A</strong><small>20 Mbps</small><em>运行中</em></div>
               <div class="port-status-row"><span class="port-status-index">P-02</span><strong>浏览器节点 B</strong><small>20 Mbps</small><em>运行中</em></div>
               <div class="port-status-row"><span class="port-status-index">P-03</span><strong>定时任务 C</strong><small>20 Mbps</small><em>运行中</em></div>
             </div>
@@ -960,11 +960,11 @@ function tunnelMainMarkup() {
             <article class="pool-mode is-crawler">
               <div class="pool-mode-head">
                 <span class="pool-label">POOL 01 / CRAWLER</span>
-                <span class="pool-badge">采集速度优先</span>
+                <span class="pool-badge">爬虫速度优先</span>
               </div>
               <div class="pool-mode-title">
                 <span class="pool-icon">${icon("route")}</span>
-                <div><h3>爬虫混合池</h3><p>约 95% 住宅 IP + 5% 数据中心 IP，公开网页采集通常更快。</p></div>
+                <div><h3>爬虫混合池</h3><p>约 95% 住宅 IP + 5% 数据中心 IP，公开网页爬取通常更快。</p></div>
               </div>
               <div class="pool-composition" aria-label="约 95% 住宅 IP 与约 5% 数据中心 IP">
                 <span class="pool-segment is-residential"></span>
@@ -975,9 +975,9 @@ function tunnelMainMarkup() {
                 <span><i class="legend-dot is-datacenter"></i><strong>约 5%</strong> 数据中心 IP</span>
               </div>
               <dl class="pool-facts">
-                <div><dt>核心优势</dt><dd>采集速度通常更快</dd></div>
+                <div><dt>核心优势</dt><dd>爬虫速度通常更快</dd></div>
                 <div><dt>出口策略</dt><dd>提取时选地区 / 自动轮换</dd></div>
-                <div><dt>适合任务</dt><dd>高频公开网页采集</dd></div>
+                <div><dt>适合任务</dt><dd>高频公开网页爬取</dd></div>
               </dl>
             </article>
             <article class="pool-mode is-pure">
@@ -999,7 +999,7 @@ function tunnelMainMarkup() {
               <dl class="pool-facts">
                 <div><dt>核心优势</dt><dd>纯住宅网络属性</dd></div>
                 <div><dt>出口策略</dt><dd>提取时选地区 / 支持 SESSION</dd></div>
-                <div><dt>适合任务</dt><dd>分页与多步骤采集</dd></div>
+                <div><dt>适合任务</dt><dd>分页与多步骤爬取</dd></div>
               </dl>
             </article>
           </div>
@@ -1012,7 +1012,7 @@ function tunnelMainMarkup() {
             <div class="boundary-column is-fit">
               <span>适合任务</span>
               <strong>粗粒度地区即可</strong>
-              <p>适合按大区组织的公开网页、高频列表和代码直连采集。</p>
+              <p>适合按大区组织的公开网页、高频列表和代码直连爬取。</p>
             </div>
             <div class="boundary-column">
               <span>其他需求</span>
@@ -1360,7 +1360,7 @@ function focusedProductMainMarkup() {
         guidanceText: "不限流量和并发不取消 5–100Mbps 带宽规格，页面完成时间仍受目标响应与客户端影响。"
       },
       workloads: {
-        title: ["浏览器自动化与", "长期住宅采集任务"],
+        title: ["浏览器自动化与", "长期住宅爬虫任务"],
         text: "适合持续在线、响应体较大或需要每端口不限并发的住宅任务。",
         alternatives: [
           ["residential-proxy.html", "map-pinned", "需要每次指定国家或地区", "选择隧道住宅代理", "按流量购买，可在鉴权中指定地区与 SESSION"],
@@ -1410,7 +1410,7 @@ function focusedProductMainMarkup() {
         text: "为需要长期复用同一来源 IP 的企业 API、自动化任务和系统连接提供端点。",
         alternatives: [
           ["static-residential-proxy.html", "house", "需要固定住宅网络身份", "选择长效静态住宅", "同时保留住宅 ISP 属性与固定出口"],
-          ["scraping-rotating-proxy.html", "shuffle", "需要大规模动态出口", "选择隧道代理", "云端自动轮换，适合常规网页采集"],
+          ["scraping-rotating-proxy.html", "shuffle", "需要大规模动态出口", "选择隧道代理", "云端自动轮换，适合常规网页爬取"],
           ["unlimited-residential-proxy.html", "infinity", "需要住宅出口且长期不限量", "选择不限量动态住宅", "按端口使用，住宅 IP 周期轮转"]
         ]
       },
@@ -1714,7 +1714,7 @@ function mainMarkup() {
         <div class="container developer-layout">
           <div class="developer-copy">
             <div class="section-kicker">05 / Developer access</div>
-            <h2>只改代理配置，不改采集逻辑</h2>
+            <h2>只改代理配置，不改爬虫逻辑</h2>
             <p>使用标准 HTTP 代理配置接入。示例中的地址与账号为演示值，实际网关、端口和鉴权信息以控制台分配为准。</p>
             <div class="developer-points">
               <span class="developer-point">${icon("check")}兼容常用 HTTP 客户端与爬虫框架</span>
@@ -1787,7 +1787,7 @@ function footerMarkup() {
         <div class="footer-main">
           <div class="footer-brand">
             <a class="brand" href="index.html">${brandMarkup()}</a>
-            <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+            <p>面向爬虫工程师和 AI 数据团队的全球代理与爬虫基础设施。</p>
           </div>
           <div class="footer-col">
             <h3>代理产品</h3>
@@ -1800,11 +1800,11 @@ function footerMarkup() {
           <div class="footer-col">
             <h3>AI 数据方案</h3>
             <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
-            <a href="ai-video-proxy.html">视频数据采集</a>
-            <a href="ai-image-proxy.html">图片数据采集</a>
+            <a href="ai-video-proxy.html">视频爬虫</a>
+            <a href="ai-image-proxy.html">图片爬虫</a>
             <a href="ai-github-proxy.html">公开代码数据</a>
             <a href="ai-text-proxy.html">文本与文档</a>
-            <a href="ai-youtube-api.html">YouTube 采集 API</a>
+            <a href="ai-youtube-api.html">YouTube 爬虫 API</a>
           </div>
           <div class="footer-col">
             <h3>开发者</h3>
@@ -1817,7 +1817,7 @@ function footerMarkup() {
             <h3>公司与支持</h3>
             <a href="enterprise.html">企业服务</a>
             <a href="custom-proxy-pool.html">定制代理池</a>
-            <a href="data-scraping-service.html">数据采集服务</a>
+              <a href="data-scraping-service.html">爬虫服务</a>
             <a href="contact.html">联系我们</a>
           </div>
         </div>

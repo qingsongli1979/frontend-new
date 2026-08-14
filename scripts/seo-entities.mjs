@@ -7,7 +7,7 @@ export const seoOrganization = {
   url: `${siteUrl}/`,
   email: "sales@123proxy.cn",
   logo: `${siteUrl}/assets/original-123proxy-logo-final.jpg`,
-  description: "123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。",
+  description: "123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽爬虫代理基础设施。",
   areaServed: "Worldwide",
   contactPoint: [
     {
@@ -29,7 +29,7 @@ export const seoOrganization = {
     "隧道代理",
     "静态代理",
     "高带宽代理 IP",
-    "AI 数据采集",
+    "AI 爬虫代理",
     "网页爬虫代理",
     "数据抓取代理"
   ]
@@ -42,7 +42,7 @@ export const productSeoFacts = {
     name: "高带宽代理 IP",
     serviceType: "High-bandwidth proxy IP service",
     category: "Proxy infrastructure for AI data scraping",
-    audience: "爬虫开发工程师、AI 数据采集团队、数据工程团队",
+    audience: "爬虫开发工程师、AI 数据团队、数据工程团队",
     description: "为 AI 视频、图片、代码和公开文档的大规模下载配置 10Gbps+ 单项目带宽、不限流量与定制代理池。",
     properties: [
       ["单项目带宽", "10Gbps+"],
@@ -57,7 +57,7 @@ export const productSeoFacts = {
     name: "隧道代理",
     serviceType: "Scraping rotating proxy",
     category: "Rotating proxy for web scraping",
-    audience: "爬虫开发工程师、采集系统开发者、数据工程团队",
+    audience: "爬虫开发工程师、爬虫系统开发者、数据工程团队",
     description: "固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。",
     properties: [
       ["代理网关", "proxy.123proxy.cn"],
@@ -73,7 +73,7 @@ export const productSeoFacts = {
     name: "隧道住宅代理",
     serviceType: "Residential rotating proxy",
     category: "Geo-targeted residential proxy",
-    audience: "爬虫开发工程师、跨地区采集任务、AI 数据采集团队",
+    audience: "爬虫开发工程师、跨地区爬虫任务、AI 数据团队",
     description: "固定网关接入 8000万+ 住宅 IP，覆盖 190+ 国家和地区，提取代理时指定国家或地区与 SESSION，仅按流量购买。",
     properties: [
       ["代理网关", "residential.123proxy.cn"],
@@ -89,7 +89,7 @@ export const productSeoFacts = {
     name: "不限量动态住宅",
     serviceType: "Unlimited residential proxy by port",
     category: "Port-based residential proxy",
-    audience: "浏览器自动化开发者、持续采集任务、AI 数据采集团队",
+    audience: "浏览器自动化开发者、持续爬虫任务、AI 数据团队",
     description: "每端口不限流量与并发，按端口和带宽套餐使用，出口 IP 每 3–30 分钟固定轮转。",
     properties: [
       ["代理网关", "unlimit.residential.123proxy.cn"],
@@ -121,7 +121,7 @@ export const productSeoFacts = {
     name: "长效静态住宅",
     serviceType: "Dedicated static residential proxy",
     category: "Static residential ISP proxy IP",
-    audience: "需要固定住宅出口的开发者、长期会话任务、AI 数据采集团队",
+    audience: "需要固定住宅出口的开发者、长期会话任务、AI 数据团队",
     description: "独享固定住宅 ISP 代理 IP，周期内不轮转，方案内不限流量，客户直连分配的代理 IP。",
     properties: [
       ["接入方式", "直连分配的代理 IP"],

@@ -62,7 +62,7 @@ export const networkZh = {
         href: "unlimited-residential-proxy.html",
         location: "提取时按套餐设置地区，不能逐端口指定",
         session: "每个端口固定 3-30 分钟后轮换",
-        fit: "长时间运行、端口不限并发的采集任务"
+        fit: "长时间运行、端口不限并发的爬虫任务"
       },
       {
         icon: "map-pinned",
@@ -78,15 +78,15 @@ export const networkZh = {
         href: "high-bandwidth-proxy.html",
         location: "按目标、任务规模与资源要求规划",
         session: "项目级代理资源与容量配置",
-        fit: "视频、图片、代码和大文件数据采集"
+        fit: "视频、图片、代码和大文件数据爬取"
       }
     ]
   },
   routing: {
     title: "HTTP(S) / SOCKS 标准代理接入",
-    text: "购买套餐后，在控制台或 API 提取代理时选择地区、代理池和 SESSION，再由采集程序连接代理网关。",
+    text: "购买套餐后，在控制台或 API 提取代理时选择地区、代理池和 SESSION，再由爬虫程序连接代理网关。",
     steps: [
-      ["01", "采集程序", "requests / Scrapy / Playwright"],
+      ["01", "爬虫程序", "requests / Scrapy / Playwright"],
       ["02", "统一代理入口", "HTTP(S) / SOCKS"],
       ["03", "路由策略", "产品 / 地区 / SESSION"],
       ["04", "代理资源", "轮换 / 住宅 / 固定出口"],

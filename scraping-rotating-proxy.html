@@ -25,7 +25,7 @@
   <meta name="twitter:title" content="隧道代理 - 混合与纯住宅双代理池 | 123Proxy">
   <meta name="twitter:description" content="123Proxy 隧道代理提供爬虫混合池与纯住宅 IP 池。混合池由约 95% 住宅 IP 和约 5% 数据中心 IP 组成，纯住宅池支持 SESSION；支持流量或不限流量并发线程方案。">
   <meta name="twitter:image" content="https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽数据采集代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 数据采集","网页爬虫代理","数据抓取代理"]},{"@type":"Service","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service","name":"隧道代理","description":"固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。","serviceType":"Scraping rotating proxy","category":"Rotating proxy for web scraping","url":"https://www.123proxy.cn/scraping-rotating-proxy.html","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、采集系统开发者、数据工程团队"},"areaServed":"Worldwide","dateModified":"2026-07-29","additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"proxy.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"36923"},{"@type":"PropertyValue","name":"默认地区","value":"全球随机"},{"@type":"PropertyValue","name":"代理池","value":"爬虫混合池约 95% 住宅 IP + 5% 数据中心 IP；纯住宅池为 100% 住宅 IP"},{"@type":"PropertyValue","name":"计费方式","value":"按流量或按并发线程"}]},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"隧道代理","item":"https://www.123proxy.cn/scraping-rotating-proxy.html"}]},{"@type":"FAQPage","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#faq","mainEntity":[{"@type":"Question","name":"按流量和按并发线程有什么区别，应该怎么选？","acceptedAnswer":{"@type":"Answer","text":"按流量方案根据实际传输的数据量计费，更适合任务规模尚不稳定、响应体较小或需要按项目核算 GB 的场景。并发线程方案根据同时在途的请求数配置容量，方案内不累计传输流量，更适合代码持续、高频请求。建议用真实目标站点测试平均响应时间、响应体大小和峰值并发后再决定。"}},{"@type":"Question","name":"爬虫混合池和纯住宅 IP 池有什么区别？","acceptedAnswer":{"@type":"Answer","text":"爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页采集中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。"}},{"@type":"Question","name":"按并发线程使用为什么可以不限流量？","acceptedAnswer":{"@type":"Answer","text":"线程方案以同一时刻正在执行的请求数量作为容量口径，不按传输 GB 累计计费，因此方案内不限流量。不限流量不等于无限速度，目标站点响应时间、线程数量、重试策略和网络状况仍会影响实际吞吐。"}},{"@type":"Question","name":"一个并发线程如何计算？它与 QPS 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"一个仍在等待响应的 HTTP 请求占用一个并发线程。QPS 是每秒完成的请求数，近似受“线程数 ÷ 平均响应时间”影响。例如响应越快，相同线程数可以完成的 QPS 越高；超时和重试会降低有效吞吐。"}},{"@type":"Question","name":"浏览器打开一个页面只占用一个线程吗？","acceptedAnswer":{"@type":"Answer","text":"不是。浏览器会并行加载 HTML、图片、CSS、JavaScript、字体和接口请求，打开一个页面通常需要约 10–20 个并发线程。线程方案更适合 requests、Scrapy 等程序直接走 HTTP 协议；浏览器自动化应按真实页面资源量评估。"}},{"@type":"Question","name":"隧道代理与隧道住宅代理的核心区别是什么？","acceptedAnswer":{"@type":"Answer","text":"隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，采集通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。"}},{"@type":"Question","name":"隧道代理默认如何分配地区？","acceptedAnswer":{"@type":"Answer","text":"默认从全球资源中随机分配出口。提取代理时也可选择欧美、北美、欧洲、亚洲、美国或日韩，不提供城市级定向；需要更细的国家或地区定位时，应选择隧道住宅代理。"}},{"@type":"Question","name":"哪些代理池支持 SESSION？","acceptedAnswer":{"@type":"Answer","text":"SESSION 仅在隧道代理的纯住宅池提供，可在设定时间内尽量保持同一住宅出口，适合分页、多步骤请求或短期连续会话。SESSION 到期、出口不可用或策略触发后，系统会重新分配代理 IP。"}},{"@type":"Question","name":"是否需要在本地维护代理 IP 列表？","acceptedAnswer":{"@type":"Answer","text":"不需要。应用连接固定隧道网关，由云端完成代理池选择、出口分配、健康检查与切换；程序只需配置鉴权、超时、重试，以及纯住宅池所需的可选 SESSION。"}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.123proxy.cn/#organization","name":"123Proxy","url":"https://www.123proxy.cn/","email":"sales@123proxy.cn","logo":"https://www.123proxy.cn/assets/original-123proxy-logo-final.jpg","description":"123Proxy 面向爬虫工程师和 AI 数据团队提供海外代理 IP、住宅代理、静态代理与高带宽爬虫代理基础设施。","areaServed":"Worldwide","contactPoint":[{"@type":"ContactPoint","contactType":"技术支持、定制咨询与企业咨询","url":"https://www.123proxy.cn/contact.html#solutions","availableLanguage":["zh-CN"]},{"@type":"ContactPoint","contactType":"免费测试、开票与基础客服","url":"https://www.123proxy.cn/contact.html#service","availableLanguage":["zh-CN"]}],"knowsAbout":["海外代理 IP","住宅代理","隧道代理","静态代理","高带宽代理 IP","AI 爬虫代理","网页爬虫代理","数据抓取代理"]},{"@type":"Service","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#service","name":"隧道代理","description":"固定网关接入爬虫混合池或纯住宅池，默认全球随机，支持按流量或并发线程使用。","serviceType":"Scraping rotating proxy","category":"Rotating proxy for web scraping","url":"https://www.123proxy.cn/scraping-rotating-proxy.html","provider":{"@id":"https://www.123proxy.cn/#organization"},"audience":{"@type":"Audience","audienceType":"爬虫开发工程师、爬虫系统开发者、数据工程团队"},"areaServed":"Worldwide","dateModified":"2026-07-29","additionalProperty":[{"@type":"PropertyValue","name":"代理网关","value":"proxy.123proxy.cn"},{"@type":"PropertyValue","name":"端口","value":"36923"},{"@type":"PropertyValue","name":"默认地区","value":"全球随机"},{"@type":"PropertyValue","name":"代理池","value":"爬虫混合池约 95% 住宅 IP + 5% 数据中心 IP；纯住宅池为 100% 住宅 IP"},{"@type":"PropertyValue","name":"计费方式","value":"按流量或按并发线程"}]},{"@type":"BreadcrumbList","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://www.123proxy.cn/"},{"@type":"ListItem","position":2,"name":"隧道代理","item":"https://www.123proxy.cn/scraping-rotating-proxy.html"}]},{"@type":"FAQPage","@id":"https://www.123proxy.cn/scraping-rotating-proxy.html#faq","mainEntity":[{"@type":"Question","name":"按流量和按并发线程有什么区别，应该怎么选？","acceptedAnswer":{"@type":"Answer","text":"按流量方案根据实际传输的数据量计费，更适合任务规模尚不稳定、响应体较小或需要按项目核算 GB 的场景。并发线程方案根据同时在途的请求数配置容量，方案内不累计传输流量，更适合代码持续、高频请求。建议用真实目标站点测试平均响应时间、响应体大小和峰值并发后再决定。"}},{"@type":"Question","name":"爬虫混合池和纯住宅 IP 池有什么区别？","acceptedAnswer":{"@type":"Answer","text":"爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页爬取中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。"}},{"@type":"Question","name":"按并发线程使用为什么可以不限流量？","acceptedAnswer":{"@type":"Answer","text":"线程方案以同一时刻正在执行的请求数量作为容量口径，不按传输 GB 累计计费，因此方案内不限流量。不限流量不等于无限速度，目标站点响应时间、线程数量、重试策略和网络状况仍会影响实际吞吐。"}},{"@type":"Question","name":"一个并发线程如何计算？它与 QPS 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"一个仍在等待响应的 HTTP 请求占用一个并发线程。QPS 是每秒完成的请求数，近似受“线程数 ÷ 平均响应时间”影响。例如响应越快，相同线程数可以完成的 QPS 越高；超时和重试会降低有效吞吐。"}},{"@type":"Question","name":"浏览器打开一个页面只占用一个线程吗？","acceptedAnswer":{"@type":"Answer","text":"不是。浏览器会并行加载 HTML、图片、CSS、JavaScript、字体和接口请求，打开一个页面通常需要约 10–20 个并发线程。线程方案更适合 requests、Scrapy 等程序直接走 HTTP 协议；浏览器自动化应按真实页面资源量评估。"}},{"@type":"Question","name":"隧道代理与隧道住宅代理的核心区别是什么？","acceptedAnswer":{"@type":"Answer","text":"隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，爬取通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。"}},{"@type":"Question","name":"隧道代理默认如何分配地区？","acceptedAnswer":{"@type":"Answer","text":"默认从全球资源中随机分配出口。提取代理时也可选择欧美、北美、欧洲、亚洲、美国或日韩，不提供城市级定向；需要更细的国家或地区定位时，应选择隧道住宅代理。"}},{"@type":"Question","name":"哪些代理池支持 SESSION？","acceptedAnswer":{"@type":"Answer","text":"SESSION 仅在隧道代理的纯住宅池提供，可在设定时间内尽量保持同一住宅出口，适合分页、多步骤请求或短期连续会话。SESSION 到期、出口不可用或策略触发后，系统会重新分配代理 IP。"}},{"@type":"Question","name":"是否需要在本地维护代理 IP 列表？","acceptedAnswer":{"@type":"Answer","text":"不需要。应用连接固定隧道网关，由云端完成代理池选择、出口分配、健康检查与切换；程序只需配置鉴权、超时、重试，以及纯住宅池所需的可选 SESSION。"}}]}]}</script>
   <!-- SEO_META_END -->
   <link rel="stylesheet" href="assets/visual-refinement.css?v=20260813-05">
 <!-- GOOGLE_TAG_START -->
@@ -121,17 +121,17 @@
               <div class="mega-layout">
                 <div class="mega-intro">
                   <span class="mega-label">AI data workloads</span>
-                  <strong>AI 数据采集代理</strong>
-                  <p>面向视频、图片、代码和文本数据的持续下载与采集。</p>
+            <strong>AI 爬虫代理</strong>
+                  <p>面向视频、图片、代码和文本数据的持续下载与爬取。</p>
                   <a href="ai-data.html">查看 AI 数据方案<i data-lucide="arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="mega-links">
                   <a class="mega-link is-featured" href="high-bandwidth-proxy.html"><span class="mega-link-icon"><i data-lucide="gauge" aria-hidden="true"></i></span><span><strong>高带宽代理 IP</strong><small>AI 数据任务的核心代理产品</small></span></a>
                   <a class="mega-link" href="ai-video-proxy.html"><span class="mega-link-icon"><i data-lucide="video" aria-hidden="true"></i></span><span><strong>视频与多模态数据</strong><small>视频、音频、字幕与元数据下载</small></span></a>
                   <a class="mega-link" href="ai-image-proxy.html"><span class="mega-link-icon"><i data-lucide="images" aria-hidden="true"></i></span><span><strong>大规模图片数据</strong><small>高并发图片数据集构建</small></span></a>
-                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon"><i data-lucide="file-code-2" aria-hidden="true"></i></span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据采集</small></span></a>
+                  <a class="mega-link" href="ai-github-proxy.html"><span class="mega-link-icon"><i data-lucide="file-code-2" aria-hidden="true"></i></span><span><strong>公开代码数据</strong><small>代码仓库与 Code LLM 数据爬取</small></span></a>
                   <a class="mega-link" href="ai-text-proxy.html"><span class="mega-link-icon"><i data-lucide="files" aria-hidden="true"></i></span><span><strong>全网文本与文档</strong><small>新闻、论坛、博客与公开文档</small></span></a>
-                  <a class="mega-link" href="ai-youtube-api.html"><span class="mega-link-icon"><i data-lucide="braces" aria-hidden="true"></i></span><span><strong>YouTube 采集 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
+                  <a class="mega-link" href="ai-youtube-api.html"><span class="mega-link-icon"><i data-lucide="braces" aria-hidden="true"></i></span><span><strong>YouTube 爬虫 API</strong><small>视频元数据、字幕与评论接口</small></span></a>
                 </div>
               </div>
             </div>
@@ -143,7 +143,7 @@
               <div class="mega-layout">
                 <div class="mega-intro">
                   <span class="mega-label">Developers</span>
-                  <strong>从首次请求到生产采集</strong>
+                  <strong>从首次请求到生产级爬虫</strong>
                   <p>产品手册、工程指南与 9 个可运行代码案例。</p>
                   <a href="/developers/">开发者中心<i data-lucide="arrow-right" aria-hidden="true"></i></a>
                 </div>
@@ -163,12 +163,12 @@
                 <div class="mega-intro">
                   <span class="mega-label">Enterprise</span>
                   <strong>企业代理与数据服务</strong>
-                  <p>定制代理池、高带宽项目和公开数据采集交付。</p>
+                  <p>定制代理池、高带宽项目和公开爬虫项目交付。</p>
                   <a href="enterprise.html">企业服务总览<i data-lucide="arrow-right" aria-hidden="true"></i></a>
                 </div>
                 <div class="mega-links">
                   <a class="mega-link is-featured" href="custom-proxy-pool.html"><span class="mega-link-icon"><i data-lucide="network" aria-hidden="true"></i></span><span><strong>定制代理池</strong><small>按目标、任务与带宽配置资源</small></span></a>
-                  <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon"><i data-lucide="database-zap" aria-hidden="true"></i></span><span><strong>数据采集服务</strong><small>公开数据项目实施与交付</small></span></a>
+            <a class="mega-link" href="data-scraping-service.html"><span class="mega-link-icon"><i data-lucide="database-zap" aria-hidden="true"></i></span><span><strong>爬虫服务</strong><small>公开数据项目实施与交付</small></span></a>
                 </div>
               </div>
             </div>
@@ -250,7 +250,7 @@
           <div class="mobile-submenu">
             <a href="enterprise.html">企业服务总览</a>
             <a href="custom-proxy-pool.html">定制代理池</a>
-            <a href="data-scraping-service.html">数据采集服务</a>
+            <a href="data-scraping-service.html">爬虫服务</a>
           </div>
         </details>
         <details>
@@ -292,7 +292,7 @@
               <div class="tunnel-path-node">
                 <i data-lucide="code-2" aria-hidden="true"></i>
                 <span>REQUEST</span>
-                <strong>采集程序</strong>
+                <strong>爬虫程序</strong>
               </div>
               <span class="tunnel-path-arrow"><i data-lucide="arrow-right" aria-hidden="true"></i></span>
               <div class="tunnel-path-node is-gateway">
@@ -341,17 +341,17 @@
         <div class="container">
           <div class="section-head">
             <div><div class="section-kicker">01 / Product capability</div><h2><span class="section-title-line">爬虫混合池与</span><span class="section-title-line">纯住宅 IP 池</span></h2></div>
-            <p>混合池约含 5% 数据中心 IP，公开网页采集通常更快；纯住宅池仅含住宅 IP，并支持 SESSION。</p>
+            <p>混合池约含 5% 数据中心 IP，公开网页爬取通常更快；纯住宅池仅含住宅 IP，并支持 SESSION。</p>
           </div>
           <div class="pool-mode-grid">
             <article class="pool-mode is-crawler">
               <div class="pool-mode-head">
                 <span class="pool-label">POOL 01 / CRAWLER</span>
-                <span class="pool-badge">采集速度优先</span>
+                <span class="pool-badge">爬虫速度优先</span>
               </div>
               <div class="pool-mode-title">
                 <span class="pool-icon"><i data-lucide="route" aria-hidden="true"></i></span>
-                <div><h3>爬虫混合池</h3><p>约 95% 住宅 IP + 5% 数据中心 IP，公开网页采集通常更快。</p></div>
+                <div><h3>爬虫混合池</h3><p>约 95% 住宅 IP + 5% 数据中心 IP，公开网页爬取通常更快。</p></div>
               </div>
               <div class="pool-composition" aria-label="约 95% 住宅 IP 与约 5% 数据中心 IP">
                 <span class="pool-segment is-residential"></span>
@@ -362,9 +362,9 @@
                 <span><i class="legend-dot is-datacenter"></i><strong>约 5%</strong> 数据中心 IP</span>
               </div>
               <dl class="pool-facts">
-                <div><dt>核心优势</dt><dd>采集速度通常更快</dd></div>
+                <div><dt>核心优势</dt><dd>爬虫速度通常更快</dd></div>
                 <div><dt>出口策略</dt><dd>提取时选地区 / 自动轮换</dd></div>
-                <div><dt>适合任务</dt><dd>高频公开网页采集</dd></div>
+                <div><dt>适合任务</dt><dd>高频公开网页爬取</dd></div>
               </dl>
             </article>
             <article class="pool-mode is-pure">
@@ -386,7 +386,7 @@
               <dl class="pool-facts">
                 <div><dt>核心优势</dt><dd>纯住宅网络属性</dd></div>
                 <div><dt>出口策略</dt><dd>提取时选地区 / 支持 SESSION</dd></div>
-                <div><dt>适合任务</dt><dd>分页与多步骤采集</dd></div>
+                <div><dt>适合任务</dt><dd>分页与多步骤爬取</dd></div>
               </dl>
             </article>
           </div>
@@ -399,7 +399,7 @@
             <div class="boundary-column is-fit">
               <span>适合任务</span>
               <strong>粗粒度地区即可</strong>
-              <p>适合按大区组织的公开网页、高频列表和代码直连采集。</p>
+              <p>适合按大区组织的公开网页、高频列表和代码直连爬取。</p>
             </div>
             <div class="boundary-column">
               <span>其他需求</span>
@@ -477,7 +477,7 @@
             <p>混合池适合速度优先的短请求，纯住宅池适合需要住宅属性和 SESSION 的请求。</p>
           </div>
           <div class="workload-grid">
-            <article class="workload-card"><span class="workload-index">01</span><h3>公开网页持续抓取</h3><p>混合池适合列表页、详情页和搜索结果等大量短请求，采集通常更快。</p><div class="workload-meta">推荐：混合池 + 并发线程</div></article><article class="workload-card"><span class="workload-index">02</span><h3>分页与多步骤采集</h3><p>纯住宅池支持 SESSION，适合不依赖地区定向的分页和多步骤任务。</p><div class="workload-meta">推荐：纯住宅池</div></article><article class="workload-card"><span class="workload-index">03</span><h3>请求量波动明显的项目</h3><p>任务量或响应体波动较大时，可按实际传输流量核算。</p><div class="workload-meta">推荐：按流量</div></article>
+            <article class="workload-card"><span class="workload-index">01</span><h3>公开网页持续抓取</h3><p>混合池适合列表页、详情页和搜索结果等大量短请求，爬取通常更快。</p><div class="workload-meta">推荐：混合池 + 并发线程</div></article><article class="workload-card"><span class="workload-index">02</span><h3>分页与多步骤爬取</h3><p>纯住宅池支持 SESSION，适合不依赖地区定向的分页和多步骤任务。</p><div class="workload-meta">推荐：纯住宅池</div></article><article class="workload-card"><span class="workload-index">03</span><h3>请求量波动明显的项目</h3><p>任务量或响应体波动较大时，可按实际传输流量核算。</p><div class="workload-meta">推荐：按流量</div></article>
           </div>
           <div class="alternative-grid">
             <a href="residential-proxy.html"><span><i data-lucide="map-pinned" aria-hidden="true"></i>需要地区定向</span><strong>选择隧道住宅代理</strong><small>可按国家或地区选择纯住宅 ISP 出口</small></a>
@@ -500,7 +500,7 @@
           <div class="architecture">
             <div class="architecture-head"><span>Proxy request architecture</span><span>123Proxy network</span></div>
             <div class="architecture-flow">
-              <div class="arch-node"><i data-lucide="code-2" aria-hidden="true"></i><div><strong>采集应用</strong><small>REQUEST</small></div></div><div class="arch-node"><i data-lucide="waypoints" aria-hidden="true"></i><div><strong>隧道网关</strong><small>AUTH</small></div></div><div class="arch-node"><i data-lucide="git-branch" aria-hidden="true"></i><div><strong>双池调度</strong><small>SELECT</small></div></div><div class="arch-node"><i data-lucide="globe-2" aria-hidden="true"></i><div><strong>目标站点</strong><small>RESPONSE</small></div></div>
+              <div class="arch-node"><i data-lucide="code-2" aria-hidden="true"></i><div><strong>爬虫程序</strong><small>REQUEST</small></div></div><div class="arch-node"><i data-lucide="waypoints" aria-hidden="true"></i><div><strong>隧道网关</strong><small>AUTH</small></div></div><div class="arch-node"><i data-lucide="git-branch" aria-hidden="true"></i><div><strong>双池调度</strong><small>SELECT</small></div></div><div class="arch-node"><i data-lucide="globe-2" aria-hidden="true"></i><div><strong>目标站点</strong><small>RESPONSE</small></div></div>
             </div>
             <div class="architecture-foot">
               <div class="arch-stat"><span>代理池</span><strong>混合 / 纯住宅</strong></div><div class="arch-stat"><span>出口地区</span><strong>提取时选择</strong></div><div class="arch-stat"><span>容量模型</span><strong>流量 / 线程</strong></div>
@@ -516,7 +516,7 @@
             <p>地区在提取代理时选择；SESSION 仅用于纯住宅池。</p>
           </div>
           <dl class="spec-table">
-            <div class="spec-row"><dt>代理池</dt><dd>爬虫混合池 / 纯住宅 IP 池</dd></div><div class="spec-row"><dt>爬虫混合池</dt><dd>约 95% 住宅 IP + 约 5% 数据中心 IP；采集速度通常比隧道住宅代理更快</dd></div><div class="spec-row"><dt>纯住宅 IP 池</dt><dd>池内仅包含住宅 IP，支持 SESSION 保持出口</dd></div><div class="spec-row"><dt>出口地区</dt><dd>默认全球随机；提取代理时可选欧美、北美、欧洲、亚洲、美国或日韩</dd></div><div class="spec-row"><dt>计费方式</dt><dd>按流量；或按并发线程使用，并发线程方案不限流量</dd></div><div class="spec-row"><dt>IP 切换</dt><dd>云端自动轮换；纯住宅池可通过 SESSION 保持同一出口</dd></div><div class="spec-row"><dt>接入协议</dt><dd>HTTP(S) / SOCKS</dd></div><div class="spec-row"><dt>并发计算</dt><dd>每个同时在途的 HTTP 请求占用一个并发线程</dd></div>
+            <div class="spec-row"><dt>代理池</dt><dd>爬虫混合池 / 纯住宅 IP 池</dd></div><div class="spec-row"><dt>爬虫混合池</dt><dd>约 95% 住宅 IP + 约 5% 数据中心 IP；爬虫速度通常比隧道住宅代理更快</dd></div><div class="spec-row"><dt>纯住宅 IP 池</dt><dd>池内仅包含住宅 IP，支持 SESSION 保持出口</dd></div><div class="spec-row"><dt>出口地区</dt><dd>默认全球随机；提取代理时可选欧美、北美、欧洲、亚洲、美国或日韩</dd></div><div class="spec-row"><dt>计费方式</dt><dd>按流量；或按并发线程使用，并发线程方案不限流量</dd></div><div class="spec-row"><dt>IP 切换</dt><dd>云端自动轮换；纯住宅池可通过 SESSION 保持同一出口</dd></div><div class="spec-row"><dt>接入协议</dt><dd>HTTP(S) / SOCKS</dd></div><div class="spec-row"><dt>并发计算</dt><dd>每个同时在途的 HTTP 请求占用一个并发线程</dd></div>
           </dl>
         </div>
       </section>
@@ -556,7 +556,7 @@
             <p>双池、默认全球随机、粗粒度地区、SESSION、流量与并发线程。</p>
           </div>
           <div class="faq-list">
-            <details class="faq-item" open><summary>按流量和按并发线程有什么区别，应该怎么选？</summary><p>按流量方案根据实际传输的数据量计费，更适合任务规模尚不稳定、响应体较小或需要按项目核算 GB 的场景。并发线程方案根据同时在途的请求数配置容量，方案内不累计传输流量，更适合代码持续、高频请求。建议用真实目标站点测试平均响应时间、响应体大小和峰值并发后再决定。</p></details><details class="faq-item"><summary>爬虫混合池和纯住宅 IP 池有什么区别？</summary><p>爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页采集中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。</p></details><details class="faq-item"><summary>按并发线程使用为什么可以不限流量？</summary><p>线程方案以同一时刻正在执行的请求数量作为容量口径，不按传输 GB 累计计费，因此方案内不限流量。不限流量不等于无限速度，目标站点响应时间、线程数量、重试策略和网络状况仍会影响实际吞吐。</p></details><details class="faq-item"><summary>一个并发线程如何计算？它与 QPS 有什么区别？</summary><p>一个仍在等待响应的 HTTP 请求占用一个并发线程。QPS 是每秒完成的请求数，近似受“线程数 ÷ 平均响应时间”影响。例如响应越快，相同线程数可以完成的 QPS 越高；超时和重试会降低有效吞吐。</p></details><details class="faq-item"><summary>浏览器打开一个页面只占用一个线程吗？</summary><p>不是。浏览器会并行加载 HTML、图片、CSS、JavaScript、字体和接口请求，打开一个页面通常需要约 10–20 个并发线程。线程方案更适合 requests、Scrapy 等程序直接走 HTTP 协议；浏览器自动化应按真实页面资源量评估。</p></details><details class="faq-item"><summary>隧道代理与隧道住宅代理的核心区别是什么？</summary><p>隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，采集通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。</p></details><details class="faq-item"><summary>隧道代理默认如何分配地区？</summary><p>默认从全球资源中随机分配出口。提取代理时也可选择欧美、北美、欧洲、亚洲、美国或日韩，不提供城市级定向；需要更细的国家或地区定位时，应选择隧道住宅代理。</p></details><details class="faq-item"><summary>哪些代理池支持 SESSION？</summary><p>SESSION 仅在隧道代理的纯住宅池提供，可在设定时间内尽量保持同一住宅出口，适合分页、多步骤请求或短期连续会话。SESSION 到期、出口不可用或策略触发后，系统会重新分配代理 IP。</p></details><details class="faq-item"><summary>是否需要在本地维护代理 IP 列表？</summary><p>不需要。应用连接固定隧道网关，由云端完成代理池选择、出口分配、健康检查与切换；程序只需配置鉴权、超时、重试，以及纯住宅池所需的可选 SESSION。</p></details>
+            <details class="faq-item" open><summary>按流量和按并发线程有什么区别，应该怎么选？</summary><p>按流量方案根据实际传输的数据量计费，更适合任务规模尚不稳定、响应体较小或需要按项目核算 GB 的场景。并发线程方案根据同时在途的请求数配置容量，方案内不累计传输流量，更适合代码持续、高频请求。建议用真实目标站点测试平均响应时间、响应体大小和峰值并发后再决定。</p></details><details class="faq-item"><summary>爬虫混合池和纯住宅 IP 池有什么区别？</summary><p>爬虫混合池由约 95% 住宅 IP 与约 5% 数据中心 IP 组成，少量数据中心出口使其在公开网页爬取中的速度通常比隧道住宅代理更快。纯住宅池仅包含住宅 IP，并支持通过 SESSION 保持同一出口。两个池默认全球随机，也支持在提取代理时选择粗粒度地区范围。</p></details><details class="faq-item"><summary>按并发线程使用为什么可以不限流量？</summary><p>线程方案以同一时刻正在执行的请求数量作为容量口径，不按传输 GB 累计计费，因此方案内不限流量。不限流量不等于无限速度，目标站点响应时间、线程数量、重试策略和网络状况仍会影响实际吞吐。</p></details><details class="faq-item"><summary>一个并发线程如何计算？它与 QPS 有什么区别？</summary><p>一个仍在等待响应的 HTTP 请求占用一个并发线程。QPS 是每秒完成的请求数，近似受“线程数 ÷ 平均响应时间”影响。例如响应越快，相同线程数可以完成的 QPS 越高；超时和重试会降低有效吞吐。</p></details><details class="faq-item"><summary>浏览器打开一个页面只占用一个线程吗？</summary><p>不是。浏览器会并行加载 HTML、图片、CSS、JavaScript、字体和接口请求，打开一个页面通常需要约 10–20 个并发线程。线程方案更适合 requests、Scrapy 等程序直接走 HTTP 协议；浏览器自动化应按真实页面资源量评估。</p></details><details class="faq-item"><summary>隧道代理与隧道住宅代理的核心区别是什么？</summary><p>隧道代理提供爬虫混合池和纯住宅池，默认全球随机；提取时也可选择欧美、北美、欧洲、亚洲、美国或日韩。混合池含约 5% 数据中心 IP，爬取通常更快；纯住宅池支持 SESSION。隧道住宅代理可进一步指定国家或地区。</p></details><details class="faq-item"><summary>隧道代理默认如何分配地区？</summary><p>默认从全球资源中随机分配出口。提取代理时也可选择欧美、北美、欧洲、亚洲、美国或日韩，不提供城市级定向；需要更细的国家或地区定位时，应选择隧道住宅代理。</p></details><details class="faq-item"><summary>哪些代理池支持 SESSION？</summary><p>SESSION 仅在隧道代理的纯住宅池提供，可在设定时间内尽量保持同一住宅出口，适合分页、多步骤请求或短期连续会话。SESSION 到期、出口不可用或策略触发后，系统会重新分配代理 IP。</p></details><details class="faq-item"><summary>是否需要在本地维护代理 IP 列表？</summary><p>不需要。应用连接固定隧道网关，由云端完成代理池选择、出口分配、健康检查与切换；程序只需配置鉴权、超时、重试，以及纯住宅池所需的可选 SESSION。</p></details>
           </div>
         </div>
       </section>
@@ -585,7 +585,7 @@
       <text x="34" y="39.2" fill="#fff" font-family="Montserrat, Arial, sans-serif" font-size="14.5" font-weight="600" text-anchor="middle">3</text>
     </svg>
     <span class="brand-wordmark"><img class="wordmark-proxy-original" src="assets/123proxy-proxy-original.svg" alt="Proxy"></span></a>
-            <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+            <p>面向爬虫工程师和 AI 数据团队的全球代理与爬虫基础设施。</p>
           </div>
           <div class="footer-col">
             <h3>代理产品</h3>
@@ -598,11 +598,11 @@
           <div class="footer-col">
             <h3>AI 数据方案</h3>
             <a href="high-bandwidth-proxy.html">高带宽代理 IP</a>
-            <a href="ai-video-proxy.html">视频数据采集</a>
-            <a href="ai-image-proxy.html">图片数据采集</a>
+            <a href="ai-video-proxy.html">视频爬虫</a>
+            <a href="ai-image-proxy.html">图片爬虫</a>
             <a href="ai-github-proxy.html">公开代码数据</a>
             <a href="ai-text-proxy.html">文本与文档</a>
-            <a href="ai-youtube-api.html">YouTube 采集 API</a>
+            <a href="ai-youtube-api.html">YouTube 爬虫 API</a>
           </div>
           <div class="footer-col">
             <h3>开发者</h3>
@@ -615,7 +615,7 @@
             <h3>公司与支持</h3>
             <a href="enterprise.html">企业服务</a>
             <a href="custom-proxy-pool.html">定制代理池</a>
-            <a href="data-scraping-service.html">数据采集服务</a>
+              <a href="data-scraping-service.html">爬虫服务</a>
             <a href="contact.html">联系我们</a>
           </div>
         </div>

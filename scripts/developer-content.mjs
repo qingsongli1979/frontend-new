@@ -77,7 +77,7 @@ export const developerPages = {
     output: "developers/getting-started/index.html",
     route: "/developers/getting-started/",
     title: "5 分钟快速开始 | 123Proxy 开发者中心",
-    description: "通过 123Proxy 控制台生成代理，使用 cURL 验证 HTTP(S) 或 SOCKS5，并接入 Python 采集程序。",
+    description: "通过 123Proxy 控制台生成代理，使用 cURL 验证 HTTP(S) 或 SOCKS5，并接入 Python 爬虫程序。",
     heading: "5 分钟完成第一个代理请求"
   },
   tunnel: {
@@ -873,7 +873,7 @@ function footerMarkup() {
       <div class="docs-frame docs-footer-inner">
         <div>
           <a class="brand docs-footer-brand" href="/">${brandMarkup()}</a>
-          <p>面向爬虫工程师和 AI 数据团队的全球代理与数据采集基础设施。</p>
+          <p>面向爬虫工程师和 AI 数据团队的全球代理与爬虫基础设施。</p>
         </div>
         <div class="docs-footer-links">
           <a href="/developers/getting-started/">快速开始</a>
@@ -1012,7 +1012,7 @@ function homeMain() {
           <div class="docs-home-copy">
             <span class="docs-eyebrow">${icon("square-terminal")}DEVELOPER DOCUMENTATION</span>
             <h1>从一条 cURL 开始，<br>接入全球代理网络</h1>
-            <p>选择代理产品，配置认证、地区与 SESSION，将可运行的代理请求接入爬虫和 AI 数据采集任务。</p>
+        <p>选择代理产品，配置认证、地区与 SESSION，将可运行的代理请求接入网页爬虫和 AI 爬虫任务。</p>
             ${searchMarkup()}
             <div class="docs-home-actions">
               <a class="btn btn-primary" href="/developers/getting-started/">${icon("rocket")}5 分钟快速开始</a>
@@ -1095,7 +1095,7 @@ function gettingStartedMain(page) {
     <header class="docs-article-header">
       <span class="docs-article-label">GETTING STARTED</span>
       <h1>5 分钟完成第一个代理请求</h1>
-      <p>从控制台生成一组代理接入信息，先用 cURL 验证，再复制到 Python、Scrapy 或其他采集程序。</p>
+      <p>从控制台生成一组代理接入信息，先用 cURL 验证，再复制到 Python、Scrapy 或其他爬虫程序。</p>
       <div class="docs-article-meta"><span>${icon("clock-3")}约 5 分钟</span><span>${icon("code-2")}无需 SDK</span><span>${icon("shield-check")}HTTP(S) / SOCKS5</span></div>
     </header>
 
@@ -1110,7 +1110,7 @@ function gettingStartedMain(page) {
         <h2>选择代理产品和套餐</h2>
         <p>第一次测试可优先选择隧道代理或隧道住宅代理。需要先明确任务按流量、并发线程、端口还是固定 IP 计费。</p>
         <div class="docs-decision-grid">
-          <a href="/developers/products/scraping-rotating-proxy/"><strong>通用网页采集</strong><span>隧道代理</span><small>混合池通常更快；纯住宅池支持 SESSION</small></a>
+          <a href="/developers/products/scraping-rotating-proxy/"><strong>通用网页爬虫</strong><span>隧道代理</span><small>混合池通常更快；纯住宅池支持 SESSION</small></a>
           <a href="/developers/products/residential-rotating-proxy/"><strong>国家定向住宅出口</strong><span>隧道住宅代理</span><small>仅按流量，支持国家和 SESSION</small></a>
           <a href="/developers/products/unlimited-residential-proxy/"><strong>持续大流量任务</strong><span>不限量动态住宅</span><small>按端口，不限流量与并发</small></a>
         </div>
@@ -1141,7 +1141,7 @@ function gettingStartedMain(page) {
         <div class="docs-compare-table">
           <div class="docs-compare-head"><span>认证方式</span><span>适合场景</span><span>程序配置</span></div>
           <div><strong>代理用户名 / 密码</strong><span>开发机、多 worker、动态服务器</span><span>在代理 URL 或客户端认证参数中发送</span></div>
-          <div><strong>套餐 IP 白名单</strong><span>公网 IP 固定的采集服务器</span><span>程序只配置 HOST:PORT</span></div>
+          <div><strong>套餐 IP 白名单</strong><span>公网 IP 固定的爬虫服务器</span><span>程序只配置 HOST:PORT</span></div>
         </div>
         <div class="docs-callout">
           ${icon("info")}
@@ -1154,7 +1154,7 @@ function gettingStartedMain(page) {
       <span class="docs-step-number">04</span>
       <div>
         <h2>先用 cURL 验证代理</h2>
-        <p>代码已使用隧道代理固定网关 <code>proxy.123proxy.cn:36923</code>。只需将控制台生成的代理用户名和密码写入环境变量，成功后应返回代理出口 IP，而不是采集服务器自身 IP。</p>
+        <p>代码已使用隧道代理固定网关 <code>proxy.123proxy.cn:36923</code>。只需将控制台生成的代理用户名和密码写入环境变量，成功后应返回代理出口 IP，而不是爬虫服务器自身 IP。</p>
         ${codeTabs("verify-curl", { curl: { label: "HTTP(S)", code: codeSamples.quickCurl }, socks: { label: "SOCKS5", code: codeSamples.tunnelSocks } }, "curl")}
         <div class="docs-result">
           <span>预期结果</span>
@@ -1167,7 +1167,7 @@ function gettingStartedMain(page) {
     <section class="docs-procedure" id="code-examples">
       <span class="docs-step-number">05</span>
       <div>
-        <h2>复制到采集代码</h2>
+        <h2>复制到爬虫代码</h2>
         <p>示例使用环境变量保存凭证，并分别设置连接与读取超时。生产任务还应加入退避重试、目标站点并发限制和响应校验。</p>
         ${code}
         <div class="docs-callout is-security">
@@ -1259,9 +1259,9 @@ function tunnelMain(page) {
       <div class="docs-section-title"><span>02</span><div><small>PROXY POOLS</small><h2>先选择代理池</h2></div></div>
       <div class="docs-pool-comparison">
         <article class="is-recommended">
-          <div><span>${icon("network")}爬虫混合池</span><small>通用采集推荐</small></div>
+          <div><span>${icon("network")}爬虫混合池</span><small>通用爬取推荐</small></div>
           <strong>约 95% 住宅 + 约 5% 数据中心</strong>
-          <p>混入少量数据中心 IP，公开网页采集通常比纯住宅池更快。</p>
+          <p>混入少量数据中心 IP，公开网页爬取通常比纯住宅池更快。</p>
           <ul><li>适合列表页、详情页和高频公开请求</li><li>不支持 SESSION</li><li>默认全球随机</li></ul>
         </article>
         <article>
@@ -1308,7 +1308,7 @@ function tunnelMain(page) {
       <div class="docs-section-title"><span>05</span><div><small>AUTHENTICATION</small><h2>账密与套餐 IP 白名单</h2></div></div>
       <div class="docs-auth-flow">
         <article>${icon("key-round")}<div><strong>账密认证</strong><p>选择一个代理用户。程序发送代理用户名和密码，适合开发机、动态服务器和多 worker。</p><code>HOST:PORT:USER:PASSWORD</code></div></article>
-        <article>${icon("shield-check")}<div><strong>套餐 IP 白名单</strong><p>每行填写一个采集服务器公网 IPv4，保存到当前套餐。程序只需使用 HOST:PORT。</p><code>HOST:PORT</code></div></article>
+        <article>${icon("shield-check")}<div><strong>套餐 IP 白名单</strong><p>每行填写一个爬虫服务器公网 IPv4，保存到当前套餐。程序只需使用 HOST:PORT。</p><code>HOST:PORT</code></div></article>
       </div>
       <p class="docs-quiet-note">${icon("info")}白名单以套餐为作用域，不是独立账户页面；纯住宅池的 SESSION 只支持账密认证，白名单模式不支持 SESSION。</p>
     </section>
@@ -1335,7 +1335,7 @@ function tunnelMain(page) {
 
     <section id="formats">
       <div class="docs-section-title"><span>07</span><div><small>OUTPUT FORMAT</small><h2>代理输出格式</h2></div></div>
-      <p>选择与你的采集工具一致的格式。控制台 API 链接使用 <code>txt_type</code> 决定文本输出顺序。</p>
+      <p>选择与你的爬虫工具一致的格式。控制台 API 链接使用 <code>txt_type</code> 决定文本输出顺序。</p>
       <div class="docs-format-table">
         <div><code>txt_type=1</code><span>HOST:PORT:USER:PASSWORD</span></div>
         <div><code>txt_type=2</code><span>HOST:PORT@USER:PASSWORD</span></div>
@@ -1371,7 +1371,7 @@ function tunnelMain(page) {
 
     <nav class="docs-next">
       <span>运行完整案例</span>
-      <a href="/developers/examples/python-requests-proxy/"><div><small>Python Requests</small><strong>使用隧道代理完成分页采集</strong></div>${icon("arrow-right")}</a>
+      <a href="/developers/examples/python-requests-proxy/"><div><small>Python Requests</small><strong>使用隧道代理完成分页爬取</strong></div>${icon("arrow-right")}</a>
     </nav>`;
   return articleLayout(page, content, [
     ["#quick-request", "最小请求"],
@@ -1470,7 +1470,7 @@ function residentialMain(page) {
         <article>${icon("key-round")}<div><strong>账密认证</strong><p>程序发送完整路由用户名与代理密码，国家码和 SESSION 都能直接从用户名看出。</p><code>HOST:PORT:ROUTED_USER:PASSWORD</code></div></article>
         <article>${icon("shield-check")}<div><strong>套餐 IP 白名单</strong><p>白名单绑定当前套餐。程序只使用 HOST:PORT，国家和 SESSION 由控制台保存为套餐路由。</p><code>HOST:PORT</code></div></article>
       </div>
-      <p class="docs-quiet-note">${icon("info")}白名单输入时每行一个公网 IPv4；保存到后端时会转为英文逗号分隔。更换采集服务器后需更新当前套餐白名单。</p>
+      <p class="docs-quiet-note">${icon("info")}白名单输入时每行一个公网 IPv4；保存到后端时会转为英文逗号分隔。更换爬虫服务器后需更新当前套餐白名单。</p>
     </section>
 
     <section id="billing">
@@ -1515,7 +1515,7 @@ function residentialMain(page) {
 
     <nav class="docs-next">
       <span>运行完整案例</span>
-      <a href="/developers/examples/nodejs-axios-proxy/"><div><small>Node.js Axios</small><strong>使用住宅网关采集分页数据</strong></div>${icon("arrow-right")}</a>
+      <a href="/developers/examples/nodejs-axios-proxy/"><div><small>Node.js Axios</small><strong>使用住宅网关爬取分页数据</strong></div>${icon("arrow-right")}</a>
     </nav>`;
   return articleLayout(page, content, [
     ["#quick-request", "最小请求"],
@@ -1715,7 +1715,7 @@ function staticMain(page, residential = false) {
       <div class="docs-allocation-flow">
         <article><span>01</span>${icon("sliders-horizontal")}<div><strong>生成分配链接</strong><p>在控制台选择套餐、国家、协议和数量，只生成 URL，不立即占用资源。</p></div></article>
         <article><span>02</span>${icon("link-2")}<div><strong>调用分配链接</strong><p>调用后才会消耗套餐可提数量，并返回固定代理信息。</p></div></article>
-        <article><span>03</span>${icon("terminal")}<div><strong>使用返回代理</strong><p>将返回的 HOST、PORT、USER、PASSWORD 配置到采集程序。</p></div></article>
+        <article><span>03</span>${icon("terminal")}<div><strong>使用返回代理</strong><p>将返回的 HOST、PORT、USER、PASSWORD 配置到爬虫程序。</p></div></article>
       </div>
       <div class="docs-callout is-important">
         ${icon("triangle-alert")}
@@ -1763,7 +1763,7 @@ function staticMain(page, residential = false) {
       <div class="docs-section-title"><span>05</span><div><small>AUTHENTICATION BOUNDARY</small><h2>静态代理只支持账密认证</h2></div></div>
       <div class="docs-boundary-grid">
         <div class="is-supported">${icon("key-round")}<span><strong>支持：代理用户名与密码</strong><small>程序通过分配结果中的 USER 和 PASSWORD 连接代理。</small></span></div>
-        <div>${icon("shield-x")}<span><strong>不支持：123Proxy 套餐 IP 白名单认证</strong><small>不能仅凭采集服务器公网 IP 连接静态代理。</small></span></div>
+        <div>${icon("shield-x")}<span><strong>不支持：123Proxy 套餐 IP 白名单认证</strong><small>不能仅凭爬虫服务器公网 IP 连接静态代理。</small></span></div>
         <div>${icon("link")}<span><strong>不支持：SESSION</strong><small>出口本身固定，不需要在认证用户名中加入 SESSION。</small></span></div>
         <div>${icon("refresh-cw-off")}<span><strong>不支持：自动轮转</strong><small>需要周期换 IP 时请选择动态住宅或隧道代理。</small></span></div>
       </div>
@@ -1917,7 +1917,7 @@ function structuredData(page, siteUrl) {
             { "@type": "HowToStep", position: 2, name: "在控制台生成代理" },
             { "@type": "HowToStep", position: 3, name: "理解代理认证" },
             { "@type": "HowToStep", position: 4, name: "使用 cURL 验证代理" },
-            { "@type": "HowToStep", position: 5, name: "复制到采集代码" }
+            { "@type": "HowToStep", position: 5, name: "复制到爬虫代码" }
           ]
         };
   } else if (page.kind === "example") {
@@ -1935,7 +1935,7 @@ function structuredData(page, siteUrl) {
         serviceReference(productFact, siteUrl),
         { "@type": "Thing", name: page.framework },
         { "@type": "Thing", name: page.targetType },
-        { "@type": "Thing", name: "网页数据采集" }
+        { "@type": "Thing", name: "网页爬虫" }
       ],
       mentions: standardProductFacts
         .filter((fact) => fact.key !== productFact.key)

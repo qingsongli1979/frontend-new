@@ -61,7 +61,7 @@ const PRODUCT_CATALOG = {
   },
   bandwidth: {
     name: "高带宽代理 IP",
-    description: "面向 AI 数据下载、视频、图片与代码采集任务的不限流量定制代理池。",
+    description: "面向 AI 数据下载、视频、图片与代码爬虫任务的不限流量定制代理池。",
     facts: [["单项目带宽", "10Gbps+"], ["计费方式", "项目制"], ["代理资源", "定制代理池"]],
     chargeTypes: [],
     pricing: "",

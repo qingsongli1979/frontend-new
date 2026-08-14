@@ -5,9 +5,9 @@ export const developerExamplePages = {
     exampleKey: "hub",
     output: "developers/examples/index.html",
     route: "/developers/examples/",
-    title: "代理爬虫代码案例 | Scrapy、Playwright、Puppeteer、Colly | 123Proxy",
-    description: "123Proxy完整代理爬虫案例：Python Requests、Scrapy、Playwright、Node.js Puppeteer、Golang Colly、Java Jsoup和PHP cURL，使用真实网关域名并输出结构化数据。",
-    heading: "可直接运行的代理爬虫案例"
+    title: "爬虫代理接入案例 | Scrapy、Playwright、Puppeteer、Colly | 123Proxy",
+    description: "123Proxy 完整爬虫代理接入案例：Python Requests、Scrapy、Playwright、Node.js Puppeteer、Golang Colly、Java Jsoup 和 PHP cURL，使用真实网关域名并输出结构化数据。",
+    heading: "可直接运行的爬虫代理案例"
   },
   exampleRequests: {
     key: "example-requests",
@@ -15,9 +15,9 @@ export const developerExamplePages = {
     exampleKey: "requests",
     output: "developers/examples/python-requests-proxy/index.html",
     route: "/developers/examples/python-requests-proxy/",
-    title: "Python Requests代理爬虫完整案例 | 123Proxy",
-    description: "使用Python Requests、BeautifulSoup和123Proxy隧道代理网关采集Quotes to Scrape分页数据，包含代理认证、重试、解析与JSONL输出。",
-    heading: "Python Requests代理爬虫",
+    title: "Python Requests 爬虫代理完整案例 | 123Proxy",
+    description: "使用Python Requests、BeautifulSoup和123Proxy隧道代理网关爬取Quotes to Scrape分页数据，包含代理认证、重试、解析与JSONL输出。",
+    heading: "Python Requests 爬虫代理",
     programmingLanguage: "Python",
     runtimePlatform: "Python 3.10+",
     framework: "Requests + BeautifulSoup",
@@ -30,7 +30,7 @@ export const developerExamplePages = {
     output: "developers/examples/scrapy-proxy/index.html",
     route: "/developers/examples/scrapy-proxy/",
     title: "Scrapy代理配置与完整爬虫案例 | 123Proxy",
-    description: "Scrapy结合123Proxy隧道代理的完整可运行案例，采集Books to Scrape列表与商品详情，支持分页、并发、重试和JSON Lines输出。",
+    description: "Scrapy结合123Proxy隧道代理的完整可运行案例，爬取Books to Scrape列表与商品详情，支持分页、并发、重试和JSON Lines输出。",
     heading: "Scrapy代理接入与完整爬虫",
     programmingLanguage: "Python",
     runtimePlatform: "Python 3.10+ / Scrapy",
@@ -44,8 +44,8 @@ export const developerExamplePages = {
     output: "developers/examples/playwright-proxy/index.html",
     route: "/developers/examples/playwright-proxy/",
     title: "Python Playwright代理配置完整案例 | 123Proxy",
-    description: "Python Playwright通过123Proxy代理网关采集JavaScript渲染页面，包含代理账密、浏览器启动、翻页、等待策略和JSON输出。",
-    heading: "Python Playwright代理采集",
+    description: "Python Playwright通过123Proxy代理网关爬取JavaScript渲染页面，包含代理账密、浏览器启动、翻页、等待策略和JSON输出。",
+    heading: "Python Playwright 爬虫代理",
     programmingLanguage: "Python",
     runtimePlatform: "Python 3.10+ / Chromium",
     framework: "Playwright",
@@ -58,8 +58,8 @@ export const developerExamplePages = {
     output: "developers/examples/selenium-proxy/index.html",
     route: "/developers/examples/selenium-proxy/",
     title: "Python Selenium代理配置完整案例 | 123Proxy",
-    description: "Python Selenium通过123Proxy不限量动态住宅网关采集JavaScript渲染页面，包含Chrome Manifest V3代理认证扩展、显式等待、分页与JSON输出。",
-    heading: "Python Selenium代理采集",
+    description: "Python Selenium通过123Proxy不限量动态住宅网关爬取JavaScript渲染页面，包含Chrome Manifest V3代理认证扩展、显式等待、分页与JSON输出。",
+    heading: "Python Selenium 爬虫代理",
     programmingLanguage: "Python",
     runtimePlatform: "Python 3.10+ / Chrome 108+",
     framework: "Selenium 4 + Chromium",
@@ -74,8 +74,8 @@ export const developerExamplePages = {
     output: "developers/examples/puppeteer-proxy/index.html",
     route: "/developers/examples/puppeteer-proxy/",
     title: "Node.js Puppeteer代理配置完整案例 | 123Proxy",
-    description: "Node.js Puppeteer结合123Proxy代理网关采集无限滚动页面，包含代理认证、滚动终止条件、去重与JSON文件输出。",
-    heading: "Node.js Puppeteer代理采集",
+    description: "Node.js Puppeteer结合123Proxy代理网关爬取无限滚动页面，包含代理认证、滚动终止条件、去重与JSON文件输出。",
+    heading: "Node.js Puppeteer 爬虫代理",
     programmingLanguage: "JavaScript",
     runtimePlatform: "Node.js 20+ / Chromium",
     framework: "Puppeteer",
@@ -87,9 +87,9 @@ export const developerExamplePages = {
     exampleKey: "axios",
     output: "developers/examples/nodejs-axios-proxy/index.html",
     route: "/developers/examples/nodejs-axios-proxy/",
-    title: "Node.js Axios代理爬虫完整案例 | 123Proxy",
-    description: "Node.js Axios通过123Proxy隧道住宅代理网关采集分页网页，包含原生proxy配置、连接复用、限时重试、Cheerio解析与JSON Lines输出。",
-    heading: "Node.js Axios代理采集",
+    title: "Node.js Axios 爬虫代理完整案例 | 123Proxy",
+    description: "Node.js Axios通过123Proxy隧道住宅代理网关爬取分页网页，包含原生proxy配置、连接复用、限时重试、Cheerio解析与JSON Lines输出。",
+    heading: "Node.js Axios 爬虫代理",
     programmingLanguage: "JavaScript",
     runtimePlatform: "Node.js 20+",
     framework: "Axios + Cheerio",
@@ -103,9 +103,9 @@ export const developerExamplePages = {
     exampleKey: "colly",
     output: "developers/examples/go-colly-proxy/index.html",
     route: "/developers/examples/go-colly-proxy/",
-    title: "Golang Colly代理爬虫完整案例 | 123Proxy",
+    title: "Golang Colly 爬虫代理完整案例 | 123Proxy",
     description: "Golang Colly通过123Proxy隧道代理抓取Quotes to Scrape分页内容，包含代理切换器、限速、错误处理和CSV输出。",
-    heading: "Golang Colly代理爬虫",
+    heading: "Golang Colly 爬虫代理",
     programmingLanguage: "Go",
     runtimePlatform: "Go 1.22+",
     framework: "Colly v2",
@@ -117,9 +117,9 @@ export const developerExamplePages = {
     exampleKey: "jsoup",
     output: "developers/examples/java-jsoup-proxy/index.html",
     route: "/developers/examples/java-jsoup-proxy/",
-    title: "Java Jsoup代理爬虫完整案例 | 123Proxy",
-    description: "Java Jsoup使用123Proxy代理认证采集Books to Scrape商品列表，包含Maven依赖、代理Authenticator、分页与CSV输出。",
-    heading: "Java Jsoup代理爬虫",
+    title: "Java Jsoup 爬虫代理完整案例 | 123Proxy",
+    description: "Java Jsoup使用123Proxy代理认证爬取Books to Scrape商品列表，包含Maven依赖、代理Authenticator、分页与CSV输出。",
+    heading: "Java Jsoup 爬虫代理",
     programmingLanguage: "Java",
     runtimePlatform: "Java 17+",
     framework: "Jsoup 1.21+",
@@ -131,9 +131,9 @@ export const developerExamplePages = {
     exampleKey: "php",
     output: "developers/examples/php-curl-proxy/index.html",
     route: "/developers/examples/php-curl-proxy/",
-    title: "PHP cURL代理爬虫完整案例 | 123Proxy",
-    description: "PHP cURL、DOMDocument和XPath结合123Proxy代理网关采集分页网页，包含代理账密、错误处理、解析与JSON输出。",
-    heading: "PHP cURL代理爬虫",
+    title: "PHP cURL 爬虫代理完整案例 | 123Proxy",
+    description: "PHP cURL、DOMDocument和XPath结合123Proxy代理网关爬取分页网页，包含代理账密、错误处理、解析与JSON输出。",
+    heading: "PHP cURL 爬虫代理",
     programmingLanguage: "PHP",
     runtimePlatform: "PHP 8.1+",
     framework: "cURL + DOMXPath",
@@ -156,13 +156,13 @@ export const developerExampleOrder = [
 
 export const developerExampleSearch = [
   {
-    title: "代理爬虫代码案例",
+    title: "爬虫代理接入案例",
     section: "框架案例",
     href: "/developers/examples/",
     keywords: "crawler examples 爬虫框架 完整代码 网关域名 可运行"
   },
   {
-    title: "Python Requests代理爬虫",
+    title: "Python Requests 爬虫代理",
     section: "框架案例",
     href: "/developers/examples/python-requests-proxy/",
     keywords: "python requests beautifulsoup proxy quotes pagination jsonl"
@@ -1120,7 +1120,7 @@ const gatewayRows = [
 const guides = {
   requests: {
     label: "PYTHON HTTP CLIENT",
-    title: "采集静态分页页面并输出JSON Lines",
+    title: "爬取静态分页页面并输出JSON Lines",
     lead: "使用Requests显式传入代理配置，BeautifulSoup解析Quotes to Scrape。代码处理连接超时、可重试状态码、分页、限速和UTF-8结构化输出。",
     language: "Python 3.10+",
     framework: "Requests + BeautifulSoup",
@@ -1138,7 +1138,7 @@ const guides = {
       "代理URL中的用户名和密码经过URL编码",
       "每次请求显式传入proxies，避免被系统代理覆盖",
       "只重试GET及429、5xx临时错误",
-      "最多采集3页并输出一行一个JSON对象"
+      "最多抓取3页并输出一行一个JSON对象"
     ],
     faq: [
       ["为什么没有只设置Session.proxies？", "Requests官方文档说明环境代理可能覆盖Session级配置。案例在每次请求中显式传入proxies，行为更可控。"],
@@ -1176,8 +1176,8 @@ const guides = {
   },
   playwright: {
     label: "PYTHON BROWSER AUTOMATION",
-    title: "采集JavaScript渲染页面并翻页",
-    lead: "Playwright在浏览器启动时设置123Proxy网关和账密，等待页面网络稳定后读取渲染完成的DOM，连续采集3页并写入JSON。",
+    title: "爬取JavaScript渲染页面并翻页",
+    lead: "Playwright在浏览器启动时设置123Proxy网关和账密，等待页面网络稳定后读取渲染完成的DOM，连续抓取3页并写入JSON。",
     language: "Python 3.10+",
     framework: "Playwright",
     target: "Quotes to Scrape / JavaScript",
@@ -1197,15 +1197,15 @@ const guides = {
       "复用同一BrowserContext完成连续分页"
     ],
     faq: [
-      ["为什么浏览器采集比Requests消耗更多并发？", "浏览器会同时加载HTML、JavaScript、CSS、字体、图片和接口，一个页面通常产生多条并发请求。"],
+      ["为什么浏览器爬虫比Requests消耗更多并发？", "浏览器会同时加载HTML、JavaScript、CSS、字体、图片和接口，一个页面通常产生多条并发请求。"],
       ["什么时候适合使用不限量动态住宅？", "持续浏览器任务需要较多流量和并发时可考虑不限量动态住宅，并使用固定网关unlimit.residential.123proxy.cn:10253。"],
       ["SESSION应该如何保持？", "使用隧道住宅或隧道代理纯住宅池时，把控制台生成的完整SESSION用户名作为PROXY_USER，并复用同一BrowserContext。"]
     ]
   },
   selenium: {
     label: "PYTHON BROWSER AUTOMATION",
-    title: "使用认证扩展采集JavaScript渲染页面",
-    lead: "Selenium启动Chrome时加载一个临时Manifest V3扩展，由扩展设置不限量动态住宅网关并响应代理认证。案例使用显式等待采集3页内容，结束时自动清理浏览器和临时凭证文件。",
+    title: "使用认证扩展爬取JavaScript渲染页面",
+    lead: "Selenium启动Chrome时加载一个临时Manifest V3扩展，由扩展设置不限量动态住宅网关并响应代理认证。案例使用显式等待抓取3页内容，结束时自动清理浏览器和临时凭证文件。",
     language: "Python 3.10+ / Chrome 108+",
     framework: "Selenium 4 + Chromium",
     target: "Quotes to Scrape / JavaScript",
@@ -1240,7 +1240,7 @@ const guides = {
   },
   puppeteer: {
     label: "NODE.JS BROWSER AUTOMATION",
-    title: "采集无限滚动页面并按内容去重",
+    title: "爬取无限滚动页面并按内容去重",
     lead: "Puppeteer通过--proxy-server指定123Proxy网关，再用page.authenticate发送代理账密。案例滚动到内容稳定，提取字段、去重并保存JSON。",
     language: "Node.js 20+",
     framework: "Puppeteer",
@@ -1268,7 +1268,7 @@ const guides = {
   },
   axios: {
     label: "NODE.JS HTTP CLIENT",
-    title: "使用原生代理配置采集分页网页",
+    title: "使用原生代理配置爬取分页网页",
     lead: "Axios通过原生proxy选项连接隧道住宅网关，Cheerio解析分页HTML。案例复用HTTP连接，只对429、5xx与临时网络错误执行有限退避，并输出JSON Lines。",
     language: "Node.js 20+",
     framework: "Axios + Cheerio",
@@ -1297,14 +1297,14 @@ const guides = {
     ],
     faq: [
       ["PROXY_USER应该填写什么？", "填写控制台生成的完整代理用户名。需要国家或SESSION时，地区后缀与SESSION参数都属于完整用户名，不要在Axios代码中再次拼接。"],
-      ["为什么没有设置HTTP_PROXY环境变量？", "案例使用Axios原生proxy配置，使代理行为与当前采集客户端绑定，避免进程环境代理影响其他请求。"],
-      ["如何使用隧道代理？", "把固定地址改为proxy.123proxy.cn:36923，并使用隧道代理控制台生成的代理用户名与密码；其他采集逻辑保持不变。"],
+      ["为什么没有设置HTTP_PROXY环境变量？", "案例使用Axios原生proxy配置，使代理行为与当前爬虫客户端绑定，避免进程环境代理影响其他请求。"],
+      ["如何使用隧道代理？", "把固定地址改为proxy.123proxy.cn:36923，并使用隧道代理控制台生成的代理用户名与密码；其他爬虫逻辑保持不变。"],
       ["429是否应该立即重试？", "不应该。优先读取Retry-After，否则使用指数退避与随机抖动，并降低目标域名的并发和QPS。"]
     ]
   },
   colly: {
     label: "GO CRAWLING FRAMEWORK",
-    title: "分页采集、限速与CSV输出",
+    title: "分页爬取、限速与CSV输出",
     lead: "Colly使用官方proxy switcher接入123Proxy网关，CSS回调解析Quotes to Scrape，自动访问下一页，并将结构化字段写入CSV。",
     language: "Go 1.22+",
     framework: "Colly v2",
@@ -1333,7 +1333,7 @@ const guides = {
   jsoup: {
     label: "JAVA HTML PARSER",
     title: "代理认证、CSS选择器与CSV输出",
-    lead: "Jsoup 1.17.1+支持请求级代理认证。案例创建可复用Connection会话，采集Books to Scrape三页商品并输出UTF-8 CSV。",
+    lead: "Jsoup 1.17.1+支持请求级代理认证。案例创建可复用Connection会话，爬取Books to Scrape三页商品并输出UTF-8 CSV。",
     language: "Java 17+",
     framework: "Jsoup 1.21+",
     target: "Books to Scrape",
@@ -1356,13 +1356,13 @@ const guides = {
       ["为什么还要设置jdk.http.auth.tunneling.disabledSchemes？", "JDK默认可能禁止HTTPS CONNECT隧道使用Basic代理认证。该属性必须在第一次认证前设置为空，否则代理账密正确也可能返回407。"],
       ["为什么要求Jsoup 1.17.1以上？", "Jsoup从1.17.1加入请求级认证能力，可为代理认证安全返回用户名和密码。"],
       ["能否使用Java全局Authenticator？", "可以，但全局Authenticator容易影响同一JVM中的其他HTTP请求。案例优先使用Jsoup连接级auth回调。"],
-      ["如何采集详情页？", "从detailUrl继续调用session.newRequest(url).get()，并保持同一代理会话和限速策略。"]
+      ["如何抓取详情页？", "从detailUrl继续调用session.newRequest(url).get()，并保持同一代理会话和限速策略。"]
     ]
   },
   php: {
     label: "PHP HTTP + DOM",
     title: "cURL代理请求、XPath解析与JSON输出",
-    lead: "PHP cURL负责代理连接和错误处理，DOMDocument与DOMXPath解析Quotes to Scrape。案例连续采集3页并输出UTF-8 JSON。",
+    lead: "PHP cURL负责代理连接和错误处理，DOMDocument与DOMXPath解析Quotes to Scrape。案例连续抓取3页并输出UTF-8 JSON。",
     language: "PHP 8.1+",
     framework: "cURL + DOMXPath",
     target: "Quotes to Scrape",
@@ -1420,7 +1420,7 @@ function articleHeader(page, icon, guide = null) {
     <header class="docs-article-header">
       <span class="docs-eyebrow">${icon(guide ? "braces" : "blocks")}${guide?.label || "RUNNABLE CRAWLER EXAMPLES"}</span>
       <h1>${page.heading}</h1>
-      <p>${guide?.lead || "围绕真实采集流程提供完整代码：配置123Proxy网关、请求目标、解析字段、处理分页或滚动，并把结果写入JSON、JSON Lines或CSV。"}</p>
+      <p>${guide?.lead || "围绕真实爬取流程提供完整代码：配置123Proxy网关、请求目标、解析字段、处理分页或滚动，并把结果写入JSON、JSON Lines或CSV。"}</p>
       <div class="docs-product-facts">
         ${facts.map(([label, value]) => `<span><small>${label}</small><strong>${value}</strong></span>`).join("")}
       </div>
@@ -1439,7 +1439,7 @@ function exampleCards(icon) {
     ["selenium-proxy", "Python", "Selenium 4", "JavaScript渲染", "quotes-selenium.json", "monitor-dot"],
     ["puppeteer-proxy", "Node.js", "Puppeteer", "无限滚动页面", "quotes-puppeteer.json", "mouse-pointer-2"],
     ["nodejs-axios-proxy", "Node.js", "Axios + Cheerio", "静态分页网页", "quotes-axios.jsonl", "send"],
-    ["go-colly-proxy", "Go", "Colly", "并发分页采集", "quotes-colly.csv", "boxes"],
+    ["go-colly-proxy", "Go", "Colly", "并发分页爬取", "quotes-colly.csv", "boxes"],
     ["java-jsoup-proxy", "Java", "Jsoup", "HTML目录页面", "books-jsoup.csv", "coffee"],
     ["php-curl-proxy", "PHP", "cURL + DOMXPath", "静态分页网页", "quotes-php.json", "braces"]
   ];
@@ -1463,13 +1463,13 @@ function renderHub(page, helpers) {
     ${articleHeader(page, icon)}
     <section id="choose">
       <div class="docs-section-title"><span>01</span><div><small>CHOOSE A FRAMEWORK</small><h2>按你的技术栈打开完整案例</h2></div></div>
-      <p>每个案例都包含安装、启动、代理认证、采集循环、终止条件和结构化输出，不省略最关键的工程代码。</p>
+      <p>每个案例都包含安装、启动、代理认证、爬虫循环、终止条件和结构化输出，不省略最关键的工程代码。</p>
       ${exampleCards(icon)}
     </section>
 
     <section id="gateways">
       <div class="docs-section-title"><span>02</span><div><small>123PROXY GATEWAYS</small><h2>代码中直接使用代理网关域名</h2></div></div>
-      <p>默认案例使用隧道代理爬虫混合池。复制后只需设置 <code>PROXY_USER</code> 与 <code>PROXY_PASS</code>。切换其他动态产品时使用下表网关；最终端口和完整路由用户名以控制台生成结果为准。</p>
+      <p>默认案例使用隧道代理的爬虫混合池。复制后只需设置 <code>PROXY_USER</code> 与 <code>PROXY_PASS</code>。切换其他动态产品时使用下表网关；最终端口和完整路由用户名以控制台生成结果为准。</p>
       ${gatewayTable()}
       <div class="docs-callout is-important">
         ${icon("triangle-alert")}
@@ -1486,9 +1486,9 @@ function renderHub(page, helpers) {
     </section>
 
     <section id="targets">
-      <div class="docs-section-title"><span>04</span><div><small>SAFE TEST TARGETS</small><h2>案例使用公开采集沙箱</h2></div></div>
+      <div class="docs-section-title"><span>04</span><div><small>SAFE TEST TARGETS</small><h2>案例使用公开爬虫测试站点</h2></div></div>
       <div class="docs-target-grid">
-        <article>${icon("network")}<div><strong>httpbin</strong><p>验证出口IP、请求头、状态码与超时，不承担业务采集。</p><code>https://httpbin.org/ip</code></div></article>
+        <article>${icon("network")}<div><strong>httpbin</strong><p>验证出口IP、请求头、状态码与超时，不承担业务爬取。</p><code>https://httpbin.org/ip</code></div></article>
         <article>${icon("list-tree")}<div><strong>Quotes to Scrape</strong><p>覆盖静态分页、JavaScript渲染和无限滚动页面。</p><code>https://quotes.toscrape.com/</code></div></article>
         <article>${icon("library")}<div><strong>Books to Scrape</strong><p>覆盖商品列表、详情页、相对链接和多页目录。</p><code>https://books.toscrape.com/</code></div></article>
       </div>
@@ -1496,10 +1496,10 @@ function renderHub(page, helpers) {
     </section>
 
     <section id="products">
-      <div class="docs-section-title"><span>05</span><div><small>PRODUCT MAPPING</small><h2>按采集行为选择代理套餐</h2></div></div>
+      <div class="docs-section-title"><span>05</span><div><small>PRODUCT MAPPING</small><h2>按爬虫行为选择代理套餐</h2></div></div>
       <div class="docs-compare-table">
-        <div class="docs-compare-head"><span>采集行为</span><span>推荐起点</span><span>代码调整</span></div>
-        <div><strong>高频HTTP列表与详情</strong><span>隧道代理爬虫混合池</span><span>默认网关即可运行</span></div>
+        <div class="docs-compare-head"><span>爬虫行为</span><span>推荐起点</span><span>代码调整</span></div>
+        <div><strong>高频HTTP列表与详情</strong><span>隧道代理（爬虫混合池）</span><span>默认网关即可运行</span></div>
         <div><strong>明确国家与连续SESSION</strong><span>隧道住宅代理</span><span>替换网关并使用完整路由用户名</span></div>
         <div><strong>持续浏览器自动化</strong><span>不限量动态住宅</span><span>固定网关端口10253</span></div>
         <div><strong>目标系统要求固定出口</strong><span>长效静态代理</span><span>先分配IP，再把返回代理写入代码</span></div>
@@ -1565,7 +1565,7 @@ $env:PROXY_PASS="替换为控制台代理密码"
     </section>
 
     <section id="switch-product">
-      <div class="docs-section-title"><span>05</span><div><small>SWITCH PROXY PRODUCT</small><h2>替换网关，不改采集逻辑</h2></div></div>
+      <div class="docs-section-title"><span>05</span><div><small>SWITCH PROXY PRODUCT</small><h2>替换网关，不改爬虫逻辑</h2></div></div>
       ${gatewayTable()}
       <div class="docs-callout">
         ${icon("route")}
