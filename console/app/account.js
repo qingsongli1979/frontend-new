@@ -327,6 +327,7 @@ async function loadUsage() {
     method: "POST",
     body: {
       includeSummary: true,
+      chargeTypes: [99],
       ...(state.usage.username ? { username: state.usage.username } : {})
     }
   });
@@ -415,7 +416,8 @@ async function downloadUsage() {
     const params = new URLSearchParams({
       zone: timezoneOffset(),
       dateFrom: state.usage.dateFrom,
-      dateTo: state.usage.dateTo
+      dateTo: state.usage.dateTo,
+      chargeType: "99"
     });
     const response = await request(`/accsrv/fee/userbilling/export?${params.toString()}`, {
       raw: true,

@@ -109,6 +109,8 @@ const accountScript = await readFile(new URL("../console/app/account.js", import
 assert.match(index, /account\.js\?v=/);
 assert.match(index, /id="usageWorkspace"/);
 assert.doesNotMatch(index, /id="usagePackageRows"/);
+assert.match(accountScript, /includeSummary:\s*true,\s*chargeTypes:\s*\[99\]/);
+assert.match(accountScript, /chargeType:\s*"99"/);
 assert.match(
   consoleCss,
   /\.console-dialog\.account-dialog\s*\{[^}]*width:\s*min\(640px,\s*calc\(100vw - 48px\)\)/s
