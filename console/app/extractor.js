@@ -1,4 +1,5 @@
 import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+import { formatConsoleDateTime } from "./date-time.js?v=20260818-03";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
@@ -70,7 +71,7 @@ const PROXY_OUTPUT_FORMATS = [
 const PRODUCT_META = {
   bandwidth: {
     name: "高带宽代理 IP",
-    description: "使用客户定制的高并发代理资源，并配置认证、地区与 SESSION。",
+    description: "不限流量、不限并发的专属代理项目，由高级技术支持独立交付接入信息。",
     icon: "gauge",
     static: false
   },
@@ -298,11 +299,7 @@ function packageId(order) {
 
 function packageExpiry(order) {
   const value = order?.expiration || order?.expirationTime;
-  const date = new Date(number(value) || String(value || "").replace(" ", "T"));
-  if (Number.isNaN(date.getTime())) return "--";
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric", month: "2-digit", day: "2-digit"
-  }).format(date).replaceAll("/", "-");
+  return formatConsoleDateTime(value);
 }
 
 function isResidentialTraffic(order) {
@@ -330,6 +327,7 @@ function matchesProduct(order, productKey) {
 }
 
 function packageLabel(order) {
+  if (isHighBandwidthPackage(order)) return "专属项目套餐";
   if (order.chargeType === "trafficIp") return `${number(order.totalTrafficInGB || order.total)}GB 流量`;
   if (order.chargeType === "tmpPackage") return `${number(order.totalTrafficInGB || order.total)}GB 补充流量`;
   if (order.chargeType === "tunnelIp") return `${number(order.total)} 并发线程`;
@@ -341,6 +339,7 @@ function packageLabel(order) {
 }
 
 function packageAvailable(order) {
+  if (isHighBandwidthPackage(order)) return "不限流量 · 不限并发";
   if (["trafficIp", "tmpPackage"].includes(order.chargeType) || isResidentialTraffic(order)) {
     return `${Math.max(0, number(order.remainingTrafficInKB) / 1000000).toFixed(2)} GB 可用`;
   }
@@ -463,6 +462,21 @@ function renderEmpty(meta) {
       <h2>当前没有可用${escapeHtml(meta.name)}套餐</h2>
       <p>先购买对应套餐，再回到这里配置并生成代理。</p>
       <a class="button button-primary" href="${actionUrl}"><i data-lucide="${state.productKey === "bandwidth" ? "messages-square" : "shopping-cart"}" aria-hidden="true"></i>${actionLabel}</a>
+    </section>`;
+  refreshIcons();
+}
+
+function isConsoleExtractableProduct(productKey) {
+  return productKey !== "bandwidth";
+}
+
+function renderManagedDelivery(meta) {
+  document.querySelector("#extractWorkspace").innerHTML = `
+    <section class="panel extraction-empty">
+      <span><i data-lucide="headphones" aria-hidden="true"></i></span>
+      <h2>${escapeHtml(meta.name)}由高级技术支持独立交付</h2>
+      <p>该产品不限流量、不限并发，代理地址、认证和接入配置不在控制台生成或提取。</p>
+      <a class="button button-primary" href="https://www.123proxy.cn/contact.html#service" target="_blank" rel="noreferrer"><i data-lucide="messages-square" aria-hidden="true"></i>联系高级技术支持</a>
     </section>`;
   refreshIcons();
 }
@@ -2274,10 +2288,16 @@ async function openExtract(productKey = "", orderId = "") {
   state.requestedOrder = orderId || params.get("order") || "";
   state.output = null;
   const meta = PRODUCT_META[state.productKey];
-  document.querySelector("#extractPageTitle").textContent = `提取与使用${meta.name}`;
+  document.querySelector("#extractPageTitle").textContent = isConsoleExtractableProduct(state.productKey)
+    ? `提取与使用${meta.name}`
+    : `${meta.name}专属交付`;
   document.querySelector("#extractPageDescription").textContent = meta.description;
   document.querySelector("#extractBackToProduct").dataset.product = state.productKey;
   setNotice("", "");
+  if (!isConsoleExtractableProduct(state.productKey)) {
+    renderManagedDelivery(meta);
+    return;
+  }
   document.querySelector("#extractWorkspace").innerHTML =
     '<div class="management-state"><span class="loading-spinner" aria-hidden="true"></span><strong>正在加载套餐与认证信息</strong></div>';
   try {
@@ -2340,6 +2360,7 @@ export {
   buildUnlimitedConnectionOutput,
   buildProxySnippets,
   formatProxyCredential,
+  isConsoleExtractableProduct,
   matchesProduct,
   normalizeTrafficData,
   retrieveApiUrl,

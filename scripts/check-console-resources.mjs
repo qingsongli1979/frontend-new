@@ -140,7 +140,7 @@ assert.deepEqual(
   }
 );
 assert.equal(data.resources.meteredTrafficGb, 99.95);
-assert.equal(data.resources.concurrency, 50000);
+assert.equal(data.resources.concurrency, 0);
 assert.equal(data.resources.unlimitedPorts, 2);
 assert.equal(data.resources.userTrafficGb, 2.5);
 
@@ -155,8 +155,14 @@ assert.equal(traffic.available, "50.5 GB");
 assert.match(traffic.usage, /9\.5 \/ 60 GB/);
 assert.equal(thread.productKey, "bandwidth");
 assert.equal(thread.productName, "高带宽代理 IP");
-assert.match(thread.route, /product=bandwidth/);
+assert.equal(thread.detail, "专属项目套餐");
+assert.equal(thread.available, "不限流量 · 不限并发");
+assert.equal(thread.usage, "高级技术支持独立交付");
+assert.equal(thread.statusLabel, "专属交付");
+assert.equal(thread.route, "#product-bandwidth");
 assert.equal(thread.purchaseUrl, "#product-bandwidth");
+assert.doesNotMatch(`${thread.detail} ${thread.available} ${thread.usage}`, /50,000|并发线程/);
+assert.match(thread.expiry, /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/);
 assert.equal(residential.productName, "隧道住宅代理");
 assert.equal(unlimited.productName, "不限量动态住宅");
 assert.equal(staticOrder.status, "attention");
@@ -170,21 +176,30 @@ assert.equal(resolveProduct({ chargeType: "tunnelIp", total: 1999 }).key, "tunne
 assert.equal(resolveProduct({ chargeType: "tunnelIp", total: 2000 }).key, "bandwidth");
 assert.equal(resolveProduct({ chargeType: "residentialDynamicIp", traffInGB: 20 }).key, "residential");
 assert.equal(resolveProduct({ chargeType: "residentialDynamicIp", traffInGB: 0 }).key, "unlimited");
-assert.equal(packageCanRenew(thread, now), true);
+assert.equal(packageCanRenew(thread, now), false);
 assert.equal(packageCanRenew(traffic, now), false);
 assert.equal(packageCanRenew(residential, now), false);
 assert.equal(packageCanRenew(unlimited, now), true);
 assert.equal(packageCanRenew(staticOrder, now), true);
 assert.equal(packageCanRenew(expired, now), false);
 
-assert.deepEqual(packageActionRequest("renew", thread), {
+const renewableThread = {
+  id: "standard-thread-order",
+  productId: 205,
+  chargeType: "tunnelIp",
+  total: 100,
+  expirationTime: future,
+  overTime: false
+};
+assert.equal(packageCanRenew(renewableThread, now), true);
+assert.deepEqual(packageActionRequest("renew", renewableThread), {
   path: "/ip/order1/create",
   method: "POST",
   body: {
     renew: true,
     period: 1,
     unit: "month",
-    orderid: "thread-order",
+    orderid: "standard-thread-order",
     productId: 205
   }
 });

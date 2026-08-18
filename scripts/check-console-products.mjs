@@ -5,6 +5,10 @@ import {
   packageAvailable,
   packageName
 } from "../console/app/products.js";
+import {
+  consoleTimestamp,
+  formatConsoleDateTime
+} from "../console/app/date-time.js";
 
 const payload = {
   orders: [
@@ -92,7 +96,9 @@ assert.equal(matchesProduct(normalized.orders[4], "unlimited"), true);
 assert.equal(matchesProduct(normalized.orders[5], "staticDatacenter"), true);
 assert.equal(normalized.orders.some((order) => matchesProduct(order, "staticResidential")), true);
 assert.match(packageName(normalized.orders[0]), /60GB/);
-assert.match(packageName(normalized.orders[1]), /高带宽代理 IP · 25,000 并发线程/);
+assert.equal(packageName(normalized.orders[1]), "高带宽代理 IP · 专属项目");
+assert.equal(packageAvailable(normalized.orders[1]), "不限流量 · 不限并发");
+assert.doesNotMatch(packageName(normalized.orders[1]), /25,000|并发线程/);
 assert.match(packageAvailable({
   chargeType: "durationIp",
   total: 3,
@@ -102,5 +108,14 @@ assert.match(packageAvailable({
 assert.match(packageAvailable(normalized.orders[2]), /99\.95 GB/);
 assert.match(packageAvailable(normalized.orders[3]), /36001-36002/);
 assert.equal(packageAvailable(normalized.orders[5]), "2 个待提取");
+
+const timestampSeconds = 1786984496;
+assert.equal(consoleTimestamp(timestampSeconds), timestampSeconds * 1000);
+assert.equal(consoleTimestamp(timestampSeconds * 1000), timestampSeconds * 1000);
+assert.match(
+  formatConsoleDateTime("2028-07-11T12:34:56Z"),
+  /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
+);
+assert.doesNotMatch(formatConsoleDateTime("2028-07-11T12:34:56Z"), /Asia\/|GMT|（|）/);
 
 console.log("Console products audit passed: product classification, package labels and resource values");

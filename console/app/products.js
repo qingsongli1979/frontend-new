@@ -1,4 +1,5 @@
 import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+import { consoleTimestamp, formatConsoleDateTime } from "./date-time.js?v=20260818-03";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 12000;
@@ -194,8 +195,8 @@ function normalizeProductTraffic(payload, orderPayload = null) {
     .filter((order) => !order?.overTime)
     .filter((order) => {
       if (!order?.expirationTime) return true;
-      const value = new Date(String(order.expirationTime).replace(" ", "T")).getTime();
-      return Number.isNaN(value) || value > Date.now();
+      const value = consoleTimestamp(order.expirationTime);
+      return value === null || value > Date.now();
     })
     .map((order) => ({
       ...order,
@@ -233,17 +234,7 @@ function formatGbFromKb(value) {
 }
 
 function formatDate(value) {
-  if (!value) return "未提供";
-  const normalized = typeof value === "number" && value < 100000000000
-    ? value * 1000
-    : value;
-  const date = new Date(normalized);
-  if (Number.isNaN(date.getTime())) return String(value).slice(0, 10);
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(date).replaceAll("/", "-");
+  return formatConsoleDateTime(value, "未提供");
 }
 
 function isResidentialTraffic(order) {
@@ -268,7 +259,9 @@ function packageName(order) {
     case "trafficIp":
       return `隧道代理 · ${formatInteger(order.totalTrafficInGB || order.total)}GB 流量`;
     case "tunnelIp":
-      return `${isHighBandwidthPackage(order) ? "高带宽代理 IP" : "隧道代理"} · ${formatInteger(order.total)} 并发线程`;
+      return isHighBandwidthPackage(order)
+        ? "高带宽代理 IP · 专属项目"
+        : `隧道代理 · ${formatInteger(order.total)} 并发线程`;
     case "residentialDynamicIp":
       return isResidentialTraffic(order)
         ? `隧道住宅代理 · ${formatInteger(order.totalTrafficInGB || order.traffInGB)}GB 流量`
@@ -285,6 +278,7 @@ function packageName(order) {
 }
 
 function packageAvailable(order) {
+  if (isHighBandwidthPackage(order)) return "不限流量 · 不限并发";
   if (["trafficIp", "residentialDynamicIp"].includes(order.chargeType) && isResidentialTraffic(order)) {
     return formatGbFromKb(order.remainingTrafficInKB);
   }
@@ -401,8 +395,10 @@ function renderPackages(productKey, product, orders) {
   const usableCount = orders.filter(isUsablePackage).length;
 
   document.querySelector("#productResourceDescription").textContent =
-    usableCount === orders.length
-      ? `${orders.length} 个可用套餐，选择后进入对应代理提取页`
+    product.enterprise
+      ? `${orders.length} 个专属套餐，代理信息由高级技术支持独立交付`
+      : usableCount === orders.length
+        ? `${orders.length} 个可用套餐，选择后进入对应代理提取页`
       : `${usableCount} 个可用套餐，${orders.length - usableCount} 个套餐资源已用完`;
   document.querySelector("#currentProductResource").innerHTML = `
     <div class="product-package-list">
@@ -465,7 +461,6 @@ function renderPurchaseOptions(productKey, product) {
 
 function setProductActions(order, product) {
   const isStatic = ["staticDatacenter", "staticResidential"].includes(state.currentProduct);
-  const hasProvisionedEnterprisePackage = Boolean(product.enterprise && order);
   const useAction = document.querySelector("#productUseAction");
   const usageAction = document.querySelector("#productUsageAction");
   const authAction = document.querySelector("#productAuthAction");
@@ -473,19 +468,17 @@ function setProductActions(order, product) {
   const primaryAction = document.querySelector("#productPrimaryAction");
   const docsAction = document.querySelector("#productDocsAction");
 
-  useAction.disabled = !order;
-  useAction.dataset.url = order
+  useAction.disabled = !order || product.enterprise;
+  useAction.dataset.url = order && !product.enterprise
     ? `#extract?product=${encodeURIComponent(state.currentProduct)}&order=${encodeURIComponent(packageId(order))}`
     : "";
-  useAction.querySelector("strong").textContent = hasProvisionedEnterprisePackage
-    ? "使用高带宽代理"
-    : product.enterprise ? "方案配置" : "提取代理";
-  useAction.querySelector("small").textContent = order
-    ? "配置接入地址、认证、出口与代码示例"
-    : (product.enterprise ? "由技术团队完成资源配置" : "购买套餐后可使用");
+  useAction.querySelector("strong").textContent = product.enterprise ? "控制台不可提取" : "提取代理";
+  useAction.querySelector("small").textContent = product.enterprise
+    ? "代理信息由高级技术支持独立交付"
+    : order ? "配置接入地址、认证、出口与代码示例" : "购买套餐后可使用";
 
-  extractAction.hidden = !order;
-  extractAction.dataset.url = order
+  extractAction.hidden = !order || product.enterprise;
+  extractAction.dataset.url = order && !product.enterprise
     ? `#extract?product=${encodeURIComponent(state.currentProduct)}&order=${encodeURIComponent(packageId(order))}`
     : "";
 
@@ -494,11 +487,11 @@ function setProductActions(order, product) {
   usageAction.querySelector("strong").textContent = "全部套餐";
   usageAction.querySelector("small").textContent = "查看有效套餐与历史记录";
 
-  authAction.disabled = isStatic || (product.enterprise && !order);
-  authAction.dataset.url = isStatic || (product.enterprise && !order) ? "" : "#users";
-  authAction.querySelector("strong").textContent = isStatic ? "账密认证" : "代理用户";
+  authAction.disabled = product.enterprise || isStatic;
+  authAction.dataset.url = product.enterprise || isStatic ? "" : "#users";
+  authAction.querySelector("strong").textContent = product.enterprise ? "专属交付" : isStatic ? "账密认证" : "代理用户";
   authAction.querySelector("small").textContent = product.enterprise
-    ? (order ? "管理高带宽代理的认证用户" : "项目认证由技术团队协助配置")
+    ? "认证与接入信息由高级技术支持交付"
     : isStatic
       ? "静态代理仅支持提取后分配的代理账密"
       : "管理代理账户，套餐白名单在提取页设置";

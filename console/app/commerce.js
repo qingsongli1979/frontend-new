@@ -274,6 +274,7 @@ function offersForType(typeKey) {
 }
 
 function offerLabel(offer) {
+  if (isHighBandwidthPackage(offer)) return "客户定制方案";
   switch (offer?.chargeType) {
     case "tunnelIp":
       return `${number(offer.amount)} 并发线程`;
@@ -291,6 +292,7 @@ function offerLabel(offer) {
 }
 
 function offerUnitNote(offer) {
+  if (isHighBandwidthPackage(offer)) return "不限流量 · 不限并发";
   switch (offer?.chargeType) {
     case "tunnelIp":
       return "不限累计流量";
@@ -580,6 +582,7 @@ function productNameForOrder(order) {
 
 function orderSpecification(order) {
   const details = order?.details || {};
+  if (isHighBandwidthPackage(order)) return "不限流量、不限并发 · 专属项目";
   switch (number(order?.chargeType)) {
     case 13: return `${number(details.amount)} 个端口，不限流量与并发`;
     case 14: return `${number(details.amount)} 个短效代理 IP`;

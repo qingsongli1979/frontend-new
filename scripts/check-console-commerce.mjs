@@ -68,6 +68,7 @@ assert.deepEqual(
   { base: 1296, total: 1166, discount: 0.9, monthly: 1166 / 3 }
 );
 assert.equal(offerLabel({ chargeType: "tunnelIp", amount: 25 }), "25 并发线程");
+assert.equal(offerLabel({ chargeType: "tunnelIp", amount: 2000 }), "客户定制方案");
 assert.equal(offerLabel({ chargeType: "trafficIp", trafficInGB: 100 }), "100GB 流量");
 assert.equal(offerLabel({ chargeType: "durationIp", amount: 5 }), "5 个端口");
 assert.equal(offerLabel({ chargeType: "fixedIp", amount: 10 }), "10 个 IP");
@@ -85,6 +86,14 @@ assert.equal(
 assert.equal(
   productNameForOrder({ chargeType: 18, details: { amount: 2000 } }),
   "高带宽代理 IP · 客户定制"
+);
+assert.equal(
+  orderSpecification({ chargeType: 18, details: { amount: 2000 } }),
+  "不限流量、不限并发 · 专属项目"
+);
+assert.doesNotMatch(
+  orderSpecification({ chargeType: 18, details: { amount: 2000 } }),
+  /2000|并发线程/
 );
 assert.equal(
   orderSpecification({ chargeType: 18, details: { amount: 50 } }),

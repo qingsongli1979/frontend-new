@@ -15,6 +15,7 @@ import {
   buildUnlimitedConnectionOutput,
   buildProxySnippets,
   formatProxyCredential,
+  isConsoleExtractableProduct,
   matchesProduct,
   normalizeWhitelist,
   normalizeTrafficData,
@@ -34,6 +35,8 @@ assert.equal(STATIC_DATACENTER_CODES.includes("US"), true);
 assert.equal(STATIC_RESIDENTIAL_CODES.includes("HN"), true);
 assert.equal(STATIC_RESIDENTIAL_CODES.includes("CN"), false);
 assert.equal(PRODUCT_META.bandwidth.name, "高带宽代理 IP");
+assert.equal(isConsoleExtractableProduct("bandwidth"), false);
+assert.equal(isConsoleExtractableProduct("tunnel"), true);
 
 assert.equal(matchesProduct({ chargeType: "trafficIp" }, "tunnel"), true);
 assert.equal(matchesProduct({ chargeType: "tunnelIp" }, "tunnel"), true);

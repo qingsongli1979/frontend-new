@@ -1,4 +1,5 @@
 import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+import { consoleTimestamp, formatConsoleDateTime } from "./date-time.js?v=20260818-03";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 12000;
@@ -80,17 +81,7 @@ function formatNumber(value, maximumFractionDigits = 2) {
 }
 
 function formatDate(value) {
-  if (!value) return "--";
-  const normalized = typeof value === "number" && value < 100000000000
-    ? value * 1000
-    : String(value).replace(" ", "T");
-  const date = new Date(normalized);
-  if (Number.isNaN(date.getTime())) return String(value).slice(0, 10);
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(date).replaceAll("/", "-");
+  return formatConsoleDateTime(value);
 }
 
 function escapeHtml(value) {
@@ -118,8 +109,8 @@ function isExpired(order, now = Date.now()) {
   if ([true, "true", 1, "1"].includes(order?.overTime)) return true;
   const value = order?.expirationTime || order?.expiration || order?.expirationStr || order?.expirationTimestamp;
   if (!value) return false;
-  const timestamp = new Date(String(value).replace(" ", "T")).getTime();
-  return Number.isFinite(timestamp) && timestamp < now;
+  const timestamp = consoleTimestamp(value);
+  return timestamp !== null && timestamp < now;
 }
 
 function isResidentialTraffic(order) {
@@ -182,6 +173,7 @@ function hasReliableTrafficTotal(order) {
 }
 
 function packageLabel(order, product) {
+  if (isHighBandwidthPackage(order)) return "专属项目套餐";
   switch (order.chargeType) {
     case "trafficIp":
       return hasReliableTrafficTotal(order)
@@ -210,6 +202,14 @@ function packageLabel(order, product) {
 }
 
 function packageResource(order) {
+  if (isHighBandwidthPackage(order)) {
+    return {
+      available: "不限流量 · 不限并发",
+      usage: "高级技术支持独立交付",
+      progress: 0
+    };
+  }
+
   if (["trafficIp", "tmpPackage"].includes(order.chargeType) || isResidentialTraffic(order)) {
     const reliableTotal = hasReliableTrafficTotal(order);
     return {
@@ -257,12 +257,14 @@ function packageStatus(order, resource, now = Date.now()) {
     && Math.max(0, number(order.remainAmount ?? order.amount)) > 0;
   if (pendingStatic) return { key: "attention", label: "待提取" };
   if (metered && remainingTrafficGb(order) <= 0) return { key: "attention", label: "已用完" };
+  if (isHighBandwidthPackage(order)) return { key: "active", label: "专属交付" };
   return { key: "active", label: "使用中" };
 }
 
 function packageCanRenew(order, now = Date.now()) {
   const raw = order?.raw || order || {};
   if ([true, "true", 1, "1"].includes(raw.present)) return false;
+  if (isHighBandwidthPackage(raw)) return false;
   if (order?.status === "expired" || isExpired(raw, now)) return false;
   if (["tmpPackage", "trafficIp"].includes(raw.chargeType)) return false;
   if (raw.chargeType === "residentialDynamicIp" && number(raw.traffInGB) > 0) return false;
@@ -370,7 +372,7 @@ function normalizeResourceData(trafficPayload, orderPayload, userPayload, now = 
         progress: resource.progress,
         created: formatDate(order.createTime || order.createTimestamp),
         expiry: formatDate(order.expirationTime || order.expirationTimestamp),
-        expiryTimestamp: new Date(String(order.expirationTime || order.expirationTimestamp || "").replace(" ", "T")).getTime() || 0,
+        expiryTimestamp: consoleTimestamp(order.expirationTime || order.expirationTimestamp) || 0,
         status: status.key,
         statusLabel: status.label,
         remark: String(order.referID || ""),
@@ -383,7 +385,9 @@ function normalizeResourceData(trafficPayload, orderPayload, userPayload, now = 
         present: [true, "true", 1, "1"].includes(order.present),
         renewable: packageCanRenew(order, now),
         metered: ["trafficIp", "tmpPackage"].includes(order.chargeType) || isResidentialTraffic(order),
-        route: `#extract?product=${encodeURIComponent(product.key)}&order=${encodeURIComponent(id)}`,
+        route: product.key === "bandwidth"
+          ? "#product-bandwidth"
+          : `#extract?product=${encodeURIComponent(product.key)}&order=${encodeURIComponent(id)}`,
         purchaseUrl: product.key === "bandwidth"
           ? "#product-bandwidth"
           : `#purchase?product=${encodeURIComponent(product.key === "unknown" ? "tunnel" : product.key)}`,
@@ -411,7 +415,13 @@ function normalizeResourceData(trafficPayload, orderPayload, userPayload, now = 
     resources: {
       meteredTrafficGb: Math.max(0, number(traffic.avaTrafficInKB)) / 1000000
         + Math.max(0, number(traffic.avaZhuzhaiTrafficInKB)) / 1000000,
-      concurrency: Math.max(0, number(traffic.avaTunnelIPs ?? traffic.conns)),
+      concurrency: Math.max(
+        0,
+        number(traffic.avaTunnelIPs ?? traffic.conns)
+          - orders
+            .filter((item) => item.productKey === "bandwidth" && item.status !== "expired")
+            .reduce((total, item) => total + number(item.raw?.total), 0)
+      ),
       unlimitedPorts: Math.max(0, number(traffic.amountOfDurationIPs ?? traffic.avaUnlimitZhuzhai)),
       userTrafficGb: users.reduce((total, user) => total + user.usedInGB, 0)
     }
@@ -564,7 +574,9 @@ function statusMarkup(item) {
 
 function packageRowMarkup(item) {
   const exhausted = item.statusLabel === "已用完";
-  const primaryLabel = item.status === "expired"
+  const primaryLabel = item.productKey === "bandwidth"
+    ? "查看交付说明"
+    : item.status === "expired"
     ? "重新购买"
     : exhausted ? "购买流量"
     : item.statusLabel === "待提取" ? "立即提取" : "使用套餐";
@@ -671,7 +683,7 @@ function usagePackageRowMarkup(item) {
       </div>
       <div class="management-resource" role="cell"><strong>${escapeHtml(item.available)}</strong><small>${escapeHtml(item.statusLabel)}</small></div>
       <div class="management-dates" role="cell"><strong>${escapeHtml(item.expiry)}</strong><small>套餐有效期</small></div>
-      <div class="management-actions" role="cell"><a class="button-mini is-primary" href="${escapeHtml(item.route)}">使用套餐</a></div>
+      <div class="management-actions" role="cell"><a class="button-mini is-primary" href="${escapeHtml(item.route)}">${item.productKey === "bandwidth" ? "查看交付说明" : "使用套餐"}</a></div>
     </div>`;
 }
 
@@ -887,7 +899,7 @@ function openPackageManageDialog(item) {
       ? '<button type="button" data-package-action="renew"><i data-lucide="calendar-plus"></i><span><strong>续费套餐</strong><small>按原套餐创建 1 个月续费订单</small></span><i data-lucide="chevron-right"></i></button>'
       : ""}
     <button type="button" data-package-action="remark"><i data-lucide="notebook-pen"></i><span><strong>修改备注</strong><small>记录项目、用途或负责人</small></span><i data-lucide="chevron-right"></i></button>
-    <button type="button" data-package-action="bind"><i data-lucide="user-round-check"></i><span><strong>绑定代理用户</strong><small>从当前账户已有代理用户中选择</small></span><i data-lucide="chevron-right"></i></button>
+    ${item.productKey === "bandwidth" ? "" : '<button type="button" data-package-action="bind"><i data-lucide="user-round-check"></i><span><strong>绑定代理用户</strong><small>从当前账户已有代理用户中选择</small></span><i data-lucide="chevron-right"></i></button>'}
     <button type="button" data-package-action="notify"><i data-lucide="bell-ring"></i><span><strong>套餐提醒</strong><small>设置到期通知与流量阈值</small></span><i data-lucide="chevron-right"></i></button>
     <a href="${escapeHtml(item.purchaseUrl)}"><i data-lucide="${item.productKey === "bandwidth" ? "messages-square" : "shopping-cart"}"></i><span><strong>${item.productKey === "bandwidth" ? "获取同类方案" : "购买同类套餐"}</strong><small>${item.productKey === "bandwidth" ? "进入高带宽代理产品页" : "进入该产品的实时套餐列表"}</small></span><i data-lucide="arrow-up-right"></i></a>`;
   openDialog("#packageManageDialog");

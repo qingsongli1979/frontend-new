@@ -1,4 +1,5 @@
 import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+import { consoleTimestamp, formatConsoleDateTime } from "./date-time.js?v=20260818-03";
 
 const TOKEN_KEY = "token_key";
 const LOGIN_PATH = "/login.html";
@@ -73,25 +74,19 @@ function formatMoney(value) {
 }
 
 function formatDate(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "--";
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(date).replaceAll("/", "-");
+  return formatConsoleDateTime(value);
 }
 
 function daysUntil(value) {
-  const timestamp = new Date(value).getTime();
-  if (!Number.isFinite(timestamp)) return null;
+  const timestamp = consoleTimestamp(value);
+  if (timestamp === null) return null;
   return Math.max(0, Math.ceil((timestamp - Date.now()) / 86400000));
 }
 
 function isExpired(item) {
   if ([true, "true", 1, "1"].includes(item?.overTime)) return true;
-  const timestamp = new Date(item?.expirationTime).getTime();
-  return Number.isFinite(timestamp) && timestamp < Date.now();
+  const timestamp = consoleTimestamp(item?.expirationTime);
+  return timestamp !== null && timestamp < Date.now();
 }
 
 function unwrapTraffic(payload) {
@@ -146,7 +141,7 @@ function resolveChargeType(item) {
       productKey: "bandwidth",
       name: "高带宽代理 IP",
       icon: "gauge",
-      detail: (order) => `${formatNumber(order.total)} 并发线程 · 客户定制`
+      detail: () => "不限流量与并发 · 专属项目"
     };
   }
 
@@ -178,6 +173,14 @@ function resolveChargeType(item) {
 }
 
 function resourceForOrder(item, meta, requiresAttention) {
+  if (meta.productKey === "bandwidth") {
+    return {
+      value: "高级技术支持交付",
+      note: "控制台不提供代理信息提取",
+      progress: 100
+    };
+  }
+
   if (isMeteredOrder(item)) {
     const remaining = remainingTrafficGb(item);
     const total = toNumber(item.traffInGB);
@@ -244,10 +247,15 @@ function packageView(item, pending) {
   const depleted = isMeteredOrder(item) && remainingTrafficGb(item) <= 0;
   const status = requiresAttention || depleted ? "attention" : "active";
   const statusLabel = requiresAttention ? "待提取" : depleted ? "已用完" : "使用中";
-  const actionLabel = requiresAttention ? "提取" : depleted ? "购买流量" : "使用";
-  const route = depleted
-    ? `#purchase?product=${encodeURIComponent(meta.productKey)}`
-    : `#extract?product=${encodeURIComponent(meta.productKey)}&order=${encodeURIComponent(reference)}`;
+  const managedDelivery = meta.productKey === "bandwidth";
+  const actionLabel = managedDelivery
+    ? "查看交付说明"
+    : requiresAttention ? "提取" : depleted ? "购买流量" : "使用";
+  const route = managedDelivery
+    ? "#product-bandwidth"
+    : depleted
+      ? `#purchase?product=${encodeURIComponent(meta.productKey)}`
+      : `#extract?product=${encodeURIComponent(meta.productKey)}&order=${encodeURIComponent(reference)}`;
 
   return {
     id: String(reference),
@@ -284,7 +292,7 @@ function normalizeOverviewData(userPayload, trafficPayload, ordersPayload, liveP
   );
   const currentOrders = orders
     .filter((item) => !isExpired(item))
-    .sort((a, b) => new Date(a.expirationTime).getTime() - new Date(b.expirationTime).getTime());
+    .sort((a, b) => (consoleTimestamp(a.expirationTime) || 0) - (consoleTimestamp(b.expirationTime) || 0));
   const pending = {
     datacenter: toNumber(traffic.avaFixedIPs),
     residential: toNumber(traffic.avaZhuzhaiFixedIPs)

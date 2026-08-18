@@ -88,6 +88,7 @@ assert.equal(resolveChargeType({ chargeType: "tunnelIp" }).name, "隧道代理")
 assert.equal(resolveChargeType({ chargeType: "tunnelIp", total: 1999 }).productKey, "tunnel");
 assert.equal(resolveChargeType({ chargeType: "tunnelIp", total: 2000 }).productKey, "bandwidth");
 assert.equal(resolveChargeType({ chargeType: "tunnelIp", total: 2000 }).name, "高带宽代理 IP");
+assert.doesNotMatch(resolveChargeType({ chargeType: "tunnelIp", total: 2000 }).detail({ total: 2000 }), /2000|并发线程/);
 assert.equal(maskAccount("u13800001234"), "u1380****1234");
 
 const duplicateTunnelData = normalizeOverviewData({}, {}, {
@@ -110,6 +111,9 @@ const duplicateTunnelData = normalizeOverviewData({}, {}, {
 });
 assert.equal(duplicateTunnelData.packages.length, 2);
 assert.equal(duplicateTunnelData.packages.every((item) => item.productKey === "bandwidth"), true);
+assert.equal(duplicateTunnelData.packages.every((item) => item.resource.value === "高级技术支持交付"), true);
+assert.equal(duplicateTunnelData.packages.every((item) => item.route === "#product-bandwidth"), true);
+assert.equal(duplicateTunnelData.packages.every((item) => !/25,000|并发线程/.test(item.detail)), true);
 assert.deepEqual(
   duplicateTunnelData.packages.map((item) => item.id),
   ["tunnel-25000-a", "tunnel-25000-b"]
