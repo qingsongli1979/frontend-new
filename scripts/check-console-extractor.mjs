@@ -3,6 +3,7 @@ import {
   API_CODE_TABS,
   ASSIGNED_PROXY_TABS,
   CONNECTION_CODE_TABS,
+  PRODUCT_META,
   PROXY_OUTPUT_FORMATS,
   STATIC_DATACENTER_CODES,
   STATIC_RESIDENTIAL_CODES,
@@ -32,9 +33,14 @@ assert.equal(STATIC_DATACENTER_CODES.includes("CN"), false);
 assert.equal(STATIC_DATACENTER_CODES.includes("US"), true);
 assert.equal(STATIC_RESIDENTIAL_CODES.includes("HN"), true);
 assert.equal(STATIC_RESIDENTIAL_CODES.includes("CN"), false);
+assert.equal(PRODUCT_META.bandwidth.name, "高带宽代理 IP");
 
 assert.equal(matchesProduct({ chargeType: "trafficIp" }, "tunnel"), true);
 assert.equal(matchesProduct({ chargeType: "tunnelIp" }, "tunnel"), true);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 1999 }, "tunnel"), true);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 1999 }, "bandwidth"), false);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 2000 }, "tunnel"), false);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 2000 }, "bandwidth"), true);
 assert.equal(
   matchesProduct({ chargeType: "residentialDynamicIp", totalTrafficInGB: 50 }, "residential"),
   true
@@ -121,6 +127,19 @@ assert.equal(tunnelRouting.cap, "");
 assert.equal(tunnelRouting.updateIp, true);
 assert.equal(tunnelRouting.mode, "2");
 assert.equal(tunnelRouting.ttl, 15);
+
+const bandwidthRouting = buildDynamicRouting({
+  ...residentialSettings,
+  auth: "user",
+  user: { username: "high_bandwidth_user" },
+  region: "la-all",
+  session: false,
+  endpointMode: "2",
+  pool: "mixed"
+}, "bandwidth");
+assert.equal(bandwidthRouting.mode, "2");
+assert.equal(bandwidthRouting.tag, "la-all");
+assert.equal(bandwidthRouting.updateIp, true);
 
 const tunnelWhitelistSettings = {
   ...residentialSettings,

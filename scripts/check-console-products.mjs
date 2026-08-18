@@ -79,7 +79,12 @@ const normalized = normalizeProductTraffic(payload, {
 assert.equal(normalized.orders.length, 7);
 assert.equal(normalized.users.length, 1);
 assert.equal(matchesProduct(normalized.orders[0], "tunnel"), true);
-assert.equal(matchesProduct(normalized.orders[1], "tunnel"), true);
+assert.equal(matchesProduct(normalized.orders[1], "tunnel"), false);
+assert.equal(matchesProduct(normalized.orders[1], "bandwidth"), true);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 1999 }, "tunnel"), true);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 1999 }, "bandwidth"), false);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 2000 }, "tunnel"), false);
+assert.equal(matchesProduct({ chargeType: "tunnelIp", total: 2000 }, "bandwidth"), true);
 assert.equal(matchesProduct(normalized.orders[2], "residential"), true);
 assert.equal(matchesProduct(normalized.orders[2], "unlimited"), false);
 assert.equal(matchesProduct(normalized.orders[3], "unlimited"), true);
@@ -87,7 +92,7 @@ assert.equal(matchesProduct(normalized.orders[4], "unlimited"), true);
 assert.equal(matchesProduct(normalized.orders[5], "staticDatacenter"), true);
 assert.equal(normalized.orders.some((order) => matchesProduct(order, "staticResidential")), true);
 assert.match(packageName(normalized.orders[0]), /60GB/);
-assert.match(packageName(normalized.orders[1]), /25,000/);
+assert.match(packageName(normalized.orders[1]), /高带宽代理 IP · 25,000 并发线程/);
 assert.match(packageAvailable({
   chargeType: "durationIp",
   total: 3,

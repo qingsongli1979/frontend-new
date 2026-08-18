@@ -1,3 +1,5 @@
+import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 12000;
 const PAGE_SIZE = 12;
@@ -13,6 +15,11 @@ const PROXY_CHARGE_TYPES = new Set([
 ]);
 
 const PRODUCT_META = {
+  bandwidth: {
+    name: "高带宽代理 IP",
+    icon: "gauge",
+    plist: 1
+  },
   tunnel: {
     name: "隧道代理",
     icon: "shuffle",
@@ -121,6 +128,10 @@ function isResidentialTraffic(order) {
 }
 
 function resolveProduct(order) {
+  if (isHighBandwidthPackage(order)) {
+    return { key: "bandwidth", ...PRODUCT_META.bandwidth };
+  }
+
   switch (order?.chargeType) {
     case "trafficIp":
     case "tmpPackage":
@@ -373,7 +384,9 @@ function normalizeResourceData(trafficPayload, orderPayload, userPayload, now = 
         renewable: packageCanRenew(order, now),
         metered: ["trafficIp", "tmpPackage"].includes(order.chargeType) || isResidentialTraffic(order),
         route: `#extract?product=${encodeURIComponent(product.key)}&order=${encodeURIComponent(id)}`,
-        purchaseUrl: `#purchase?product=${encodeURIComponent(product.key === "unknown" ? "tunnel" : product.key)}`,
+        purchaseUrl: product.key === "bandwidth"
+          ? "#product-bandwidth"
+          : `#purchase?product=${encodeURIComponent(product.key === "unknown" ? "tunnel" : product.key)}`,
         totalTrafficGb: totalTrafficGb(order),
         remainingTrafficGb: remainingTrafficGb(order)
       };
@@ -876,7 +889,7 @@ function openPackageManageDialog(item) {
     <button type="button" data-package-action="remark"><i data-lucide="notebook-pen"></i><span><strong>修改备注</strong><small>记录项目、用途或负责人</small></span><i data-lucide="chevron-right"></i></button>
     <button type="button" data-package-action="bind"><i data-lucide="user-round-check"></i><span><strong>绑定代理用户</strong><small>从当前账户已有代理用户中选择</small></span><i data-lucide="chevron-right"></i></button>
     <button type="button" data-package-action="notify"><i data-lucide="bell-ring"></i><span><strong>套餐提醒</strong><small>设置到期通知与流量阈值</small></span><i data-lucide="chevron-right"></i></button>
-    <a href="${escapeHtml(item.purchaseUrl)}"><i data-lucide="shopping-cart"></i><span><strong>购买同类套餐</strong><small>进入该产品的实时套餐列表</small></span><i data-lucide="arrow-up-right"></i></a>`;
+    <a href="${escapeHtml(item.purchaseUrl)}"><i data-lucide="${item.productKey === "bandwidth" ? "messages-square" : "shopping-cart"}"></i><span><strong>${item.productKey === "bandwidth" ? "获取同类方案" : "购买同类套餐"}</strong><small>${item.productKey === "bandwidth" ? "进入高带宽代理产品页" : "进入该产品的实时套餐列表"}</small></span><i data-lucide="arrow-up-right"></i></a>`;
   openDialog("#packageManageDialog");
   refreshIcons();
 }

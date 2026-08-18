@@ -79,6 +79,14 @@ assert.equal(
 );
 assert.equal(productNameForOrder({ chargeType: 18 }), "隧道代理 · 按并发线程");
 assert.equal(
+  productNameForOrder({ chargeType: 18, details: { amount: 1999 } }),
+  "隧道代理 · 按并发线程"
+);
+assert.equal(
+  productNameForOrder({ chargeType: 18, details: { amount: 2000 } }),
+  "高带宽代理 IP · 客户定制"
+);
+assert.equal(
   orderSpecification({ chargeType: 18, details: { amount: 50 } }),
   "50 并发线程，不限累计流量"
 );
@@ -86,6 +94,8 @@ assert.equal(isProxyOrder({ chargeType: 18, service: "IP" }), true);
 assert.equal(isProxyOrder({ chargeType: 18, service: "CVM" }), false);
 assert.equal(isProxyOrder({ chargeType: 12, service: "IP" }), false);
 assert.equal(orderProductKey({ chargeType: 18 }), "tunnel");
+assert.equal(orderProductKey({ chargeType: 18, details: { amount: 1999 } }), "tunnel");
+assert.equal(orderProductKey({ chargeType: 18, details: { amount: 2000 } }), "bandwidth");
 assert.ok(orderTimestamp("2026-08-14T20:00:00Z") > orderTimestamp("2026-08-13T20:00:00Z"));
 assert.equal(
   productNameForOrder({ chargeType: 70, details: { trafficInGB: 20 } }),
@@ -182,7 +192,7 @@ assert.match(commerceScript, /paymentReturnKey:\s*""/);
 assert.match(commerceScript, /state\.paymentReturnKey === returnKey && state\.paymentReturnPromise/);
 assert.match(commerceScript, /FULFILLING:\s*\["套餐开通中",\s*"is-waiting"\]/);
 assert.match(commerceScript, /PROXY_ORDER_CHARGE_TYPES = new Set\(\[13, 14, 15, 16, 17, 18, 70, 71\]\)/);
-assert.match(commerceScript, /case 18:\s*return "隧道代理 · 按并发线程"/);
+assert.match(commerceScript, /case 18:\s*return isHighBandwidthPackage\(order\)/);
 assert.match(commerceScript, /chargeType !== 18/);
 assert.match(commerceScript, /orderTimestamp\(right\.orderTimeStamp\) - orderTimestamp\(left\.orderTimeStamp\)/);
 assert.match(consoleScript, /function routeModuleOnce\(moduleKey, handler\)/);

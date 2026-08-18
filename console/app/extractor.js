@@ -1,3 +1,5 @@
+import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -66,6 +68,12 @@ const PROXY_OUTPUT_FORMATS = [
 ];
 
 const PRODUCT_META = {
+  bandwidth: {
+    name: "高带宽代理 IP",
+    description: "使用客户定制的高并发代理资源，并配置认证、地区与 SESSION。",
+    icon: "gauge",
+    static: false
+  },
   tunnel: {
     name: "隧道代理",
     description: "选择爬虫混合池或纯住宅池，并配置认证、地区与 SESSION。",
@@ -301,8 +309,16 @@ function isResidentialTraffic(order) {
   return order?.chargeType === "residentialDynamicIp" && number(order?.totalTrafficInGB) > 0;
 }
 
+function isTunnelProduct(productKey = state.productKey) {
+  return ["tunnel", "bandwidth"].includes(productKey);
+}
+
 function matchesProduct(order, productKey) {
-  if (productKey === "tunnel") return ["trafficIp", "tunnelIp", "tmpPackage"].includes(order?.chargeType);
+  if (productKey === "bandwidth") return isHighBandwidthPackage(order);
+  if (productKey === "tunnel") {
+    return ["trafficIp", "tunnelIp", "tmpPackage"].includes(order?.chargeType)
+      && !isHighBandwidthPackage(order);
+  }
   if (productKey === "residential") return isResidentialTraffic(order);
   if (productKey === "unlimited") {
     return order?.chargeType === "durationIp"
@@ -403,8 +419,9 @@ function whitelistTextareaValue(value) {
 }
 
 function whitelistScopeHelp(productKey = state.productKey) {
-  if (productKey === "tunnel") {
-    return "绑定当前隧道代理套餐；白名单模式使用轮转出口，纯住宅池的 SESSION 仅支持账密认证。";
+  if (isTunnelProduct(productKey)) {
+    const productName = PRODUCT_META[productKey]?.name || "隧道代理";
+    return `绑定当前${productName}套餐；白名单模式使用轮转出口，纯住宅池的 SESSION 仅支持账密认证。`;
   }
   if (productKey === "residential") {
     return "绑定当前隧道住宅套餐；国家/地区与 SESSION 路由会随本次配置一起保存。";
@@ -436,12 +453,16 @@ function rememberOrderWhitelist(settings) {
 }
 
 function renderEmpty(meta) {
+  const actionUrl = state.productKey === "bandwidth"
+    ? "#product-bandwidth"
+    : `#purchase?product=${encodeURIComponent(state.productKey)}`;
+  const actionLabel = state.productKey === "bandwidth" ? "获取高带宽方案" : "购买套餐";
   document.querySelector("#extractWorkspace").innerHTML = `
     <section class="panel extraction-empty">
       <span><i data-lucide="${meta.icon}" aria-hidden="true"></i></span>
       <h2>当前没有可用${escapeHtml(meta.name)}套餐</h2>
       <p>先购买对应套餐，再回到这里配置并生成代理。</p>
-      <a class="button button-primary" href="#purchase?product=${encodeURIComponent(state.productKey)}"><i data-lucide="shopping-cart" aria-hidden="true"></i>购买套餐</a>
+      <a class="button button-primary" href="${actionUrl}"><i data-lucide="${state.productKey === "bandwidth" ? "messages-square" : "shopping-cart"}" aria-hidden="true"></i>${actionLabel}</a>
     </section>`;
   refreshIcons();
 }
@@ -471,7 +492,7 @@ function authFields() {
 
 function commonConnectionFields() {
   const unlimitedEndpoint = state.productKey === "unlimited";
-  const endpointMode = ["tunnel", "unlimited"].includes(state.productKey)
+  const endpointMode = (isTunnelProduct() || unlimitedEndpoint)
     ? `<div class="extract-field extract-endpoint-field">
         <span>接入地址</span>
         <div class="extract-choice-row is-compact" id="extractEndpointChoices">
@@ -626,7 +647,7 @@ function unlimitedSettings() {
 }
 
 function renderDynamic(meta) {
-  const isTunnel = state.productKey === "tunnel";
+  const isTunnel = isTunnelProduct();
   document.querySelector("#extractWorkspace").innerHTML = `
     <div class="extraction-layout">
       <form class="panel extraction-form" id="dynamicExtractForm">
@@ -641,7 +662,7 @@ function renderDynamic(meta) {
           <label class="extract-field"><span>使用套餐</span><select id="extractPackage">${orderOptions()}</select><small id="extractPackageStatus"></small></label>
           ${authFields()}
           ${commonConnectionFields()}
-          ${state.productKey === "tunnel" ? tunnelSettings() : state.productKey === "residential" ? residentialSettings() : unlimitedSettings()}
+          ${isTunnelProduct() ? tunnelSettings() : state.productKey === "residential" ? residentialSettings() : unlimitedSettings()}
           <div class="extract-validation" id="extractValidation" hidden></div>
         </div>
         <footer class="extract-primary-footer">
@@ -696,7 +717,7 @@ function bindDynamicForm() {
     document.querySelector("#whitelistField").hidden = !whitelist;
     if (whitelist) syncWhitelistField(selectedOrder());
     const sticky = document.querySelector("[data-session-mode='sticky']");
-    if (state.productKey === "tunnel" && sticky) {
+    if (isTunnelProduct() && sticky) {
       sticky.disabled = whitelist;
       sticky.setAttribute(
         "title",
@@ -862,10 +883,10 @@ function dynamicSettings() {
   const pool = document.querySelector("[data-pool].is-active")?.dataset.pool || "";
   const endpointMode = currentEndpointMode();
   const outputFormatValue = document.querySelector("#extractOutputFormat")?.value || "1";
-  const choiceSession = ["tunnel", "residential"].includes(state.productKey) && currentSessionMode() === "sticky";
-  const session = state.productKey === "tunnel" && auth === "whitelist"
+  const choiceSession = (isTunnelProduct() || state.productKey === "residential") && currentSessionMode() === "sticky";
+  const session = isTunnelProduct() && auth === "whitelist"
     ? false
-    : (["tunnel", "residential"].includes(state.productKey) ? choiceSession : checkboxSession);
+    : ((isTunnelProduct() || state.productKey === "residential") ? choiceSession : checkboxSession);
   return {
     order,
     auth,
@@ -892,7 +913,7 @@ function validateDynamic(settings) {
   if (settings.auth === "whitelist" && !validWhitelist(settings.whitelist)) return "请输入有效的 IPv4 白名单，每行填写一个地址。";
   if (settings.session && (settings.sessionMinutes < 1 || settings.sessionMinutes > 120)) return "SESSION 时长必须在 1-120 分钟之间。";
   if (
-    ["tunnel", "residential"].includes(state.productKey) &&
+    (isTunnelProduct() || state.productKey === "residential") &&
     settings.session &&
     settings.auth === "user" &&
     !/^[A-Za-z0-9]{12}$/.test(settings.sessionId)
@@ -910,7 +931,7 @@ function buildDynamicRouting(settings, productKey = state.productKey) {
   let updateIp = false;
   let retrieveRegion = settings.region;
 
-  if (productKey === "tunnel") {
+  if (isTunnelProduct(productKey)) {
     mode = settings.endpointMode || "1";
     tag = settings.region;
     updateIp = true;
@@ -939,7 +960,7 @@ function buildDynamicRouting(settings, productKey = state.productKey) {
 }
 
 function whitelistRequestParameters(settings, routing, productKey = state.productKey) {
-  const whitelistTtl = productKey === "tunnel" ? 0 : -1;
+  const whitelistTtl = isTunnelProduct(productKey) ? 0 : -1;
   return {
     userip: settings.auth === "whitelist" ? settings.whitelist : "",
     protocol: settings.protocol === "socks" ? "socks" : "proxy",

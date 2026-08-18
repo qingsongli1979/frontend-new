@@ -1,3 +1,5 @@
+import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+
 const TOKEN_KEY = "token_key";
 const LOGIN_PATH = "/login.html";
 const REQUEST_TIMEOUT_MS = 12000;
@@ -139,6 +141,15 @@ function remainingTrafficGb(item) {
 }
 
 function resolveChargeType(item) {
+  if (isHighBandwidthPackage(item)) {
+    return {
+      productKey: "bandwidth",
+      name: "高带宽代理 IP",
+      icon: "gauge",
+      detail: (order) => `${formatNumber(order.total)} 并发线程 · 客户定制`
+    };
+  }
+
   if (item?.chargeType !== "residentialDynamicIp") {
     return chargeTypeMeta[item?.chargeType] || {
       productKey: "unknown",

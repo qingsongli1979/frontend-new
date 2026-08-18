@@ -8,6 +8,8 @@ import {
   submitPaymentHtml
 } from "./payment.js?v=20260804-02";
 
+import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
+
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -567,7 +569,9 @@ function productNameForOrder(order) {
     case 15: return "长效静态代理";
     case 16: return "隧道代理 · 按流量";
     case 17: return "隧道代理 · 补充流量包";
-    case 18: return "隧道代理 · 按并发线程";
+    case 18: return isHighBandwidthPackage(order)
+      ? "高带宽代理 IP · 客户定制"
+      : "隧道代理 · 按并发线程";
     case 70: return number(details.trafficInGB) > 0 ? "隧道住宅代理" : "不限量动态住宅";
     case 71: return "长效静态住宅";
     default: return "代理套餐";
@@ -648,7 +652,9 @@ function renderOrder(order, user) {
     : fulfilling
       ? "支付已经确认，套餐正在开通，请稍后刷新订单状态。"
       : "该订单当前无法支付。";
-  const completionHref = paid || fulfilling ? "#packages" : purchaseRoute("tunnel");
+  const completionHref = paid || fulfilling
+    ? "#packages"
+    : orderProductKey(order) === "bandwidth" ? "#product-bandwidth" : purchaseRoute("tunnel");
   const completionLabel = paid ? "查看我的套餐" : fulfilling ? "查看开通进度" : "重新购买";
   const balance = number(user?.balance);
   const total = number(order.rate);
@@ -975,6 +981,7 @@ async function openOrders() {
 
 function orderProductKey(order) {
   const type = number(order?.chargeType);
+  if (type === 18 && isHighBandwidthPackage(order)) return "bandwidth";
   if ([14, 16, 17, 18].includes(type)) return "tunnel";
   if (type === 70 && number(order?.details?.trafficInGB) > 0) return "residential";
   if ([13].includes(type) || (type === 70 && number(order?.details?.trafficInGB) <= 0)) return "unlimited";
@@ -1031,7 +1038,10 @@ function renderOrders() {
         </select></label>
         <label><span>代理产品</span><select id="orderProductFilter">
           <option value="">全部产品</option>
-          ${Object.entries(PRODUCTS).map(([key, product]) => `<option value="${key}" ${state.orderProductFilter === key ? "selected" : ""}>${escapeHtml(product.name)}</option>`).join("")}
+          ${[
+            ...Object.entries(PRODUCTS),
+            ["bandwidth", { name: "高带宽代理 IP" }]
+          ].map(([key, product]) => `<option value="${key}" ${state.orderProductFilter === key ? "selected" : ""}>${escapeHtml(product.name)}</option>`).join("")}
         </select></label>
         <label><span>订单搜索</span><input id="orderKeyword" type="search" value="${escapeHtml(state.orderKeyword)}" placeholder="订单号或套餐名称"></label>
         <button class="button button-secondary" type="submit"><i data-lucide="search"></i>查询</button>
