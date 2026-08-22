@@ -68,6 +68,7 @@ const requiredFiles = [
   "dist/console/app/console.js",
   "dist/console/app/date-time.js",
   "dist/console/app/package-classification.js",
+  "dist/console/app/thread-usage.js",
   "dist/console/app/overview.js",
   "dist/console/app/products.js",
   "dist/console/app/resources.js",

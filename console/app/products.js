@@ -1,10 +1,18 @@
 import { isHighBandwidthPackage } from "./package-classification.js?v=20260818-01";
 import { consoleTimestamp, formatConsoleDateTime } from "./date-time.js?v=20260818-03";
+import {
+  drawThreadUsageChart,
+  normalizeRealtimeThreads,
+  normalizeThreadHistory,
+  standardConcurrencyCapacity
+} from "./thread-usage.js?v=20260822-01";
 
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 12000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 const TRIAL_CONTACT_URL = "https://www.123proxy.cn/contact.html?intent=trial#service";
+const THREAD_REALTIME_INTERVAL_MS = 5000;
+const THREAD_HISTORY_INTERVAL_MS = 60000;
 
 const PRODUCT_CATALOG = {
   tunnel: {
@@ -92,7 +100,18 @@ const state = {
   orders: [],
   users: [],
   currentProduct: "",
-  selectedByProduct: new Map()
+  selectedByProduct: new Map(),
+  threadUsage: {
+    active: false,
+    generation: 0,
+    capacity: 0,
+    current: null,
+    model: null,
+    lastUpdated: null,
+    realtimeTimer: null,
+    historyTimer: null,
+    historyUnavailable: false
+  }
 };
 
 function isLocalPreview() {
@@ -504,6 +523,172 @@ function setProductActions(order, product) {
     || "https://www.123proxy.cn/developers/";
 }
 
+function formatThreadNumber(value, digits = 0) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return "--";
+  return new Intl.NumberFormat("zh-CN", { maximumFractionDigits: digits }).format(Number(value));
+}
+
+function formatThreadUpdate(value) {
+  if (!value) return "--";
+  return new Intl.DateTimeFormat("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }).format(value);
+}
+
+function setThreadLiveStatus(mode, label) {
+  const status = document.querySelector("#threadLiveStatus");
+  if (!status) return;
+  status.className = `thread-live-status${mode ? ` is-${mode}` : ""}`;
+  status.innerHTML = `<i aria-hidden="true"></i>${escapeHtml(label)}`;
+}
+
+function renderThreadUsage() {
+  const usage = state.threadUsage;
+  const panel = document.querySelector("#threadUsagePanel");
+  if (!panel || panel.hidden || !usage.active) return;
+
+  const current = usage.current ?? usage.model?.current ?? null;
+  const historicalPeak = usage.model?.peak ?? null;
+  const peak = current === null
+    ? historicalPeak
+    : Math.max(current, historicalPeak ?? current);
+  const average = usage.model?.average ?? null;
+  const percent = current !== null && usage.capacity > 0
+    ? current / usage.capacity * 100
+    : null;
+  document.querySelector("#threadCurrentMetric").textContent = formatThreadNumber(current);
+  document.querySelector("#threadCapacityMetric").textContent = ` / ${formatThreadNumber(usage.capacity)}`;
+  document.querySelector("#threadPeakMetric").textContent = formatThreadNumber(peak);
+  document.querySelector("#threadAverageMetric").textContent = formatThreadNumber(average, 1);
+  document.querySelector("#threadUpdatedMetric").textContent = formatThreadUpdate(usage.lastUpdated);
+  document.querySelector("#threadLoadMetric").textContent = percent === null
+    ? "等待实时数据"
+    : percent > 100
+      ? `当前为额度的 ${formatThreadNumber(percent, 1)}%`
+      : `已使用 ${formatThreadNumber(percent, 1)}%`;
+
+  const fresh = usage.lastUpdated && Date.now() - usage.lastUpdated.getTime() < 15000;
+  if (fresh) setThreadLiveStatus("live", "实时更新");
+  else if (current !== null) setThreadLiveStatus("stale", "连接中断，保留上次数据");
+  else setThreadLiveStatus("", "正在连接");
+
+  const canvas = document.querySelector("#threadHistoryChart");
+  const empty = document.querySelector("#threadChartEmpty");
+  if (empty) {
+    empty.hidden = Boolean(usage.model?.sampleCount);
+    empty.textContent = usage.historyUnavailable
+      ? "历史数据暂不可用，实时并发仍会继续更新"
+      : "历史数据正在积累，实时并发不受影响";
+  }
+  if (usage.model) {
+    drawThreadUsageChart(canvas, usage.model, usage.capacity);
+    canvas?.setAttribute(
+      "aria-label",
+      `最近 12 小时并发线程趋势，当前 ${formatThreadNumber(current)}，峰值 ${formatThreadNumber(peak)}，套餐额度 ${formatThreadNumber(usage.capacity)}`
+    );
+  }
+}
+
+function clearThreadUsageTimers() {
+  window.clearTimeout(state.threadUsage.realtimeTimer);
+  window.clearTimeout(state.threadUsage.historyTimer);
+  state.threadUsage.realtimeTimer = null;
+  state.threadUsage.historyTimer = null;
+}
+
+function stopThreadUsage(hide = true) {
+  state.threadUsage.active = false;
+  state.threadUsage.generation += 1;
+  clearThreadUsageTimers();
+  if (hide) {
+    const panel = document.querySelector("#threadUsagePanel");
+    if (panel) panel.hidden = true;
+  }
+}
+
+async function pollThreadRealtime(generation) {
+  const usage = state.threadUsage;
+  if (!usage.active || usage.generation !== generation) return;
+  if (document.hidden) {
+    usage.realtimeTimer = window.setTimeout(() => pollThreadRealtime(generation), THREAD_REALTIME_INTERVAL_MS);
+    return;
+  }
+  try {
+    const current = normalizeRealtimeThreads(await request("/ip/scrape/threads", getAccessToken()));
+    if (!usage.active || usage.generation !== generation) return;
+    if (current !== null) {
+      usage.current = current;
+      usage.lastUpdated = new Date();
+      renderThreadUsage();
+    }
+  } catch {
+    if (usage.active && usage.generation === generation) renderThreadUsage();
+  } finally {
+    if (usage.active && usage.generation === generation) {
+      usage.realtimeTimer = window.setTimeout(() => pollThreadRealtime(generation), THREAD_REALTIME_INTERVAL_MS);
+    }
+  }
+}
+
+async function pollThreadHistory(generation) {
+  const usage = state.threadUsage;
+  if (!usage.active || usage.generation !== generation) return;
+  if (document.hidden) {
+    usage.historyTimer = window.setTimeout(() => pollThreadHistory(generation), THREAD_HISTORY_INTERVAL_MS);
+    return;
+  }
+  try {
+    const payload = await request("/ip/scrape/threads/history?hours=12", getAccessToken());
+    if (!usage.active || usage.generation !== generation) return;
+    usage.model = normalizeThreadHistory(payload, { rangeHours: 12 });
+    usage.historyUnavailable = false;
+    if (usage.current === null && usage.model.current !== null) usage.current = usage.model.current;
+    renderThreadUsage();
+  } catch {
+    if (!usage.active || usage.generation !== generation) return;
+    usage.historyUnavailable = true;
+    if (!usage.model) {
+      usage.model = normalizeThreadHistory({ samples: [], observedAt: Date.now() }, { rangeHours: 12 });
+    }
+    renderThreadUsage();
+  } finally {
+    if (usage.active && usage.generation === generation) {
+      usage.historyTimer = window.setTimeout(() => pollThreadHistory(generation), THREAD_HISTORY_INTERVAL_MS);
+    }
+  }
+}
+
+function startThreadUsage(orders) {
+  stopThreadUsage(false);
+  const usage = state.threadUsage;
+  usage.capacity = standardConcurrencyCapacity(orders);
+  usage.current = null;
+  usage.model = null;
+  usage.lastUpdated = null;
+  usage.historyUnavailable = false;
+  const panel = document.querySelector("#threadUsagePanel");
+  if (!panel || usage.capacity <= 0) {
+    if (panel) panel.hidden = true;
+    return;
+  }
+
+  panel.hidden = false;
+  usage.active = true;
+  const generation = usage.generation;
+  setThreadLiveStatus("", "正在连接");
+  document.querySelector("#threadCurrentMetric").textContent = "--";
+  document.querySelector("#threadCapacityMetric").textContent = ` / ${formatThreadNumber(usage.capacity)}`;
+  document.querySelector("#threadPeakMetric").textContent = "--";
+  document.querySelector("#threadAverageMetric").textContent = "--";
+  document.querySelector("#threadUpdatedMetric").textContent = "--";
+  document.querySelector("#threadLoadMetric").textContent = "等待实时数据";
+  pollThreadRealtime(generation);
+  pollThreadHistory(generation);
+}
+
 async function ensureData() {
   if (state.loaded) return state;
   if (state.loadingPromise) return state.loadingPromise;
@@ -536,6 +721,7 @@ async function ensureData() {
 async function openProduct(productKey) {
   const product = PRODUCT_CATALOG[productKey];
   if (!product) return;
+  stopThreadUsage();
   state.currentProduct = productKey;
 
   renderMetadata(product);
@@ -549,6 +735,7 @@ async function openProduct(productKey) {
     const orders = productOrders(productKey);
     if (orders.length) renderPackages(productKey, product, orders);
     else renderEmpty(product);
+    if (productKey === "tunnel") startThreadUsage(state.orders);
   } catch (error) {
     if (state.currentProduct !== productKey) return;
     if (error.code === "NO_TOKEN") {
@@ -573,6 +760,7 @@ async function openProduct(productKey) {
 }
 
 function reload() {
+  stopThreadUsage();
   state.loaded = false;
   state.traffic = null;
   state.orders = [];
@@ -609,6 +797,21 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
   };
 
   bindActions();
+
+  window.addEventListener("hashchange", () => {
+    if (!window.location.hash.startsWith("#product-tunnel")) stopThreadUsage();
+  });
+  document.addEventListener("visibilitychange", () => {
+    const usage = state.threadUsage;
+    if (!document.hidden && usage.active) {
+      clearThreadUsageTimers();
+      pollThreadRealtime(usage.generation);
+      pollThreadHistory(usage.generation);
+    }
+  });
+  window.addEventListener("resize", () => {
+    if (state.threadUsage.active) renderThreadUsage();
+  });
 
   const initialProduct = [...document.querySelectorAll("[data-product]")]
     .find((item) => item.getAttribute("href") === window.location.hash)?.dataset.product;

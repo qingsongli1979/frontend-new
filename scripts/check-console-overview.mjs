@@ -178,7 +178,7 @@ const consoleCss = await readFile(new URL("../console/app/console.css", import.m
 const consoleScript = await readFile(new URL("../console/app/console.js", import.meta.url), "utf8");
 const overviewScript = await readFile(new URL("../console/app/overview.js", import.meta.url), "utf8");
 const resourcesScript = await readFile(new URL("../console/app/resources.js", import.meta.url), "utf8");
-assert.match(consoleHtml, /console\.css\?v=20260813-04/);
+assert.match(consoleHtml, /console\.css\?v=20260822-01/);
 assert.match(consoleCss, /\.brand-mark\s*\{[^}]*width:\s*34px;[^}]*flex:\s*0 0 34px;/);
 assert.match(consoleCss, /\.brand-wordmark img\s*\{[^}]*width:\s*78px;/);
 assert.match(consoleHtml, /id="userMenuButton"[\s\S]*?aria-haspopup="menu"/);
