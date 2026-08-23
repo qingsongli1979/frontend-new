@@ -9,6 +9,7 @@ import {
   isProxyOrder,
   offerIsVisible,
   offerLabel,
+  offerMonthlyPrice,
   orderProductKey,
   orderSpecification,
   orderTimestamp,
@@ -66,6 +67,14 @@ assert.deepEqual(
 assert.deepEqual(
   calculatePrice({ price: 480, discount: 0.9 }, "3m"),
   { base: 1296, total: 1166, discount: 0.9, monthly: 1166 / 3 }
+);
+assert.deepEqual(
+  offerMonthlyPrice({ price: 300, discount: 0.9 }),
+  { base: 300, total: 270, discount: 0.9, monthly: 270 }
+);
+assert.deepEqual(
+  offerMonthlyPrice({ price: 300, discount: 1 }),
+  { base: 300, total: 300, discount: 1, monthly: 300 }
 );
 assert.equal(offerLabel({ chargeType: "tunnelIp", amount: 25 }), "25 并发线程");
 assert.equal(offerLabel({ chargeType: "tunnelIp", amount: 2000 }), "客户定制方案");
@@ -187,6 +196,8 @@ assert.match(
   pricingScript,
   /Number\(item\.discount\) > 0\.1 && Number\(item\.discount\) < 1/
 );
+assert.match(pricingScript, /tierMonthlyPrice\(tier\)/);
+assert.match(pricingScript, /pricing-tier-price/);
 const commerceScript = await readFile(path.join(rootDir, "console", "app", "commerce.js"), "utf8");
 const consoleScript = await readFile(path.join(rootDir, "console", "app", "console.js"), "utf8");
 const productsScript = await readFile(path.join(rootDir, "console", "app", "products.js"), "utf8");
@@ -194,6 +205,8 @@ assert.equal(consoleHtml.includes("mailto:sales@123proxy.cn"), false);
 assert.equal(consoleHtml.includes("https://www.123proxy.cn/contact.html#solutions"), true);
 assert.equal(commerceScript.includes("mailto:sales@123proxy.cn"), false);
 assert.equal(commerceScript.includes("https://www.123proxy.cn/contact.html#service"), true);
+assert.equal(commerceScript.includes("月付折后价"), true);
+assert.match(commerceScript, /offerMonthlyPrice\(offer\)/);
 assert.equal(commerceScript.includes("data-open-trial"), false);
 assert.equal(commerceScript.includes("trialRequestDialog"), false);
 assert.equal(commerceScript.includes("handlePaymentReturn"), true);

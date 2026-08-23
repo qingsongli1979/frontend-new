@@ -586,6 +586,28 @@
     return `${money.format(tier.amount)} ${unitText(unit)}`;
   }
 
+  function tierMonthlyPrice(tier) {
+    const rawPrice = Number(tier.price) || 0;
+    const standard = Math.round(rawPrice);
+    const discount = Number(tier.discount) > 0.1 && Number(tier.discount) < 1 ? Number(tier.discount) : 1;
+    return {
+      standard,
+      total: Math.round(rawPrice * discount)
+    };
+  }
+
+  function renderTierOption(tier, tierIndex, billing) {
+    const active = state.tier === tierIndex;
+    const price = tierMonthlyPrice(tier);
+    const original = price.standard > price.total
+      ? `<del>¥${money.format(price.standard)}</del>`
+      : "";
+    return `<button class="pricing-option${active ? " is-active" : ""}" type="button" data-action="tier" data-value="${tierIndex}" role="radio" aria-checked="${active}">
+      <strong>${tierName(tier, billing.unit)}</strong>
+      <span class="pricing-tier-price"><b>¥${money.format(price.total)}</b><small>${labels.perMonth}</small>${original}</span>
+    </button>`;
+  }
+
   function renderTiers(billing) {
     const trial = billing.trial;
     const trialActive = Boolean(trial) && state.tier === "trial";
@@ -600,9 +622,7 @@
     } else if (apiState === "error") {
       paidMarkup = `<div class="pricing-tier-error">${labels.paidUnavailable}</div>`;
     } else {
-      paidMarkup = billing.tiers.map((tier, tierIndex) =>
-        optionButton(String(tierIndex), tierName(tier, billing.unit), `¥${money.format(tier.price)} ${labels.perMonth}`, state.tier === tierIndex, "tier")
-      ).join("");
+      paidMarkup = billing.tiers.map((tier, tierIndex) => renderTierOption(tier, tierIndex, billing)).join("");
     }
 
     return `<div class="pricing-field">

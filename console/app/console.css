@@ -2568,9 +2568,29 @@ svg {
 }
 
 .commerce-offer-price strong {
-  margin-top: 1px;
   color: var(--blue);
   font-size: 11px;
+}
+
+.commerce-offer-price-value {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+.commerce-offer-price-value > span {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.commerce-offer-price-value del {
+  margin-left: 2px;
+  color: var(--subtle);
+  font-size: 9px;
+  text-decoration-thickness: 1px;
 }
 
 .commerce-periods {

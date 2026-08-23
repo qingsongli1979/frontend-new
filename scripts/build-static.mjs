@@ -15,7 +15,7 @@ import { renderStatusDocument, statusZh } from "./status-content.mjs";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(scriptDir, "..");
 const assetVersion = "20260813-05";
-const pricingAssetVersion = "20260813-05";
+const pricingAssetVersion = "20260823-01";
 const refinementAssetVersion = "20260813-05";
 const conversionAssetVersion = "20260813-01";
 const googleTagId = "GT-WF3B5LNX";
@@ -1061,7 +1061,7 @@ function renderPricingHead(page, locale) {
   <meta name="description" content="${escapeHtml(page.description)}">
   <title>${escapeHtml(page.title)}</title>
   <link rel="preconnect" href="https://unpkg.com">
-  <link rel="stylesheet" href="${assetPrefix}assets/product-detail.css?v=${pricingAssetVersion}">
+  <link rel="stylesheet" href="${assetPrefix}assets/product-detail.css?v=${assetVersion}">
   <link rel="stylesheet" href="${assetPrefix}assets/pricing-detail.css?v=${pricingAssetVersion}">
   ${isEnglish ? "" : `<link rel="stylesheet" href="assets/visual-refinement.css?v=${refinementAssetVersion}">`}
   ${block}`;
@@ -1081,7 +1081,7 @@ function renderPricingDocument(page, { header, footer, locale }) {
     ${footer}
   </div>
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
-  <script src="${assetPrefix}assets/product-static.js?v=${pricingAssetVersion}"></script>
+  <script src="${assetPrefix}assets/product-static.js?v=${assetVersion}"></script>
   <script src="${assetPrefix}assets/pricing.js?v=${pricingAssetVersion}"></script>
 </body>
 </html>`;

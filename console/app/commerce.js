@@ -324,6 +324,10 @@ function calculatePrice(offer, periodKey) {
   };
 }
 
+function offerMonthlyPrice(offer) {
+  return calculatePrice(offer, "m");
+}
+
 function normalizePurchaseSelection(productKey) {
   state.productKey = PRODUCTS[productKey] ? productKey : "tunnel";
   const product = PRODUCTS[state.productKey];
@@ -377,6 +381,8 @@ function renderOfferCards(offers) {
     ${offers.map((offer) => {
       const selected = String(offer.id) === String(state.offerId);
       const privateOffer = Boolean(String(offer.forAccountIds || ""));
+      const monthlyPrice = offerMonthlyPrice(offer);
+      const discounted = monthlyPrice.base > monthlyPrice.total;
       return `<button class="commerce-offer${selected ? " is-selected" : ""}" type="button" data-commerce-offer="${escapeHtml(offer.id)}" aria-pressed="${selected}">
         <span class="commerce-radio" aria-hidden="true"></span>
         <span class="commerce-offer-copy">
@@ -384,7 +390,10 @@ function renderOfferCards(offers) {
           <strong>${escapeHtml(offerLabel(offer))}</strong>
           <em>${escapeHtml(offerUnitNote(offer))}</em>
         </span>
-        <span class="commerce-offer-price"><small>月付标准价</small><strong>¥${formatMoney(offer.price)}</strong></span>
+        <span class="commerce-offer-price">
+          <small>${discounted ? "月付折后价" : "月付价格"}</small>
+          <span class="commerce-offer-price-value"><strong>¥${formatMoney(monthlyPrice.total)}</strong><span>/ 月</span>${discounted ? `<del>¥${formatMoney(monthlyPrice.base)}</del>` : ""}</span>
+        </span>
       </button>`;
     }).join("")}
   </div>`;
@@ -1216,6 +1225,7 @@ export {
   isProxyOrder,
   offerIsVisible,
   offerLabel,
+  offerMonthlyPrice,
   orderProductKey,
   orderSpecification,
   orderTimestamp,
