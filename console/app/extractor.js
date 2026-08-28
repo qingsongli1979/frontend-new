@@ -505,18 +505,17 @@ function authFields() {
 }
 
 function commonConnectionFields() {
-  const unlimitedEndpoint = state.productKey === "unlimited";
-  const endpointMode = (isTunnelProduct() || unlimitedEndpoint)
+  const endpointMode = isTunnelProduct()
     ? `<div class="extract-field extract-endpoint-field">
         <span>接入地址</span>
         <div class="extract-choice-row is-compact" id="extractEndpointChoices">
-          <button class="${unlimitedEndpoint ? "" : "is-active"}" type="button" data-endpoint-mode="1">
+          <button class="is-active" type="button" data-endpoint-mode="1">
             <i data-lucide="whole-word"></i>
-            <span><strong>HOSTNAME</strong><small>域名接入${unlimitedEndpoint ? "" : "，推荐"}</small></span>
+            <span><strong>HOSTNAME</strong><small>域名接入，推荐</small></span>
           </button>
-          <button class="${unlimitedEndpoint ? "is-active" : ""}" type="button" data-endpoint-mode="2">
+          <button type="button" data-endpoint-mode="2">
             <i data-lucide="binary"></i>
-            <span><strong>IP</strong><small>固定地址接入${unlimitedEndpoint ? "，默认" : ""}</small></span>
+            <span><strong>IP</strong><small>固定地址接入</small></span>
           </button>
         </div>
       </div>`
@@ -800,6 +799,7 @@ function randomSessionId() {
 }
 
 function currentEndpointMode() {
+  if (state.productKey === "unlimited") return "2";
   return document.querySelector("[data-endpoint-mode].is-active")?.dataset.endpointMode || "1";
 }
 
@@ -963,7 +963,7 @@ function buildDynamicRouting(settings, productKey = state.productKey) {
     cap = username;
   }
   if (productKey === "unlimited") {
-    mode = settings.endpointMode || "2";
+    mode = "2";
     tag = "zz-unlimit";
     const routeParts = [`sess_${randomSessionId()}_${settings.rotationMinutes}`];
     if (settings.region !== "all") routeParts.push(`+${settings.region}`);

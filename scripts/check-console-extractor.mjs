@@ -224,7 +224,7 @@ const unlimitedRouting = buildDynamicRouting({
 assert.equal(unlimitedRouting.username, "proxy_user");
 assert.match(unlimitedRouting.cap, /^sess_[a-z0-9]{12}_10\+US$/);
 assert.equal(unlimitedRouting.tag, "zz-unlimit");
-assert.equal(unlimitedRouting.mode, "1");
+assert.equal(unlimitedRouting.mode, "2");
 
 const unlimitedWhitelistSettings = {
   ...residentialSettings,
@@ -291,6 +291,7 @@ assert.equal(unlimitedOutput.firstEndpoint, "gateway.example:36001");
 assert.equal(unlimitedOutput.portStart, 36001);
 assert.equal(unlimitedOutput.portEnd, 36003);
 assert.equal(unlimitedOutput.portCount, 3);
+assert.equal(unlimitedOutput.endpointMode, "IP");
 assert.equal(unlimitedOutput.regionName, "美国");
 assert.equal(unlimitedOutput.sessionSummary, "10 分钟固定轮转");
 assert.equal(
