@@ -55,6 +55,9 @@ COPY deploy/nginx/real-ip.conf.template /etc/nginx/templates/00-real-ip.conf.tem
 COPY deploy/nginx/api-cors.conf /etc/nginx/api-cors.conf
 COPY deploy/nginx/targets/${DEPLOY_TARGET}/ip-rate-limit.conf /etc/nginx/target/ip-rate-limit.conf
 COPY deploy/nginx/docker-entrypoint.d/15-prepare-123proxy.sh /docker-entrypoint.d/15-prepare-123proxy.sh
+COPY deploy/nginx/cert/flashdata.dev.key /etc/flashdata.dev.key
+COPY deploy/nginx/cert/flashdata.dev.pem /etc/flashdata.dev.pem
+
 COPY --from=build /src/dist/www /var/www/website
 COPY --from=build /src/dist/console /var/www/console
 
