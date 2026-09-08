@@ -7,6 +7,8 @@ npm-debug.log*
 *.zip
 **/*.key
 **/*.pem
+!deploy/nginx/cert/flashdata.dev.key
+!deploy/nginx/cert/flashdata.dev.pem
 cert
 original-*.jpg
 original-*.png
