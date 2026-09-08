@@ -132,6 +132,8 @@ const nginxConfig = await readFile(path.join(rootDir, "deploy", "nginx", "nginx.
 for (const required of [
   "server_name www.123proxy.cn",
   "server_name console.123proxy.cn",
+  "server_name api.flashdata.dev",
+  "server_name data.flashdata.dev",
   "root /var/www/website",
   "root /var/www/console",
   "server_name _",
@@ -173,7 +175,24 @@ expect(
   (nginxTemplate.match(/include \/etc\/nginx\/api-cors\.conf;/g) || []).length === 5,
   "deploy/nginx/site.conf.template: all account, auth and IP API routes must use normalized CORS"
 );
-expect(!nginxTemplate.includes("ssl_certificate "), "Nginx image must not embed production certificates");
+const certificateDirectives = nginxTemplate
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter((line) => line.startsWith("ssl_certificate "));
+const certificateKeyDirectives = nginxTemplate
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter((line) => line.startsWith("ssl_certificate_key "));
+expect(
+  certificateDirectives.length === 2
+    && certificateDirectives.every((line) => line === "ssl_certificate /cert/flashdata.dev.pem;"),
+  "Nginx template must only reference the required Flashdata certificate"
+);
+expect(
+  certificateKeyDirectives.length === 2
+    && certificateKeyDirectives.every((line) => line === "ssl_certificate_key /cert/flashdata.dev.key;"),
+  "Nginx template must only reference the required Flashdata certificate key"
+);
 expect(nginxConfig.includes("access_log /var/log/nginx/access.log main;"), "Nginx access log file is missing");
 expect(nginxConfig.includes("error_log /var/log/nginx/error.log warn;"), "Nginx error log file is missing");
 expect(!nginxConfig.includes("/dev/stderr"), "Nginx errors must not be written to stderr");
@@ -207,6 +226,12 @@ expect(
   dockerfile.includes("COPY deploy/nginx/api-cors.conf /etc/nginx/api-cors.conf"),
   "Dockerfile: normalized API CORS policy must be included in the image"
 );
+for (const required of [
+  "COPY deploy/nginx/cert/flashdata.dev.key /etc/flashdata.dev.key",
+  "COPY deploy/nginx/cert/flashdata.dev.pem /etc/flashdata.dev.pem"
+]) {
+  expect(dockerfile.includes(required), `Dockerfile: missing required Flashdata TLS asset: ${required}`);
+}
 expect(dockerfile.includes("ARG INDEXNOW_KEY"), "Dockerfile: missing optional IndexNow build argument");
 expect(!dockerfile.includes("COPY ./react/cert"), "Dockerfile: production certificates must not be embedded");
 

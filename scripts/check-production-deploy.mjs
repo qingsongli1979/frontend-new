@@ -53,6 +53,8 @@ for (const required of [
   "COPY dist/console /var/www/console",
   "COPY deploy/nginx/targets/${DEPLOY_TARGET}/ip-rate-limit.conf",
   "COPY deploy/nginx/api-cors.conf /etc/nginx/api-cors.conf",
+  "COPY deploy/nginx/cert/flashdata.dev.key /etc/flashdata.dev.key",
+  "COPY deploy/nginx/cert/flashdata.dev.pem /etc/flashdata.dev.pem",
   "WEBSITE_TLS_CERTIFICATE=/cert/123proxy.cn.pem",
   "CONSOLE_TLS_CERTIFICATE=/cert/console.123proxy.cn.pem",
   "EXPOSE 80 443"
