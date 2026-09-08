@@ -185,17 +185,21 @@ const certificateKeyDirectives = nginxTemplate
   .filter((line) => line.startsWith("ssl_certificate_key "));
 expect(
   certificateDirectives.length === 2
-    && certificateDirectives.every((line) => line === "ssl_certificate /cert/flashdata.dev.pem;"),
+    && certificateDirectives.every((line) => line === "ssl_certificate /etc/flashdata.dev.pem;"),
   "Nginx template must only reference the required Flashdata certificate"
 );
 expect(
   certificateKeyDirectives.length === 2
-    && certificateKeyDirectives.every((line) => line === "ssl_certificate_key /cert/flashdata.dev.key;"),
+    && certificateKeyDirectives.every((line) => line === "ssl_certificate_key /etc/flashdata.dev.key;"),
   "Nginx template must only reference the required Flashdata certificate key"
 );
 expect(nginxConfig.includes("access_log /var/log/nginx/access.log main;"), "Nginx access log file is missing");
 expect(nginxConfig.includes("error_log /var/log/nginx/error.log warn;"), "Nginx error log file is missing");
 expect(!nginxConfig.includes("/dev/stderr"), "Nginx errors must not be written to stderr");
+expect(
+  nginxConfig.includes("map $http_cf_connecting_ip $real_client_ip"),
+  "Nginx must define the Flashdata real-client IP mapping"
+);
 
 const corsConfig = await readFile(path.join(rootDir, "deploy", "nginx", "api-cors.conf"), "utf8");
 for (const required of [

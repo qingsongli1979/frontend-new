@@ -76,6 +76,10 @@ expect(
   "nginx.conf: error log must persist under /var/log/nginx"
 );
 expect(!nginxConfig.includes("/dev/stderr"), "nginx.conf: errors must not be duplicated to stderr");
+expect(
+  nginxConfig.includes("map $http_cf_connecting_ip $real_client_ip"),
+  "nginx.conf: missing Flashdata real-client IP mapping"
+);
 for (const required of [
   "listen ${WEBSITE_LISTEN}",
   "listen ${CONSOLE_LISTEN}",
