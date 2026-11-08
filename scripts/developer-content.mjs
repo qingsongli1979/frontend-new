@@ -1181,9 +1181,10 @@ function gettingStartedMain(page) {
       <span class="docs-step-number">06</span>
       <div>
         <h2>HTTP(S) 与 SOCKS5 怎么选</h2>
+        <p>长效静态代理和长效静态住宅仅支持 HTTP 代理。</p>
         <div class="docs-fact-list">
           <div><strong>HTTP(S)</strong><p>最常见的网页与 API 请求方式。HTTPS 目标通常通过 HTTP CONNECT 建立隧道。</p></div>
-          <div><strong>SOCKS5</strong><p>适合支持 SOCKS 的客户端。建议使用远端 DNS 解析，例如 Python 中的 <code>socks5h://</code>。</p></div>
+          <div><strong>SOCKS5</strong><p>仅适用于支持 SOCKS5 的套餐和客户端。建议使用远端 DNS 解析，例如 Python 中的 <code>socks5h://</code>。</p></div>
           <div><strong>先保持简单</strong><p>没有明确需求时先使用 HTTP(S)，确认代理链路后再调整协议和连接池。</p></div>
         </div>
       </div>
@@ -1713,7 +1714,7 @@ function staticMain(page, residential = false) {
     <section id="overview">
       <div class="docs-section-title"><span>01</span><div><small>TWO-STAGE ACCESS</small><h2>分配固定 IP 与使用代理是两个请求</h2></div></div>
       <div class="docs-allocation-flow">
-        <article><span>01</span>${icon("sliders-horizontal")}<div><strong>生成分配链接</strong><p>在控制台选择套餐、国家、协议和数量，只生成 URL，不立即占用资源。</p></div></article>
+        <article><span>01</span>${icon("sliders-horizontal")}<div><strong>生成分配链接</strong><p>在控制台选择套餐、国家和数量，只生成 URL，不立即占用资源。</p></div></article>
         <article><span>02</span>${icon("link-2")}<div><strong>调用分配链接</strong><p>调用后才会消耗套餐可提数量，并返回固定代理信息。</p></div></article>
         <article><span>03</span>${icon("terminal")}<div><strong>使用返回代理</strong><p>将返回的 HOST、PORT、USER、PASSWORD 配置到爬虫程序。</p></div></article>
       </div>
@@ -1751,7 +1752,7 @@ function staticMain(page, residential = false) {
 
     <section id="use-proxy">
       <div class="docs-section-title"><span>04</span><div><small>PROXY REQUEST</small><h2>使用已分配代理访问目标</h2></div></div>
-      <p>把分配响应中的四个字段写入环境变量，再运行下面的标准代理代码。这个请求访问测试目标，不会再次调用分配 API。</p>
+      <p>固定代理仅支持 HTTP 代理（<code>http://</code>）。把分配响应中的四个字段写入环境变量，再运行下面的代码。这个请求访问测试目标，不会再次调用分配 API。</p>
       ${proxyCode}
       <div class="docs-callout">
         ${icon("circle-check")}

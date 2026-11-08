@@ -328,7 +328,7 @@ const productPages = {
       ["带宽范围", "5–10Mbps，具体以可选地区和套餐为准"],
       ["支持地区", "69 个国家和地区；购买时无需选择，提取代理时指定"],
       ["免费测试", "不提供免费测试"],
-      ["接入协议", "HTTP(S) / SOCKS"],
+      ["接入协议", "HTTP"],
       ["鉴权方式", "分配的代理用户名和密码"]
     ],
     endpoint: "38.91.24.27:8080",
@@ -413,7 +413,7 @@ const productPages = {
       ["计费方式", "按 IP 和使用周期，方案内不限流量"],
       ["带宽范围", "通常为 5–10Mbps，具体以资源规格为准"],
       ["免费测试", "不提供免费测试"],
-      ["鉴权与协议", "代理用户名和密码；HTTP(S) / SOCKS"]
+      ["鉴权与协议", "代理用户名和密码；HTTP"]
     ],
     endpoint: "73.18.42.114:8080",
     username: "customer-static-isp",
@@ -822,7 +822,7 @@ function heroVisualMarkup(v) {
               <div><span>支持地区</span><strong>69 个地区</strong><small>提取代理时选择</small></div>
               <div><span>端口带宽</span><strong>10 Mbps</strong><small>稳定规格</small></div>
               <div><span>流量方式</span><strong>不限流量</strong><small>不按 GB 计费</small></div>
-              <div><span>认证方式</span><strong>代理账密</strong><small>HTTP(S) / SOCKS</small></div>
+              <div><span>认证方式</span><strong>代理账密</strong><small>HTTP</small></div>
             </div>
             <div class="fixed-route-line">
               <span>${icon("building-2")}业务系统</span><i>${icon("arrow-right")}</i><span class="is-fixed">${icon("server")}固定 IP</span><i>${icon("arrow-right")}</i><span>${icon("network")}目标服务</span>

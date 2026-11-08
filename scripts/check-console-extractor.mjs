@@ -441,8 +441,10 @@ assert.doesNotThrow(() => new Function(directSnippets.nodejs));
 
 const staticExtractUrl =
   "https://console.example/ip/retreveip/static-order?protocol=proxy&region=US&usepwd=true&count=2&format=text&userip=";
-const staticExtraction = buildStaticExtractionSnippets(staticExtractUrl, "proxy");
+const staticExtraction = buildStaticExtractionSnippets(staticExtractUrl);
 assert.equal(staticExtraction.apiUrl, staticExtractUrl);
+assert.equal(staticExtraction.protocol, "proxy");
+assert.equal(staticExtraction.protocolLabel, "HTTP");
 assert.equal(staticExtraction.responseFormat, "HOST:PORT:USER:PASSWORD");
 assert.match(staticExtraction.curl, /不是代理地址/);
 assert.match(staticExtraction.curl, /--max-time 330/);
@@ -459,26 +461,30 @@ assert.doesNotThrow(() => new Function(staticExtraction.nodejs));
 const assignedStaticOutput = buildAssignedStaticOutput({
   orderId: "assigned-order",
   proxyIp: "198.51.100.25",
-  port: 1080,
+  port: 8080,
   username: "fixed_user",
-  password: "fixed_secret"
-}, "socks");
-assert.equal(assignedStaticOutput.endpoint, "198.51.100.25:1080");
+  password: "fixed_secret",
+  protocol: "socks"
+});
+assert.equal(assignedStaticOutput.endpoint, "198.51.100.25:8080");
+assert.equal(assignedStaticOutput.protocolLabel, "HTTP");
 assert.equal(
   assignedStaticOutput.credential,
-  "198.51.100.25:1080:fixed_user:fixed_secret"
+  "198.51.100.25:8080:fixed_user:fixed_secret"
 );
 assert.equal(
   assignedStaticOutput.proxyUrl,
-  "socks5h://fixed_user:fixed_secret@198.51.100.25:1080"
+  "http://fixed_user:fixed_secret@198.51.100.25:8080"
 );
 assert.match(assignedStaticOutput.connection, /认证方式: 代理账密/);
 assert.doesNotMatch(assignedStaticOutput.connection, /白名单/);
 assert.equal("whitelist" in assignedStaticOutput, false);
-assert.match(assignedStaticOutput.python, /requests\[socks\]/);
-assert.match(assignedStaticOutput.nodejs, /SocksProxyAgent/);
-assert.match(assignedStaticOutput.go, /golang\.org\/x\/net\/proxy/);
-assert.match(assignedStaticOutput.java, /Proxy\.Type\.SOCKS/);
-assert.match(assignedStaticOutput.php, /CURLPROXY_SOCKS5_HOSTNAME/);
+assert.match(assignedStaticOutput.nodejs, /HttpsProxyAgent/);
+assert.match(assignedStaticOutput.go, /http\.ProxyURL/);
+assert.match(assignedStaticOutput.java, /Proxy\.Type\.HTTP/);
+assert.match(assignedStaticOutput.php, /CURLPROXY_HTTP/);
+for (const key of languageKeys) {
+  assert.doesNotMatch(assignedStaticOutput[key], /socks/i);
+}
 
 console.log("Console extractor audit passed: package routing, dynamic whitelist and six-language code examples");

@@ -4,6 +4,8 @@ import { formatConsoleDateTime } from "./date-time.js?v=20260818-03";
 const TOKEN_KEY = "token_key";
 const REQUEST_TIMEOUT_MS = 15000;
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+const STATIC_API_PROTOCOL = "proxy";
+const STATIC_PROTOCOL_LABEL = "HTTP";
 
 const STATIC_DATACENTER_CODES = [
   "ZA", "VN", "VE", "UZ", "US", "UA", "TW", "TR", "TH", "SK", "SG", "SE", "SA", "RS", "RO", "PT",
@@ -1162,13 +1164,12 @@ echo $response;`
   };
 }
 
-function buildStaticExtractionSnippets(apiUrl, protocol = "proxy") {
+function buildStaticExtractionSnippets(apiUrl) {
   const url = String(apiUrl || "");
-  const protocolLabel = protocol === "socks" ? "SOCKS5" : "HTTP(S)";
   return {
     apiUrl: url,
-    protocol: protocol === "socks" ? "socks" : "proxy",
-    protocolLabel,
+    protocol: STATIC_API_PROTOCOL,
+    protocolLabel: STATIC_PROTOCOL_LABEL,
     responseFormat: "HOST:PORT:USER:PASSWORD",
     curl: `# 此链接用于分配固定 IP，不是代理地址；请只按计划调用一次。
 # 请求最多可能等待约 5 分钟，响应每行格式为 HOST:PORT:USER:PASSWORD。
@@ -2024,23 +2025,14 @@ function staticLinkPlaceholder(meta) {
   </div>`;
 }
 
-function assignedProtocol(item) {
-  const itemProtocol = String(item?.protocol || item?.proxyType || "").toLowerCase();
-  if (itemProtocol.includes("socks")) return "socks";
-  if (itemProtocol.includes("http") || itemProtocol === "proxy") return "proxy";
-  return document.querySelector("#extractProtocol")?.value === "socks" ? "socks" : "proxy";
-}
-
-function buildAssignedStaticOutput(item, protocol = "proxy") {
+function buildAssignedStaticOutput(item) {
   const host = String(item?.proxyIp || item?.ip || "");
   const port = Math.floor(number(item?.port));
   const username = String(item?.username || "");
   const password = String(item?.password || "");
-  const normalizedProtocol = protocol === "socks" ? "socks" : "proxy";
-  const protocolLabel = normalizedProtocol === "socks" ? "SOCKS5" : "HTTP(S)";
   const endpoint = `${host}:${port}`;
   const auth = `${encodeURIComponent(username)}:${encodeURIComponent(password)}@`;
-  const proxyUrl = `${normalizedProtocol === "socks" ? "socks5h" : "http"}://${auth}${endpoint}`;
+  const proxyUrl = `http://${auth}${endpoint}`;
   const credential = formatProxyCredential({ host, port, username, password }, "1");
   const snippets = buildProxySnippets({
     host,
@@ -2049,12 +2041,12 @@ function buildAssignedStaticOutput(item, protocol = "proxy") {
     username,
     password,
     proxyUrl,
-    protocol: normalizedProtocol === "socks" ? "socks" : "http"
+    protocol: "http"
   });
   const connection = [
     `代理主机: ${host}`,
     `代理端口: ${port}`,
-    `代理协议: ${protocolLabel}`,
+    `代理协议: ${STATIC_PROTOCOL_LABEL}`,
     "认证方式: 代理账密",
     `认证用户名: ${username}`,
     `认证密码: ${password}`,
@@ -2070,8 +2062,8 @@ function buildAssignedStaticOutput(item, protocol = "proxy") {
     username,
     password,
     credential,
-    protocol: normalizedProtocol,
-    protocolLabel,
+    protocol: STATIC_API_PROTOCOL,
+    protocolLabel: STATIC_PROTOCOL_LABEL,
     proxyUrl,
     connection,
     ...snippets
@@ -2084,14 +2076,13 @@ async function renderStatic(meta) {
   document.querySelector("#extractWorkspace").innerHTML = `
     <div class="static-extraction-layout">
       <form class="panel extraction-form" id="staticExtractForm">
-        <header class="panel-head"><div><h2>提取固定 IP</h2><p>地区在提取时按实时库存决定</p></div><span class="live-badge"><i></i>INVENTORY LIVE</span></header>
+        <header class="panel-head"><div><h2>提取固定 IP</h2><p>地区按实时库存分配，仅支持 ${STATIC_PROTOCOL_LABEL} 代理</p></div><span class="live-badge"><i></i>INVENTORY LIVE</span></header>
         <div class="extraction-form-body">
           <label class="extract-field"><span>使用套餐</span><select id="extractPackage">${orderOptions()}</select><small id="extractPackageStatus"></small></label>
           <div class="extract-two-columns">
             <label class="extract-field"><span>国家或地区</span><select id="extractRegion">${countryOptions(staticCountries(), null, false)}</select><small>${state.productKey === "staticDatacenter" ? "不支持中国地区 IP。" : "按住宅 ISP 实时库存分配。"}</small></label>
             <label class="extract-field"><span>提取数量</span><input id="extractCount" type="number" min="1" max="${Math.max(1, number(order?.amount ?? order?.total))}" value="1" step="1"><small>不能超过套餐剩余可提数量</small></label>
           </div>
-          <label class="extract-field"><span>代理协议</span><select id="extractProtocol"><option value="proxy">HTTP(S)</option><option value="socks">SOCKS5</option></select></label>
           <div class="extract-validation" id="extractValidation" hidden></div>
         </div>
         <footer><button class="button button-primary" type="submit"><i data-lucide="link-2" aria-hidden="true"></i>生成提取 API 链接</button></footer>
@@ -2189,7 +2180,7 @@ function generateStaticLink(event) {
   }
   validation.hidden = true;
   const params = new URLSearchParams({
-    protocol: document.querySelector("#extractProtocol").value,
+    protocol: STATIC_API_PROTOCOL,
     region: document.querySelector("#extractRegion").value,
     usepwd: "true",
     count: String(count),
@@ -2197,10 +2188,7 @@ function generateStaticLink(event) {
     userip: ""
   });
   const apiUrl = `${apiBase()}/ip/retreveip/${encodeURIComponent(packageId(order))}?${params.toString()}`;
-  state.output = buildStaticExtractionSnippets(
-    apiUrl,
-    document.querySelector("#extractProtocol").value
-  );
+  state.output = buildStaticExtractionSnippets(apiUrl);
   document.querySelector("#extractOutput").innerHTML = `
     <div class="static-link-result">
       <span><i data-lucide="link-2"></i></span><strong>提取 API 链接已生成</strong>
@@ -2227,7 +2215,7 @@ function bindAssignedActions() {
         setNotice("error", "静态代理仅支持账密认证。当前记录缺少代理用户名或密码，请刷新后联系技术支持。");
         return;
       }
-      const output = buildAssignedStaticOutput(item, assignedProtocol(item));
+      const output = buildAssignedStaticOutput(item);
       const panel = document.querySelector("#assignedCodePanel");
       if (!panel) return;
       panel.hidden = false;

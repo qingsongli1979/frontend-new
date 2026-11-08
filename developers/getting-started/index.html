@@ -523,9 +523,10 @@ asyncio.run(main())</code></pre>
       <span class="docs-step-number">06</span>
       <div>
         <h2>HTTP(S) 与 SOCKS5 怎么选</h2>
+        <p>长效静态代理和长效静态住宅仅支持 HTTP 代理。</p>
         <div class="docs-fact-list">
           <div><strong>HTTP(S)</strong><p>最常见的网页与 API 请求方式。HTTPS 目标通常通过 HTTP CONNECT 建立隧道。</p></div>
-          <div><strong>SOCKS5</strong><p>适合支持 SOCKS 的客户端。建议使用远端 DNS 解析，例如 Python 中的 <code>socks5h://</code>。</p></div>
+          <div><strong>SOCKS5</strong><p>仅适用于支持 SOCKS5 的套餐和客户端。建议使用远端 DNS 解析，例如 Python 中的 <code>socks5h://</code>。</p></div>
           <div><strong>先保持简单</strong><p>没有明确需求时先使用 HTTP(S)，确认代理链路后再调整协议和连接池。</p></div>
         </div>
       </div>

@@ -333,9 +333,9 @@ export const englishProducts = {
     name: "Dedicated Static Datacenter Proxy",
     eyebrow: "Dedicated datacenter proxy",
     titleLines: ["A fixed dedicated exit", "for stable long-running systems"],
-    description: "123Proxy dedicated static datacenter proxy with fixed exclusive IPs, unmetered traffic, stable 5–10Mbps bandwidth, and HTTP(S) or SOCKS access.",
+    description: "123Proxy dedicated static datacenter proxy with fixed exclusive IPs, unmetered traffic, stable 5–10Mbps bandwidth, and HTTP proxy access.",
     lead: "Use a dedicated fixed datacenter IP with unmetered traffic and stable bandwidth for target-system source-IP allowlists, long-running automation, and predictable enterprise system connectivity.",
-    points: ["Dedicated fixed IP", "Unmetered traffic", "5–10Mbps", "HTTP(S) / SOCKS"],
+    points: ["Dedicated fixed IP", "Unmetered traffic", "5–10Mbps", "HTTP proxy"],
     pricingUrl: "pricing.html?product=static-datacenter",
     hero: {
       label: "DEDICATED FIXED ENDPOINT",
@@ -393,7 +393,7 @@ export const englishProducts = {
       ["Billing", "Per IP and service period"],
       ["Traffic", "Unmetered within the package"],
       ["Bandwidth", "5–10Mbps, subject to available package inventory"],
-      ["Protocols", "HTTP(S) / SOCKS"],
+      ["Protocol", "HTTP only"],
       ["Authentication", "Assigned proxy username and password"]
     ],
     developerTitle: "Manage fixed endpoints as infrastructure assets",
@@ -476,7 +476,7 @@ export const englishProducts = {
       ["Billing", "Per residential IP and service period"],
       ["Traffic", "Unmetered within the package"],
       ["Bandwidth", "Typically 5–10Mbps, subject to resource specifications"],
-      ["Protocols", "HTTP(S) / SOCKS"]
+      ["Protocol", "HTTP only"]
     ],
     developerTitle: "Treat one fixed ISP endpoint as one persistent identity",
     developerText: "Assign every endpoint to a clear project or worker. Application code does not need SESSION or rotation parameters because the residential IP remains fixed during the service period.",
