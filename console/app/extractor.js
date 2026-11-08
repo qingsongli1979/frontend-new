@@ -2085,7 +2085,10 @@ async function renderStatic(meta) {
           </div>
           <div class="extract-validation" id="extractValidation" hidden></div>
         </div>
-        <footer><button class="button button-primary" type="submit"><i data-lucide="link-2" aria-hidden="true"></i>生成提取 API 链接</button></footer>
+        <footer>
+          <button class="button button-primary" type="submit"><i data-lucide="link-2" aria-hidden="true"></i>生成提取 API 链接</button>
+          <p class="static-region-warning" id="staticRegionWarning" role="status"></p>
+        </footer>
       </form>
       <section class="panel extraction-output-panel">
         <header class="panel-head"><div><h2>提取 API 链接</h2><p>调用链接后才会从套餐中分配固定 IP</p></div></header>
@@ -2154,12 +2157,23 @@ async function refreshAssignedPanel(showSuccess = false) {
   }
 }
 
+function clearStaticLink() {
+  if (!state.output) return;
+  state.output = null;
+  document.querySelector("#staticRegionWarning").textContent = "";
+  document.querySelector("#extractOutput").innerHTML = staticLinkPlaceholder(PRODUCT_META[state.productKey]);
+  refreshIcons();
+}
+
 function bindStaticForm() {
   document.querySelector("#extractPackage")?.addEventListener("change", () => {
     state.requestedOrder = document.querySelector("#extractPackage").value;
+    clearStaticLink();
     updatePackageStatus();
     void refreshAssignedPanel();
   });
+  document.querySelector("#extractRegion")?.addEventListener("change", clearStaticLink);
+  document.querySelector("#extractCount")?.addEventListener("input", clearStaticLink);
   document.querySelector("#staticExtractForm")?.addEventListener("submit", generateStaticLink);
   document.querySelector("#assignedReload")?.addEventListener("click", () => {
     void refreshAssignedPanel(true);
@@ -2179,9 +2193,11 @@ function generateStaticLink(event) {
     return;
   }
   validation.hidden = true;
+  const region = document.querySelector("#extractRegion").value;
+  const regionLabel = escapeHtml(`${countryName(region)}（${region}）`);
   const params = new URLSearchParams({
     protocol: STATIC_API_PROTOCOL,
-    region: document.querySelector("#extractRegion").value,
+    region,
     usepwd: "true",
     count: String(count),
     format: "text",
@@ -2189,10 +2205,12 @@ function generateStaticLink(event) {
   });
   const apiUrl = `${apiBase()}/ip/retreveip/${encodeURIComponent(packageId(order))}?${params.toString()}`;
   state.output = buildStaticExtractionSnippets(apiUrl);
+  document.querySelector("#staticRegionWarning").innerHTML =
+    `<strong>本次链接的国家或地区：${regionLabel}</strong>请确认无误后再使用链接。提取成功后，已分配的 IP 不能换国家或地区重新提取。`;
   document.querySelector("#extractOutput").innerHTML = `
     <div class="static-link-result">
       <span><i data-lucide="link-2"></i></span><strong>提取 API 链接已生成</strong>
-      <p>生成链接本身不会分配资源。执行下方链接或代码时，才会从套餐中分配 ${count} 个固定 IP。</p>
+      <p>请核对提取地区：<b>${regionLabel}</b>。调用成功后才会分配 ${count} 个固定 IP。</p>
       <div class="static-extraction-flow">
         <div><span>01</span><strong>调用提取 API</strong><p>请求可能等待约 5 分钟，请勿把 API URL 配置为代理地址。</p></div>
         <div><span>02</span><strong>解析返回代理</strong><p>响应每行是 <code>HOST:PORT:USER:PASSWORD</code>。</p></div>

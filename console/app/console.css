@@ -3416,6 +3416,26 @@ svg {
   width: 100%;
 }
 
+.static-region-warning {
+  margin: 0;
+  color: #a12218;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.static-region-warning:not(:empty) {
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: #fff4f2;
+  border: 1px solid #f0cccc;
+  border-radius: 4px;
+}
+
+.static-region-warning strong {
+  display: block;
+  margin-bottom: 3px;
+}
+
 .extraction-form > footer.extract-primary-footer {
   display: grid;
   gap: 7px;
