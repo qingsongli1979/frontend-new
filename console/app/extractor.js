@@ -47,6 +47,13 @@ const TUNNEL_RESIDENTIAL_REGIONS = [
   ["la-europe", "欧洲"], ["la-asia", "亚洲"]
 ];
 
+const TUNNEL_ACCESS_GATEWAYS = [
+  { value: "us", label: "US · 美国", host: "us.proxy.123proxy.cn" },
+  { value: "asia", label: "ASIA · 亚洲", host: "as.proxy.123proxy.cn" },
+  { value: "eu", label: "EU · 欧洲", host: "eu.proxy.123proxy.cn" }
+];
+const MAX_PROXY_OUTPUT_COUNT = 1000;
+
 const PROXY_OUTPUT_FORMATS = [
   {
     value: "1",
@@ -118,6 +125,13 @@ const CONNECTION_CODE_TABS = [
   ["java", "Java"],
   ["php", "PHP"],
   ["apiUrl", "API 链接"]
+];
+
+const TUNNEL_CONNECTION_CODE_TABS = [
+  CONNECTION_CODE_TABS[0],
+  ["proxyList", "代理列表"],
+  ...CONNECTION_CODE_TABS.slice(1, -1),
+  ["apiUrl", "旧版 API 链接"]
 ];
 
 const API_CODE_TABS = [
@@ -507,20 +521,13 @@ function authFields() {
 }
 
 function commonConnectionFields() {
-  const endpointMode = isTunnelProduct()
-    ? `<div class="extract-field extract-endpoint-field">
-        <span>接入地址</span>
-        <div class="extract-choice-row is-compact" id="extractEndpointChoices">
-          <button class="is-active" type="button" data-endpoint-mode="1">
-            <i data-lucide="whole-word"></i>
-            <span><strong>HOSTNAME</strong><small>域名接入，推荐</small></span>
-          </button>
-          <button type="button" data-endpoint-mode="2">
-            <i data-lucide="binary"></i>
-            <span><strong>IP</strong><small>固定地址接入</small></span>
-          </button>
-        </div>
-      </div>`
+  const accessGateway = state.productKey === "tunnel"
+    ? `<label class="extract-field">
+        <span>接入网关</span>
+        <select id="extractGatewayRegion">${TUNNEL_ACCESS_GATEWAYS.map(({ value, label, host }) =>
+          `<option value="${value}">${label} · ${host}</option>`).join("")}</select>
+        <small>建议选择靠近爬虫程序的网关，出口地区在下方单独设置。</small>
+      </label>`
     : "";
   const countField = state.productKey === "unlimited"
     ? `<label class="extract-field">
@@ -528,11 +535,11 @@ function commonConnectionFields() {
         <input id="extractCount" type="number" min="1" value="1" readonly>
         <small id="extractPortStatus">生成时输出当前套餐的全部连续端口</small>
       </label>`
-    : `<label class="extract-field"><span>输出数量</span><input id="extractCount" type="number" min="1" max="1000" step="1" value="1" inputmode="numeric"><small>API 链接单次最多返回 1000 条</small></label>`;
+    : `<label class="extract-field"><span>输出数量</span><input id="extractCount" type="number" min="1" max="${MAX_PROXY_OUTPUT_COUNT}" step="1" value="1" inputmode="numeric"><small>${accessGateway ? `代理列表最多生成 ${MAX_PROXY_OUTPUT_COUNT} 条；开启 SESSION 后每条使用不同 ID` : `API 链接单次最多返回 ${MAX_PROXY_OUTPUT_COUNT} 条`}</small></label>`;
   return `
     <fieldset class="extract-fieldset extract-access-fieldset">
       <legend>接入与输出</legend>
-      ${endpointMode}
+      ${accessGateway}
       <div class="extract-two-columns">
         <label class="extract-field"><span>代理协议</span><select id="extractProtocol"><option value="http">HTTP(S)</option><option value="socks">SOCKS5</option></select></label>
         ${countField}
@@ -574,7 +581,7 @@ function tunnelSettings() {
           <label class="extract-field" id="extractSessionIdField">
             <span>SESSION ID</span>
             <input id="extractSessionId" type="text" minlength="12" maxlength="12" pattern="[A-Za-z0-9]{12}" autocomplete="off">
-            <small>自定义 12 位英文字母或数字</small>
+            <small>首条使用此 12 位 ID，其余自动生成</small>
           </label>
           <label class="extract-field">
             <span>固定时长（分钟）</span>
@@ -682,7 +689,7 @@ function renderDynamic(meta) {
         </div>
         <footer class="extract-primary-footer">
           <button class="button button-primary" type="submit" data-submit-label="生成代理接入信息" data-submit-icon="route"><i data-lucide="route" aria-hidden="true"></i>生成代理接入信息</button>
-          <small>生成会把认证、出口与接入地址设置保存到当前套餐</small>
+          <small>${isTunnel ? "生成会保存当前套餐的认证与出口设置；接入网关用于本次输出" : "生成会把认证、出口与接入地址设置保存到当前套餐"}</small>
         </footer>
       </form>
       <section class="panel extraction-output-panel">
@@ -747,10 +754,6 @@ function bindDynamicForm() {
     updateSessionGuide();
   });
   document.querySelector("#extractProxyUser")?.addEventListener("change", updateSessionGuide);
-  document.querySelector("#extractEndpointChoices")?.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-endpoint-mode]");
-    if (button) setChoice(event.currentTarget, button);
-  });
   document.querySelector("#extractOutputFormat")?.addEventListener("change", updateOutputFormatHint);
   document.querySelector("#extractPoolChoices")?.addEventListener("click", (event) => {
     const button = event.target.closest("[data-pool]");
@@ -798,11 +801,6 @@ function currentAuth() {
 function randomSessionId() {
   const source = "abcdefghijklmnopqrstuvwxyz0123456789";
   return Array.from({ length: 12 }, () => source[Math.floor(Math.random() * source.length)]).join("");
-}
-
-function currentEndpointMode() {
-  if (state.productKey === "unlimited") return "2";
-  return document.querySelector("[data-endpoint-mode].is-active")?.dataset.endpointMode || "1";
 }
 
 function currentSessionMode() {
@@ -897,7 +895,7 @@ function dynamicSettings() {
   const sessionId = document.querySelector("#extractSessionId")?.value.trim() || "";
   const rotationMinutes = Math.floor(number(document.querySelector("#extractRotationMinutes")?.value || 0));
   const pool = document.querySelector("[data-pool].is-active")?.dataset.pool || "";
-  const endpointMode = currentEndpointMode();
+  const gatewayRegion = document.querySelector("#extractGatewayRegion")?.value;
   const outputFormatValue = document.querySelector("#extractOutputFormat")?.value || "1";
   const choiceSession = (isTunnelProduct() || state.productKey === "residential") && currentSessionMode() === "sticky";
   const session = isTunnelProduct() && auth === "whitelist"
@@ -916,7 +914,7 @@ function dynamicSettings() {
     sessionId,
     rotationMinutes,
     pool,
-    endpointMode,
+    gatewayRegion,
     outputFormat: outputFormatValue,
     productKey: state.productKey
   };
@@ -924,7 +922,7 @@ function dynamicSettings() {
 
 function validateDynamic(settings) {
   if (!settings.order) return "请选择可用套餐。";
-  if (settings.count < 1 || settings.count > 1000) return "输出数量必须在 1-1000 之间。";
+  if (settings.count < 1 || settings.count > MAX_PROXY_OUTPUT_COUNT) return `输出数量必须在 1-${MAX_PROXY_OUTPUT_COUNT} 之间。`;
   if (settings.auth === "user" && !settings.user) return "请先创建并选择代理用户。";
   if (settings.auth === "whitelist" && !validWhitelist(settings.whitelist)) return "请输入有效的 IPv4 白名单，每行填写一个地址。";
   if (settings.session && (settings.sessionMinutes < 1 || settings.sessionMinutes > 120)) return "SESSION 时长必须在 1-120 分钟之间。";
@@ -936,6 +934,10 @@ function validateDynamic(settings) {
   ) return "SESSION ID 必须是 12 位英文字母或数字。";
   if (state.productKey === "unlimited" && (settings.rotationMinutes < 3 || settings.rotationMinutes > 30)) return "出口轮转周期必须在 3-30 分钟之间。";
   return "";
+}
+
+function usesTunnelSession(settings) {
+  return settings.auth === "user" && settings.session && settings.pool === "residential";
 }
 
 function buildDynamicRouting(settings, productKey = state.productKey) {
@@ -951,7 +953,7 @@ function buildDynamicRouting(settings, productKey = state.productKey) {
     mode = settings.endpointMode || "1";
     tag = settings.region;
     updateIp = true;
-    if (settings.auth === "user" && settings.session && settings.pool === "residential") {
+    if (usesTunnelSession(settings)) {
       ttl = settings.sessionMinutes;
       username += `${username ? "-" : ""}sess_${settings.sessionId}_${settings.sessionMinutes}`;
     }
@@ -1614,49 +1616,59 @@ echo $response;`
   };
 }
 
+function buildTunnelProxyList(settings, proxy, credential, format, count) {
+  if (!usesTunnelSession(settings) || count === 1) return Array(count).fill(credential).join("\n");
+  const sessionIds = new Set([settings.sessionId]);
+  while (sessionIds.size < count) sessionIds.add(randomSessionId());
+  return [...sessionIds].map((sessionId) => {
+    const { username } = buildDynamicRouting({ ...settings, sessionId }, "tunnel");
+    return formatProxyCredential({ ...proxy, username }, format);
+  }).join("\n");
+}
+
 function buildConnectionOutput(settings, routing, gateway, apiUrl) {
   const productKey = settings.productKey || state.productKey;
   if (productKey === "unlimited") {
     return buildUnlimitedConnectionOutput(settings, routing, gateway, apiUrl);
   }
+  const accessGateway = productKey === "tunnel"
+    ? TUNNEL_ACCESS_GATEWAYS.find(({ value }) => value === settings.gatewayRegion) || TUNNEL_ACCESS_GATEWAYS[0]
+    : null;
+  const host = accessGateway?.host || gateway.host;
+  const count = accessGateway ? Math.max(1, Math.min(MAX_PROXY_OUTPUT_COUNT, Math.floor(number(settings.count)))) : 1;
   const username = settings.auth === "user" ? routing.username : "";
   const password = settings.auth === "user" ? settings.user.password : "";
   const auth = settings.auth === "user"
     ? `${encodeURIComponent(username)}:${encodeURIComponent(password)}@`
     : "";
-  const endpoint = `${gateway.host}:${gateway.port}`;
+  const endpoint = `${host}:${gateway.port}`;
   const proxyUrl = `${settings.protocol === "socks" ? "socks5h" : "http"}://${auth}${endpoint}`;
   const selectedFormat = outputFormat(settings.outputFormat);
-  const credential = formatProxyCredential({
-    host: gateway.host,
-    port: gateway.port,
-    username,
-    password
-  }, selectedFormat.value);
-  const endpointMode = routing.mode === "2" ? "IP" : "HOSTNAME";
+  const proxy = { host, port: gateway.port, username, password };
+  const credential = formatProxyCredential(proxy, selectedFormat.value);
+  const proxyList = accessGateway ? buildTunnelProxyList(settings, proxy, credential, selectedFormat.value, count) : "";
+  const endpointMode = accessGateway?.label || (routing.mode === "2" ? "IP" : "HOSTNAME");
   const protocolLabel = settings.protocol === "socks" ? "SOCKS5" : "HTTP(S)";
   const region = settings.region || "all";
   const regionName = productKey === "residential" ? residentialRegionName(region) : "";
   const geoSuffix = productKey === "residential" && region !== "all" ? `+${region}` : "";
   const baseUsername = settings.auth === "user" ? settings.user?.username || "" : "";
-  const sessionSuffix = settings.session ? `-sess_${settings.sessionId}_${settings.sessionMinutes}` : "";
-  const sessionSummary = settings.session
+  const usesSession = accessGateway ? usesTunnelSession(settings) : settings.session;
+  const sessionSuffix = usesSession ? `-sess_${settings.sessionId}_${settings.sessionMinutes}` : "";
+  const sessionSummary = usesSession
     ? (settings.auth === "user"
-        ? `${settings.sessionId} · ${settings.sessionMinutes} 分钟`
+        ? `${count > 1 ? `${count} 个独立 SESSION` : settings.sessionId} · ${settings.sessionMinutes} 分钟`
         : `白名单 TTL · ${settings.sessionMinutes} 分钟`)
     : "每次请求轮换";
   const snippets = buildProxySnippets({
-    host: gateway.host,
-    port: gateway.port,
+    ...proxy,
     endpoint,
-    username,
-    password,
     proxyUrl,
     protocol: settings.protocol
   });
   const connection = [
     `接入地址类型: ${endpointMode}`,
-    `代理主机: ${gateway.host}`,
+    `代理主机: ${host}`,
     `代理端口: ${gateway.port}`,
     `代理协议: ${protocolLabel}`,
     `认证方式: ${settings.auth === "user" ? "代理账密" : "套餐 IP 白名单"}`,
@@ -1665,8 +1677,9 @@ function buildConnectionOutput(settings, routing, gateway, apiUrl) {
     ...(productKey === "residential" ? [`国家定位: ${regionName}${geoSuffix ? ` (${geoSuffix})` : ""}`] : []),
     `换 IP 周期: ${sessionSummary}`,
     `输出格式: ${selectedFormat.label}`,
+    ...(accessGateway ? [`输出数量: ${count} 条`] : []),
     "",
-    credential
+    proxyList || credential
   ].join("\n");
   return {
     endpoint,
@@ -1676,6 +1689,8 @@ function buildConnectionOutput(settings, routing, gateway, apiUrl) {
     username,
     password,
     credential,
+    proxyList,
+    count,
     outputFormat: selectedFormat.label,
     sessionSummary,
     region,
@@ -1685,7 +1700,7 @@ function buildConnectionOutput(settings, routing, gateway, apiUrl) {
     sessionSuffix,
     sessionId: settings.sessionId || "",
     sessionMinutes: settings.sessionMinutes || 0,
-    usesSession: Boolean(settings.session),
+    usesSession: Boolean(usesSession),
     usesWhitelist: settings.auth === "whitelist",
     whitelist: settings.auth === "whitelist" ? settings.whitelist : "",
     routingUsername: routing.username || "",
@@ -1836,6 +1851,8 @@ function renderConnectionOutput(output) {
     renderUnlimitedConnectionOutput(output);
     return;
   }
+  const hasProxyList = Boolean(output.proxyList);
+  const isBatch = hasProxyList && output.count > 1;
   document.querySelector("#extractOutput").innerHTML = `
     <div class="connection-result">
       <div class="connection-status"><span></span><strong>代理网关已生成</strong><small>READY</small></div>
@@ -1844,13 +1861,14 @@ function renderConnectionOutput(output) {
         ${output.username ? `<div><dt>认证用户名</dt><dd><code>${escapeHtml(output.username)}</code><button type="button" data-copy-output="username" title="复制用户名"><i data-lucide="copy"></i></button></dd></div>
         <div><dt>认证密码</dt><dd><code>${escapeHtml(output.password)}</code><button type="button" data-copy-output="password" title="复制密码"><i data-lucide="copy"></i></button></dd></div>` : `<div><dt>认证方式</dt><dd><strong>套餐 IP 白名单</strong></dd></div>
         <div><dt>生效白名单<small>当前套餐</small></dt><dd><code>${escapeHtml(whitelistTextareaValue(output.whitelist))}</code><button type="button" data-copy-output="whitelist" title="复制白名单"><i data-lucide="copy"></i></button></dd></div>`}
-        <div><dt>完整代理格式<small>${escapeHtml(output.outputFormat)}</small></dt><dd><code>${escapeHtml(output.credential)}</code><button type="button" data-copy-output="credential" title="复制完整代理格式"><i data-lucide="copy"></i></button></dd></div>
+        <div><dt>${isBatch ? `代理列表<small>首条预览 · 共 ${output.count} 条</small>` : `完整代理格式<small>${escapeHtml(output.outputFormat)}</small>`}</dt><dd><code>${escapeHtml(output.credential)}</code><button type="button" data-copy-output="${isBatch ? "proxyList" : "credential"}" title="${isBatch ? "复制全部代理" : "复制完整代理格式"}"><i data-lucide="copy"></i></button></dd></div>
         <div><dt>协议与轮换</dt><dd><strong>${escapeHtml(output.protocolLabel)} · ${escapeHtml(output.sessionSummary)}</strong></dd></div>
       </dl>
       ${residentialConnectionGuide(output)}
-      ${outputTabsMarkup(CONNECTION_CODE_TABS, "connection")}
+      ${outputTabsMarkup(hasProxyList ? TUNNEL_CONNECTION_CODE_TABS : CONNECTION_CODE_TABS, "connection")}
       ${outputCodeMarkup(output, "connection")}
       <div class="output-parameter-note">
+        ${hasProxyList ? `<strong>${isBatch ? "代码示例使用首条；批量接入请复制「代理列表」。" : ""}旧版 API 链接由后端分配网关，不跟随所选接入网关。</strong>` : ""}
         <strong>API 输出参数</strong>
         <span><code>txt_type=1</code> HOST:PORT:USER:PASSWORD</span>
         <span><code>txt_type=2</code> HOST:PORT@USER:PASSWORD</span>

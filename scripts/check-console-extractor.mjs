@@ -314,24 +314,52 @@ const unlimitedGuide = unlimitedConnectionGuide(unlimitedOutput);
 assert.match(unlimitedGuide, /从 36001 开始连续输出 3 个端口/);
 assert.match(unlimitedGuide, /无需在认证用户名中设置 SESSION/);
 
+const tunnelBatchSettings = {
+  productKey: "tunnel",
+  auth: "user",
+  protocol: "http",
+  user: { username: "proxy_user", password: "secret" },
+  gatewayRegion: "eu",
+  region: "la-asia",
+  pool: "residential",
+  outputFormat: "3",
+  count: 7,
+  session: true,
+  sessionId: "crawler00001",
+  sessionMinutes: 15
+};
+const tunnelGatewayResponse = { host: "gateway.example", port: 36931 };
 const output = buildConnectionOutput(
-  {
-    auth: "user",
-    protocol: "http",
-    user: { password: "secret" },
-    outputFormat: "3",
-    session: true,
-    sessionId: "crawler00001",
-    sessionMinutes: 15
-  },
-  { username: "proxy_user-sess_crawler00001_15", mode: "2" },
-  { host: "gateway.example", port: 9000 },
+  tunnelBatchSettings,
+  buildDynamicRouting(tunnelBatchSettings, "tunnel"),
+  tunnelGatewayResponse,
   "https://console.example/ip/retreveip/order"
 );
-assert.equal(output.endpoint, "gateway.example:9000");
-assert.equal(output.endpointMode, "IP");
-assert.equal(output.credential, "proxy_user-sess_crawler00001_15:secret:gateway.example:9000");
-assert.match(output.curl, /proxy_user-sess_crawler00001_15:secret@gateway\.example:9000/);
+assert.equal(output.endpoint, "eu.proxy.123proxy.cn:36931");
+assert.equal(output.endpointMode, "EU · 欧洲");
+assert.equal(output.credential, "proxy_user-sess_crawler00001_15:secret:eu.proxy.123proxy.cn:36931");
+assert.match(output.curl, /proxy_user-sess_crawler00001_15:secret@eu\.proxy\.123proxy\.cn:36931/);
+assert.equal(output.count, 7);
+const tunnelBatch = output.proxyList.split("\n");
+assert.equal(tunnelBatch[0], output.credential);
+assert.equal(tunnelBatch.length, 7);
+assert.equal(new Set(tunnelBatch).size, 7);
+for (const line of tunnelBatch) assert.match(line, /^proxy_user-sess_[A-Za-z0-9]{12}_15:secret:eu\.proxy\.123proxy\.cn:36931$/);
+assert.ok(output.connection.endsWith(output.proxyList));
+
+const largeBatch = { ...tunnelBatchSettings, gatewayRegion: "us", count: 1000 };
+const largeOutput = buildConnectionOutput(largeBatch, buildDynamicRouting(largeBatch, "tunnel"), tunnelGatewayResponse, "");
+assert.equal(largeOutput.endpoint, "us.proxy.123proxy.cn:36931");
+assert.equal(largeOutput.proxyList.split("\n").length, 1000);
+assert.equal(new Set(largeOutput.proxyList.split("\n")).size, 1000);
+
+for (const format of PROXY_OUTPUT_FORMATS) {
+  const mixedSettings = { ...tunnelBatchSettings, pool: "mixed", count: 3, outputFormat: format.value };
+  const mixedOutput = buildConnectionOutput(mixedSettings, buildDynamicRouting(mixedSettings, "tunnel"), tunnelGatewayResponse, "");
+  const expected = formatProxyCredential({ host: "eu.proxy.123proxy.cn", port: 36931, username: "proxy_user", password: "secret" }, format.value);
+  assert.equal(mixedOutput.usesSession, false);
+  assert.deepEqual(mixedOutput.proxyList.split("\n"), [expected, expected, expected]);
+}
 assert.deepEqual(
   CONNECTION_CODE_TABS.map(([key]) => key),
   ["connection", "curl", "python", "nodejs", "go", "java", "php", "apiUrl"]
@@ -368,6 +396,8 @@ assert.equal(residentialOutput.regionName, "美国");
 assert.equal(residentialOutput.geoSuffix, "+us");
 assert.equal(residentialOutput.sessionSuffix, "-sess_crawler00001_15");
 assert.equal(residentialOutput.username, "proxy_user-sess_crawler00001_15+us");
+assert.equal(residentialOutput.endpoint, "residential.123proxy.cn:33000");
+assert.equal(residentialOutput.proxyList, "");
 const residentialGuide = residentialConnectionGuide(residentialOutput);
 assert.match(residentialGuide, /美国 · \+us/);
 assert.match(residentialGuide, /国家码必须放在认证用户名最后/);
@@ -376,13 +406,14 @@ assert.match(residentialGuide, /约 3-15 分钟/);
 assert.match(residentialGuide, /proxy_user-sess_crawler00001_15\+us/);
 
 const socksOutput = buildConnectionOutput(
-  { auth: "whitelist", protocol: "socks", user: null, outputFormat: "4", session: false },
+  { productKey: "tunnel", gatewayRegion: "asia", auth: "whitelist", protocol: "socks", user: null, outputFormat: "4", session: false, count: 2 },
   { username: "", mode: "1" },
   { host: "socks.example", port: 1080 },
   "https://console.example/ip/retreveip/socks-order"
 );
-assert.equal(socksOutput.proxyUrl, "socks5h://socks.example:1080");
-assert.equal(socksOutput.credential, "socks.example:1080");
+assert.equal(socksOutput.proxyUrl, "socks5h://as.proxy.123proxy.cn:1080");
+assert.equal(socksOutput.credential, "as.proxy.123proxy.cn:1080");
+assert.deepEqual(socksOutput.proxyList.split("\n"), [socksOutput.credential, socksOutput.credential]);
 assert.match(socksOutput.python, /requests\[socks\]/);
 assert.match(socksOutput.nodejs, /SocksProxyAgent/);
 assert.match(socksOutput.go, /golang\.org\/x\/net\/proxy/);
